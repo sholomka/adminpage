@@ -1,0 +1,15 @@
+<dgo-nav subpage="false" menu="true"></dgo-nav>
+
+<uib-tabset class="tabs">
+    <uib-tab ng-repeat="tab in tabs" heading="{{tab.title}}" ng-if="tab.show">
+        <ng-switch on="tab.url">
+            <dgo-neue ng-switch-when="dgo-neue"></dgo-neue>
+            <dgo-bestehende ng-switch-when="dgo-bestehende"></dgo-bestehende>
+            <dgo-neue-driveby class-name="neue" ng-switch-when="dgo-neue-driveby"></dgo-neue-driveby>
+            <dgo-bestehende-driveby ng-switch-when="dgo-bestehende-driveby"></dgo-bestehende-driveby>
+        </ng-switch>
+    </uib-tab>
+</uib-tabset>
+
+
+

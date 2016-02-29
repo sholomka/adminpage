@@ -1,0 +1,114 @@
+<div class="erstellen column-35 col-sm-4 col-sm-offset-4 top-1 panel panel-default">
+    <div class="modal-header">
+        <h4 class="modal-title">News erstellen</h4>
+    </div>
+    <div class="modal-body">
+        <form class="top-25 bottom-25">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label>Titel</label>
+                        <input type="text" ng-model="sendData.title" class="form-control">
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label>Teaser</label>
+                        <textarea rows="3"  ng-model="sendData.teaser" class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label>Text</label>
+                        <textarea rows="10"  ng-model="sendData.text" class="form-control"></textarea>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Themen</label>
+                        <select  class="form-control" ng-model="sendData.topic" ng-options="key for (key, value) in newsThemen"></select>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Typ</label>
+                        <select  class="form-control" ng-model="sendData.newsType" ng-options="key for (key, value) in newsTypes"></select>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Veröffentlichung von</label>
+                        <p class="input-group">
+                            <input type="text" uib-datepicker-popup="{{settings.format}}" ng-change="getCount()" class="form-control"  ng-model="sendData.publishFromDate" is-open="settings.status.openedFrom" max-date="settings.maxDate" datepicker-options="settings.dateOptions" close-text="Schließen" current-text="Heute" clear-text="Löschen" />
+                            <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="settings.openFrom($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Veröffentlichen bis</label>
+                        <p class="input-group">
+                            <input type="text" uib-datepicker-popup="{{settings.format}}" ng-change="getCount()" class="form-control" ng-model="sendData.publishUntilDate" is-open="settings.status.openedUntil" max-date="settings.maxDate" datepicker-options="settings.dateOptions"  close-text="Schließen" current-text="Heute" clear-text="Löschen" />
+                            <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="settings.openUntil($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Source</label>
+                        <input type="text" ng-model="sendData.source" class="form-control">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>external Links</label>
+                        <input type="text" ng-model="sendData.externalLink" class="form-control">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Lokalisierungshierarchie
+                            <i class="fa fa-question-circle fa-fw help-cursor" uib-tooltip-html="'Hierarchy of locations, starting with most precise (e.g. district) and seperated by #. Levels should be district, city, state, country. You do not have to start at lowest level but you can not skip a level (e.g. sachsen#deutschland is valid, leipzig#deutschland is not valid)'" tooltip-placement="top"></i>
+                        </label>
+                        <input type="text" ng-change="check(sendData)" ng-model="sendData.locationHierarchy" class="form-control">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Keywords <i class="fa fa-question-circle fa-fw help-cursor" uib-tooltip-html="'Aufbau: wort1, wort2, wort3'" tooltip-placement="top"></i></label>
+                        <input type="text" ng-model="sendData.keywords" class="form-control">
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div >
+                        <label>Standort der News</label>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    Lat (Breite): <input type="text" ng-change="check(sendData)" ng-model="sendData.location.lat" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    Lon (Länge): <input type="text" ng-change="check(sendData)" ng-model="sendData.location.lon" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="saveNews()" ng-disabled="disabled">Speichern</button>
+        <button class="btn btn-default" ng-click="cancel()">Abbrechen</button>
+    </div>
+</div>
+

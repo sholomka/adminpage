@@ -1,0 +1,26 @@
+<div ng-class="classNames">
+    <uib-pagination ng-show="sendData && totalItems > 10" class="pagination-sm pull-right" max-size="5" next-text="&raquo;" previous-text="&laquo;" total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()">
+    </uib-pagination>
+
+    <div class="modal-header">
+        <h4 class="modal-title" ng-bind-html="title">News bearbeiten</h4>
+    </div>
+
+    <div class="news-items" ng-hide="newsError" ng-style="newsItemsStyleObj">
+        <div class="news-item" ng-repeat="n in news">
+            <h4><a href="javascript:void(0);" ng-click="showNewsDetails(n.newsId)">{{n.title}}</a></h4>
+            <p class="news-text">{{n.teaser}}</p>
+            <p class="news-text" ng-show="showNewsDetail[n.newsId]" ng-bind-html="n.text"></p>
+            <div class="data-n-link"><a href="{{n.externalLink}}" class="pull-right" ng-show="n.externalLink" target="_blank"><i class="fa fa-fw fa-chevron-circle-right"></i> mehr dazu hier</a>{{n.publishFromDate | date:'dd.MM.yyyy'}}</div>
+            <div class="tags"><span class="text-small" ng-repeat="keyword in n.keywords"><i class="fa fa-fw fa-tag text-lightgrey"></i>{{keyword}}</span></div>
+            <div>
+                <a href="javascript:void(0);" ng-show="kannNewsLoeschen()" ng-click="loescheNews(n)">
+                    <i class="fa fa-fw fa-trash" ></i>
+                </a>
+                <a href="javascript:void(0);" ng-click="editNews(n)">
+                    <i class="fa fa-fw fa-edit"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

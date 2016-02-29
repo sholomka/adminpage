@@ -1,0 +1,52 @@
+.tabs {
+    margin-top: 65px;
+}
+
+.tabs .nav-tabs > li > div {
+    margin-right: 2px;
+    line-height: 1.42857143;
+    border: 1px solid transparent;
+    border-radius: 4px 4px 0 0;
+}
+
+.tabs .nav-tabs > li > div:hover {
+    border-color: #eee #eee #ddd;
+}
+
+.tabs .nav-tabs > li.active > div,.tabs  .nav-tabs > li.active > div:hover {
+    color: #555;
+    cursor: default;
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    border-bottom-color: transparent;
+}
+
+.tabs .nav > li > div {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+}
+
+.tabs .nav > li > div:hover {
+    background-color: #eee;
+}
+
+.tabs .uib-tab > div {
+    color: #337ab7;
+    cursor: pointer;
+}
+
+.tabs .nav-tabs > li.disabled > div {
+    color: #999;
+}
+
+.tabs .nav-tabs>li.disabled>div:hover, .tabs .nav-tabs>li.disabled>div:focus {
+    color: #999;
+    text-decoration: none;
+    background-color: transparent;
+    cursor: not-allowed;
+}
+
+.tabs form.tab-form-demo .tab-pane {
+    margin: 20px 20px;
+}

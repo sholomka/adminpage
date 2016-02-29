@@ -1,0 +1,109 @@
+@font-face {
+    font-family: 'icomoon';
+    src: url('../fonts/icomoon.eot?boj8c1');
+    src: url('../fonts/icomoon.eot?#iefixboj8c1') format('embedded-opentype'),
+    url('../fonts/icomoon.woff?boj8c1') format('woff'),
+    url('../fonts/icomoon.ttf?boj8c1') format('truetype'),
+    url('../fonts/icomoon.svg?boj8c1#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+    font-family: 'icomoon';
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-pencil:before {
+    content: "\e600";
+}
+
+.icon-rectangle:before {
+    content: "\e601";
+}
+
+.icon-polygon:before {
+    content: "\e602";
+}
+
+.icon-circle:before {
+    content: "\e603";
+}
+
+.icon-trash:before {
+    content: "\e604";
+}
+
+.icon-teamproq-logo {
+    background-image: url('../img/teamproq-logo.png');
+    background-color: transparent; /* make the button transparent */
+    background-repeat: no-repeat;  /* make the background image appear only once */
+    background-size: cover;
+    background-position: 0px 0px;  /* equivalent to 'top left' */
+    border: none;           /* assuming we don't want any borders */
+    height: 16px;           /* make this the size of your image */
+    width: 16px;           /* make this the size of your image */
+    padding-left: 16px;     /* make text start to the right of the image */
+    vertical-align: middle; /* align the text vertically centered */
+}
+
+.icon-teamproq-button {
+    background-image: url('../img/teamproq-button.png');
+    background-color: transparent; /* make the button transparent */
+    background-repeat: no-repeat;  /* make the background image appear only once */
+    background-size: cover;
+    background-position: 0px 0px;  /* equivalent to 'top left' */
+    border: none;           /* assuming we don't want any borders */
+    /*height: 16px;           !* make this the size of your image *!*/
+    /*width: 16px;           !* make this the size of your image *!*/
+    padding-left: 16px;     /* make text start to the right of the image */
+    vertical-align: middle; /* align the text vertically centered */
+}
+
+.icon-vergleichsobjekte {
+    background-image: url('../img/vergleichbareObjekte.png');
+    background-color: transparent; /* make the button transparent */
+    background-repeat: no-repeat;  /* make the background image appear only once */
+    background-size: cover;
+    background-position: 0px 0px;  /* equivalent to 'top left' */
+    border: none;           /* assuming we don't want any borders */
+    height: 16px;           /* make this the size of your image */
+    width: 16px;           /* make this the size of your image */
+    padding-left: 16px;     /* make text start to the right of the image */
+    vertical-align: middle; /* align the text vertically centered */
+}
+
+.icon-feedback {
+    background-image: url('../img/feedback.png');
+    background-color: transparent; /* make the button transparent */
+    background-repeat: no-repeat;  /* make the background image appear only once */
+    background-size: cover;
+    background-position: 0px 0px;  /* equivalent to 'top left' */
+    border: none;           /* assuming we don't want any borders */
+    height: 16px;           /* make this the size of your image */
+    width: 16px;           /* make this the size of your image */
+    padding-left: 16px;     /* make text start to the right of the image */
+    vertical-align: middle; /* align the text vertically centered */
+}
+
+.icon-geomap-logo{
+    background-image: url('../img/logo-icon.png');
+    background-color: transparent; /* make the button transparent */
+    background-repeat: no-repeat;  /* make the background image appear only once */
+    background-size: cover;
+    background-position: 0px 0px;  /* equivalent to 'top left' */
+    border: none;           /* assuming we don't want any borders */
+    height: 16px;           /* make this the size of your image */
+    width: 16px;           /* make this the size of your image */
+    padding-left: 16px;     /* make text start to the right of the image */
+    vertical-align: middle; /* align the text vertically centered */
+}
