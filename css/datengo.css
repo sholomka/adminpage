@@ -1492,3 +1492,44 @@ span.dropdown  {
     height: 21px;
     width: 24px;
 }
+
+.lightbox-nav.bottom {
+     margin-top: 12px;
+ }
+
+.nav-list {
+    margin-top: 5px;
+}
+
+.btn-group a {
+    margin-right: 10px;
+}
+
+.btn-group a.btn-xs {
+    vertical-align: top;
+    float: inherit;
+}
+
+.nav-list a, .btn-group a {
+    display: inline-block;
+}
+
+.complaint {
+    background: url(../img/u361.png) no-repeat;
+    height: 21px;
+    width: 24px;
+}
+
+.complaint.active {
+    background: url(../img/u363.png) no-repeat;
+}
+
+.accept {
+    background: url(../img/u356.png) no-repeat;
+    height: 19px;
+    width: 22px;
+}
+
+.accept.active {
+    background: url(../img/u358.png) no-repeat;
+}

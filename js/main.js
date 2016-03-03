@@ -10,7 +10,8 @@ require.config({
 		"ui-bootstrap": 		"../lib/angular-bootstrap/ui-bootstrap-tpls-1.0.0.min",
 		"locale-de": 			"../lib/angular/angular-locale_de-de",
 		"ngStorage":			"../lib/ngstorage/ngStorage.min",
-		"duScroll":				"../lib/angular-scroll/angular-scroll.min"
+		"duScroll":				"../lib/angular-scroll/angular-scroll.min",
+		"bootstrapLightbox": "../lib/angular-bootstrap-lightbox/angular-bootstrap-lightbox.min"
 		//"googlemaps-marker": 	"../lib/google-maps-utility/markerwithlabel.min"
 	},
 	map: {
@@ -39,6 +40,9 @@ require.config({
 		},
 		"ui-bootstrap": {
 			deps: ["angular"]
+		},
+		"bootstrapLightbox": {
+			deps: ["angular","ui-bootstrap"]
 		},
 		"ngStorage": {
 			deps: ["angular"]

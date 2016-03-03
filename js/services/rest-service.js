@@ -189,7 +189,7 @@ define(["./module"], function (module) {
 		var getObjektRequestDetail = function (id) {
 			return getRequest({
 				method: "GET",
-				url: "http://geomap-intern.test1.evermind.de/service/odb/suche/objekt/objekteimbau?objektId=" + id,
+				url: "http://geomap-intern.test1.evermind.de/service/odb/suche/objekt/objekteimbau?objektId=" + id
 				//url: "objectimbaudetail.json"
 			});
 		};

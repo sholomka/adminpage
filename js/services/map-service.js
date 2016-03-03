@@ -886,22 +886,24 @@ define(["./module", "googlemaps"], function (module) {
                 var color =  "green";
                 var drivebyLatlon = new google.maps.LatLng(driveby.lon, driveby.lat);
 
-                map.setZoom(12);
-                map.setCenter(drivebyLatlon);
+                if (angular.isObject(map)) {
+                    map.setZoom(12);
+                    map.setCenter(drivebyLatlon);
 
-                var objektMarker = new google.maps.Marker({
-                    position: drivebyLatlon,
-                    map: map,
-                    icon: createPinMarkerIcon(undefined, color, false),
-                    title: "Position: PLZ-genau",
-                    zIndex: 1,
-                    dgoIsGroup: false,
-                    dgoIsOffline: false,
-                    dgoLabel: undefined,
-                    dgoColor: "green"
-                });
+                    var objektMarker = new google.maps.Marker({
+                        position: drivebyLatlon,
+                        map: map,
+                        icon: createPinMarkerIcon(undefined, color, false),
+                        title: "Position: PLZ-genau",
+                        zIndex: 1,
+                        dgoIsGroup: false,
+                        dgoIsOffline: false,
+                        dgoLabel: undefined,
+                        dgoColor: "green"
+                    });
 
-                newsMap[driveby.geohash] = objektMarker;
+                    newsMap[driveby.geohash] = objektMarker;
+                }
             };
 
             var updateNewsMarker = function (map, newse) {
