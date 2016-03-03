@@ -4,6 +4,10 @@ html, body, .mapcanvas {
     padding: 0px
 }
 
+ol, ul {
+    list-style: none;
+}
+
 .list-info {
     text-align: center;
     font-weight: 300;
@@ -1459,7 +1463,94 @@ span.dropdown  {
     color: #333333;
     line-height: normal;
     text-align: left;
+
 }
+
+.modal-popup-complaint .modal-dialog {
+    width: 481px;
+}
+
+.modal-complaint {
+    padding: 8px;
+    height: 330px;
+    width: 480px;
+}
+
+
+.modal-complaint h2 {
+    font-size: 13px;
+    text-decoration:underline;
+    font-weight: bold;
+    margin: 0;
+}
+
+.modal-complaint .checkbox-title {
+    font-size: 11px;
+    font-weight: bold;
+    margin-left: 36px;
+}
+
+
+.modal-complaint  input, .modal-complaint  label {
+    margin: 0;
+}
+
+.modal-complaint .ax_checkbox, .modal-complaint  .img-content {
+    overflow: hidden;
+}
+
+.modal-complaint .ax_img {
+    float: left;
+}
+
+.modal-complaint .ax_text_area {
+    float: right;
+    height: 130px;
+    width: 220px;
+}
+
+
+
+
+.modal-complaint .ax_text_area textarea{
+    font-size: 10px;
+    text-align: left;
+    height: 130px;
+    width: 220px;
+}
+
+.modal-complaint .ax_checkbox ul {
+    float: left;
+    padding: 0;
+
+}
+
+.modal-complaint .ax_checkbox ul:first-child {
+    margin: 0 45px 0 120px;
+}
+
+.modal-complaint img {
+    height: 130px;
+    width: 220px;
+}
+
+.modal-complaint .email {
+    margin-top: 5px;
+}
+
+.modal-complaint .email span, .modal-complaint .email input {
+    font-size: 10px;
+}
+
+.modal-complaint .email input {
+    width: 165px;
+    height: 25px
+}
+
+.modal-complaint  .buttons {
+    float: right;
+}
+
 
 .foto-container {
     margin: 0 0 0 40px;
@@ -1512,6 +1603,7 @@ span.dropdown  {
 
 .nav-list a, .btn-group a {
     display: inline-block;
+    cursor: pointer;
 }
 
 .complaint {
@@ -1533,3 +1625,4 @@ span.dropdown  {
 .accept.active {
     background: url(../img/u358.png) no-repeat;
 }
+

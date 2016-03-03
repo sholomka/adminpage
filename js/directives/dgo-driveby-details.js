@@ -1,7 +1,7 @@
 define(["./module"], function (module) {
     "use strict";
-    module.directive("dgoDrivebyDetails", ["$urlService", "$constantsService", "$filter", "$restService", "$newsService", "$drivebysService", "$listenerService", "$mapService", "$sucheService",
-        function ($urlService, $constantsService, $filter, $restService, $newsService, $drivebysService, $listenerService, $mapService, $sucheService) {
+    module.directive("dgoDrivebyDetails", ["$urlService", "$constantsService", "$filter", "$restService", "$newsService", "$drivebysService", "$listenerService", "$mapService", "$sucheService", "$uibModal",
+        function ($urlService, $constantsService, $filter, $restService, $newsService, $drivebysService, $listenerService, $mapService, $sucheService, $uibModal) {
             return {
                 restrict: "E",
                 replace: true,
@@ -142,8 +142,17 @@ define(["./module"], function (module) {
                         angular.element($event.currentTarget).toggleClass('active');
                     };
 
-                    $scope.complaint = function($event) {
+                    $scope.complaint = function($event, index) {
                         angular.element($event.currentTarget).toggleClass('active');
+
+                        $scope.currentImg = $scope.images[index].thumbUrl;
+
+                        var currentModal = $uibModal.open({
+                            templateUrl: 'templates/modal-complaint.html',
+                            backdrop: true,
+                            windowClass: 'modal-popup-complaint',
+                            scope: $scope
+                        });
                     };
 
                     $scope.storeEdited = function () {
