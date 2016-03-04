@@ -19,7 +19,8 @@ define(["./module"], function (module) {
                         $scope.sendData = args.data;
                         $scope.reset();
 
-                        $scope.images = args.data.base64Images;
+                        $scope.images = $scope.sendData.base64Images;
+
 
                         $scope.titlesImage = [
                              "Objektübersicht",
@@ -113,11 +114,7 @@ define(["./module"], function (module) {
 
 
 
-                       /* "complaints": [
-                            { "element": "IMAGE1", "complaintText": "das ist unscharf", "date": "01.10.2015" },
-                            { "element": "IMAGE2", "complaintText": "das ist verwackelt", "date": "01.10.2015" },
-                            { "element": "IMAGE3", "complaintText": "Daten sind nicht vollständig", "date": "01.10.2015" }
-                        ]*/
+
 
                     };
 
@@ -138,12 +135,66 @@ define(["./module"], function (module) {
                         Lightbox.openModal($scope.images, index);
                     };
 
-                    $scope.accept = function($event) {
-                        angular.element($event.currentTarget).toggleClass('active');
+                    $scope.accept = function($event, index) {
+
+                        var event = $event.currentTarget,
+                            complaint = angular.element(event);
+
+
+                        if (!complaint.hasClass('active')) {
+
+                           console.log('1');
+
+                            complaint.toggleClass('active');
+
+
+
+                            $scope.currentImg = $scope.images[index].thumbUrl.replace('data:image/png;base64,', '');
+                            $scope.sendData.base64Images[index].index = ++index;
+                            $scope.sendData.base64Images[index].base64 = $scope.currentImg;
+                        } else {
+
+                            console.log('2');
+
+                            delete $scope.sendData.base64Images[index];
+
+                            complaint.toggleClass('active');
+                        }
+
+
+                        console.log($scope.sendData.base64Images);
+
+
+
+
+
+                        /* "complaints": [
+                         { "element": "IMAGE1", "complaintText": "das ist unscharf", "date": "01.10.2015" },
+                         { "element": "IMAGE2", "complaintText": "das ist verwackelt", "date": "01.10.2015" },
+                         { "element": "IMAGE3", "complaintText": "Daten sind nicht vollständig", "date": "01.10.2015" }
+                         ]*/
+
+
+
                     };
 
                     $scope.complaint = function($event, index) {
-                        angular.element($event.currentTarget).toggleClass('active');
+                        var event = $event.currentTarget,
+                            complaint = angular.element(event);
+
+                        var clear = function() {
+                            $scope.sendData.complaintText = '';
+                            $scope.disabled = true;
+                        };
+
+                        clear();
+
+                        if (complaint.hasClass('active')) {
+                           complaint.toggleClass('active');
+
+                           clear();
+                           return;
+                        }
 
                         $scope.currentImg = $scope.images[index].thumbUrl;
 
@@ -153,14 +204,25 @@ define(["./module"], function (module) {
                             windowClass: 'modal-popup-complaint',
                             scope: $scope
                         });
+
+                        $scope.save = function() {
+                            complaint.toggleClass('active');
+                            currentModal.dismiss();
+                        };
+
+                        $scope.cancel = function() {
+                            currentModal.dismiss();
+                        };
+
+                        $scope.check = function(complaintText) {
+                            $scope.disabled = complaintText == '';
+                        }
                     };
 
                     $scope.storeEdited = function () {
                         $drivebysService.storeEdited($scope.sendData).then(function (data) {
                         }, function (error) {});
                     };
-
-
                 }
             };
         }]);

@@ -66,18 +66,18 @@
             </div>
 
             <div class="ax_text_area">
-              <textarea>
+              <textarea ng-model="sendData.complaintText" ng-change="check(sendData.complaintText)">
               </textarea>
             </div>
         </div>
 
         <div class="email" id="u639" style="">
             <span>Senden an:</span>
-            <input type="email" value="Daniel.Huebner@yahoo.com">
+            <input type="email" value="{{sendData.userName}}">
         </div>
 
         <div class="buttons">
-            <button class="btn btn-primary" ng-click="saveNews()" ng-disabled="disabled">Senden vermerken</button>
+            <button class="btn btn-primary" ng-click="save()" ng-disabled="disabled">Senden vermerken</button>
             <button class="btn btn-default" ng-click="cancel()">Abbrechen</button>
         </div>
     </div>

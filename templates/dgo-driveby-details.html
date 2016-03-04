@@ -68,7 +68,7 @@
                     <span>{{image.caption}}</span>
                     <img ng-src="{{image.thumbUrl}}" ng-click="openLightboxModal($index)" class="img-thumbnail">
                     <div class="nav-list">
-                        <a class="accept" ng-click="accept($event)"></a>
+                        <a class="accept" ng-click="accept($event, $index)"></a>
                         <a class="complaint" ng-click="complaint($event, $index)"></a>
                     </div>
                 </div>
