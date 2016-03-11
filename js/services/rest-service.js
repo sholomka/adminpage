@@ -127,8 +127,8 @@ define(["./module"], function (module) {
 		var searchTodayDriveBys = function (data) {
 			return getRequest({
 				method: "POST",
-				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/sucheEdit",
-				//url: "searchTodayDriveBys.json",
+				//url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/sucheEdit",
+				url: "searchTodayDriveBys.json",
 				data: data
 			});
 		};
@@ -136,8 +136,8 @@ define(["./module"], function (module) {
 		var showDrivebysDetails = function (id) {
 			return getRequest({
 				method: "POST",
-				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/getDetail",
-				//url: "getDetails.json",
+				//url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/getDetail",
+				url: "getDetails.json",
 				headers: {
 				 	'Content-Type': 'text/plain'
 				},
@@ -149,8 +149,8 @@ define(["./module"], function (module) {
 		var countEditDriveBy = function () {
 			return getRequest({
 				method: "GET",
-				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/countEdit"
-				//url: "countEditDriveBy.txt"
+				//url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/countEdit"
+				url: "countEditDriveBy.txt"
 			});
 		};
 
@@ -166,8 +166,8 @@ define(["./module"], function (module) {
 		var getUserInfo = function (userName) {
 			return getRequest({
 				method: "POST",
-				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/userInfo",
-				//url: "getUserInfo.json",
+				//url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/userInfo",
+				url: "getUserInfo.json",
 
 				headers: {
 					'Content-Type': 'text/plain'
@@ -180,8 +180,8 @@ define(["./module"], function (module) {
 		var getObjektRequest = function (data) {
 			return getRequest({
 				method: "POST",
-				url: "http://geomap-intern.test1.evermind.de/service/odb/suche/objekteimbau",
-				//url: "objectimbau.json",
+				//url: "http://geomap-intern.test1.evermind.de/service/odb/suche/objekteimbau",
+				url: "objectimbau.json",
 				data: data
 			});
 		};
@@ -189,8 +189,8 @@ define(["./module"], function (module) {
 		var getObjektRequestDetail = function (id) {
 			return getRequest({
 				method: "GET",
-				url: "http://geomap-intern.test1.evermind.de/service/odb/suche/objekt/objekteimbau?objektId=" + id
-				//url: "objectimbaudetail.json"
+				//url: "http://geomap-intern.test1.evermind.de/service/odb/suche/objekt/objekteimbau?objektId=" + id
+				url: "objectimbaudetail.json"
 			});
 		};
 

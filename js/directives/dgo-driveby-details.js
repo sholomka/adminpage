@@ -16,11 +16,21 @@ define(["./module"], function (module) {
                     };
 
                     $scope.$on('drivebyDetails', function (event, args) {
-                        $scope.sendData = args.data;
+                        $scope.sendData = {};
+                        $scope.sendData.street = args.data.street;
+                        $scope.sendData.plz = args.data.plz;
+                        $scope.sendData.city = args.data.city;
+                        $scope.sendData.location = args.data.location;
+                        $scope.sendData.projectName = args.data.projectName;
+                        $scope.sendData.userName = args.data.userName;
+                        $scope.sendData.dateCreated = args.data.dateCreated;
+
+                        $scope.base64Images = [];
+                        $scope.complaints = [];
+
                         $scope.reset();
 
-                        $scope.images = $scope.sendData.base64Images;
-
+                        $scope.images = args.data.base64Images;
 
                         $scope.titlesImage = [
                              "Objektübersicht",
@@ -86,7 +96,6 @@ define(["./module"], function (module) {
                             $scope.mapObjectList = [];
                             angular.forEach(item.objektImBauVorschau, function(data) {
                                 $sucheService.loadItem(data.id).then(function (data) {
-                                    console.log(data);
 
                                     $scope.mapObjectList.push(data);
                                 });
@@ -110,12 +119,6 @@ define(["./module"], function (module) {
                         $scope.street = item.adresse.strasse;
                         $scope.plz = item.adresse.plz;
                         $scope.city = item.adresse.ort;
-
-
-
-
-
-
                     };
 
                     $scope.reset = function () {
@@ -133,70 +136,67 @@ define(["./module"], function (module) {
                     // Fotos
                     $scope.openLightboxModal = function (index) {
                         Lightbox.openModal($scope.images, index);
+
+                        /*$scope.currentImg = $scope.images[index].thumbUrl;
+
+
+                        var currentModal = $uibModal.open({
+                            templateUrl: 'templates/modal-lightbox.html',
+                            backdrop: true,
+                            windowClass: 'modal-popup-complaint',
+                            scope: $scope
+                        });*/
                     };
 
                     $scope.accept = function($event, index) {
-
                         var event = $event.currentTarget,
-                            complaint = angular.element(event);
+                            accept = angular.element(event),
+                            complaint = accept.next();
 
-
-                        if (!complaint.hasClass('active')) {
-
-                           console.log('1');
-
-                            complaint.toggleClass('active');
-
-
-
-                            $scope.currentImg = $scope.images[index].thumbUrl.replace('data:image/png;base64,', '');
-                            $scope.sendData.base64Images[index].index = ++index;
-                            $scope.sendData.base64Images[index].base64 = $scope.currentImg;
-                        } else {
-
-                            console.log('2');
-
-                            delete $scope.sendData.base64Images[index];
-
-                            complaint.toggleClass('active');
+                        if (complaint.hasClass('active')) {
+                            return;
                         }
 
+                        var nextIndex = index + 1;
 
-                        console.log($scope.sendData.base64Images);
+                        if (!accept.hasClass('active')) {
+                            accept.toggleClass('active');
+                            $scope.currentImg = $scope.images[index].thumbUrl.replace('data:image/png;base64,', '');
+                            $scope.base64Images[index] = {};
+                            $scope.base64Images[index].index = nextIndex;
+                            $scope.base64Images[index].base64 = $scope.currentImg;
+                        } else {
+                            delete $scope.base64Images[index];
+                            accept.toggleClass('active');
+                        }
+                    };
 
+                    $scope.accept2 = function($event, index) {
+                        var event = $event.currentTarget,
+                            accept = angular.element(event),
+                            complaint = accept.next();
 
+                        if (complaint.hasClass('active')) {
+                            complaint.toggleClass('active');
+                            accept.toggleClass('active');
 
-
-
-                        /* "complaints": [
-                         { "element": "IMAGE1", "complaintText": "das ist unscharf", "date": "01.10.2015" },
-                         { "element": "IMAGE2", "complaintText": "das ist verwackelt", "date": "01.10.2015" },
-                         { "element": "IMAGE3", "complaintText": "Daten sind nicht vollständig", "date": "01.10.2015" }
-                         ]*/
-
-
-
+                            delete $scope.complaints[index];
+                        }
                     };
 
                     $scope.complaint = function($event, index) {
                         var event = $event.currentTarget,
-                            complaint = angular.element(event);
+                            complaint = angular.element(event),
+                            accept = complaint.parent().children().eq(0);
+
 
                         var clear = function() {
                             $scope.sendData.complaintText = '';
                             $scope.disabled = true;
                         };
 
-                        clear();
-
-                        if (complaint.hasClass('active')) {
-                           complaint.toggleClass('active');
-
-                           clear();
-                           return;
-                        }
-
                         $scope.currentImg = $scope.images[index].thumbUrl;
+                        $scope.complaintText = angular.isObject($scope.complaints[index]) ? $scope.complaints[index].complaintText : '';
 
                         var currentModal = $uibModal.open({
                             templateUrl: 'templates/modal-complaint.html',
@@ -205,8 +205,22 @@ define(["./module"], function (module) {
                             scope: $scope
                         });
 
-                        $scope.save = function() {
-                            complaint.toggleClass('active');
+                        $scope.save = function(complaintText) {
+                            if (!complaint.hasClass('active')) {
+                               complaint.toggleClass('active');
+                            }
+
+                            if (accept.hasClass('active')) {
+                                accept.toggleClass('active');
+                            }
+
+                            var nextIndex = index + 1;
+
+                            $scope.complaints[index] = {};
+                            $scope.complaints[index].complaintText = complaintText;
+                            $scope.complaints[index].element = 'IMAGE' + nextIndex;
+
+
                             currentModal.dismiss();
                         };
 
@@ -220,6 +234,16 @@ define(["./module"], function (module) {
                     };
 
                     $scope.storeEdited = function () {
+                        $scope.sendData.base64Images = $scope.base64Images.filter(function(x) {
+                           return x !== undefined &&  x !== null;
+                        });
+
+                        $scope.sendData.complaints = $scope.complaints.filter(function(x) {
+                            return x !== undefined &&  x !== null;
+                        });
+
+                        console.log($scope.sendData.complaints);
+
                         $drivebysService.storeEdited($scope.sendData).then(function (data) {
                         }, function (error) {});
                     };
