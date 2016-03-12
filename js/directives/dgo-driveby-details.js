@@ -1,19 +1,32 @@
 define(["./module"], function (module) {
     "use strict";
-    module.directive("dgoDrivebyDetails", ["$urlService", "$constantsService", "$filter", "$restService", "$newsService", "$drivebysService", "$listenerService", "$mapService", "$sucheService", "$uibModal",
-        function ($urlService, $constantsService, $filter, $restService, $newsService, $drivebysService, $listenerService, $mapService, $sucheService, $uibModal) {
+    module.directive("dgoDrivebyDetails", ["$urlService", "$constantsService", "$filter", "$restService", "$newsService", "$drivebysService", "$listenerService", "$mapService", "$sucheService", "$uibModal", "$rootScope",
+        function ($urlService, $constantsService, $filter, $restService, $newsService, $drivebysService, $listenerService, $mapService, $sucheService, $uibModal, $rootScope) {
             return {
                 restrict: "E",
                 replace: true,
                 scope: true,
                 templateUrl: "templates/dgo-driveby-details.html",
-                controller: function ($scope, $element, Lightbox) {
+                controller: function ($scope, $element, Lightbox, $sessionStorage) {
                     $scope.sortByKey = function(array, key) {
                         return array.sort(function(a, b) {
                             var x = a[key]; var y = b[key];
                             return ((x < y) ? -1 : ((x > y) ? 1 : 0));
                         });
                     };
+
+                    $scope.$on('accept', function (event, args) {
+                        $scope.images[args.index].accept = args.accept;
+                    });
+
+                    $scope.$on('acceptDblClick', function (event, args) {
+                        $scope.images[args.index].accept = args.accept;
+                        $scope.images[args.index].complaint = args.complaint;
+                    });
+
+                    $scope.$on('complaint', function (event, args) {
+                        $scope.images[args.index].complaint = args.complaint;
+                    });
 
                     $scope.$on('drivebyDetails', function (event, args) {
                         $scope.sendData = {};
@@ -27,6 +40,10 @@ define(["./module"], function (module) {
 
                         $scope.base64Images = [];
                         $scope.complaints = [];
+
+                        $sessionStorage.base64Images = [];
+                        $sessionStorage.complaints = [];
+
 
                         $scope.reset();
 
@@ -136,16 +153,6 @@ define(["./module"], function (module) {
                     // Fotos
                     $scope.openLightboxModal = function (index) {
                         Lightbox.openModal($scope.images, index);
-
-                        /*$scope.currentImg = $scope.images[index].thumbUrl;
-
-
-                        var currentModal = $uibModal.open({
-                            templateUrl: 'templates/modal-lightbox.html',
-                            backdrop: true,
-                            windowClass: 'modal-popup-complaint',
-                            scope: $scope
-                        });*/
                     };
 
                     $scope.accept = function($event, index) {
@@ -162,16 +169,25 @@ define(["./module"], function (module) {
                         if (!accept.hasClass('active')) {
                             accept.toggleClass('active');
                             $scope.currentImg = $scope.images[index].thumbUrl.replace('data:image/png;base64,', '');
-                            $scope.base64Images[index] = {};
-                            $scope.base64Images[index].index = nextIndex;
-                            $scope.base64Images[index].base64 = $scope.currentImg;
+                            $sessionStorage.base64Images[index] = {};
+                            $sessionStorage.base64Images[index].index = nextIndex;
+                            $sessionStorage.base64Images[index].base64 = $scope.currentImg;
+
+                            $scope.images[index].accept = true;
+
                         } else {
-                            delete $scope.base64Images[index];
+                            delete $sessionStorage.base64Images[index];
+                            $scope.images[index].accept = false;
                             accept.toggleClass('active');
                         }
+
+                        $rootScope.$broadcast('accept2', {
+                            index: index,
+                            accept:  $scope.images[index].accept
+                        });
                     };
 
-                    $scope.accept2 = function($event, index) {
+                    $scope.acceptDblClick = function($event, index) {
                         var event = $event.currentTarget,
                             accept = angular.element(event),
                             complaint = accept.next();
@@ -180,7 +196,16 @@ define(["./module"], function (module) {
                             complaint.toggleClass('active');
                             accept.toggleClass('active');
 
-                            delete $scope.complaints[index];
+                            $scope.images[index].complaint = false;
+                            $scope.images[index].accept = true;
+
+                            $rootScope.$broadcast('acceptDblClick2', {
+                                index: index,
+                                complaint:  $scope.images[index].complaint,
+                                accept:  $scope.images[index].accept
+                            });
+
+                            delete $sessionStorage.complaints[index];
                         }
                     };
 
@@ -189,14 +214,8 @@ define(["./module"], function (module) {
                             complaint = angular.element(event),
                             accept = complaint.parent().children().eq(0);
 
-
-                        var clear = function() {
-                            $scope.sendData.complaintText = '';
-                            $scope.disabled = true;
-                        };
-
                         $scope.currentImg = $scope.images[index].thumbUrl;
-                        $scope.complaintText = angular.isObject($scope.complaints[index]) ? $scope.complaints[index].complaintText : '';
+                        $scope.complaintText = angular.isObject($sessionStorage.complaints[index]) ? $sessionStorage.complaints[index].complaintText : '';
 
                         var currentModal = $uibModal.open({
                             templateUrl: 'templates/modal-complaint.html',
@@ -207,18 +226,25 @@ define(["./module"], function (module) {
 
                         $scope.save = function(complaintText) {
                             if (!complaint.hasClass('active')) {
-                               complaint.toggleClass('active');
+                                complaint.toggleClass('active');
+                                $scope.images[index].complaint = true;
                             }
 
                             if (accept.hasClass('active')) {
                                 accept.toggleClass('active');
+                                $scope.images[index].complaint = false;
                             }
+
+                            $rootScope.$broadcast('complaint2', {
+                                index: index,
+                                complaint:  $scope.images[index].complaint
+                            });
 
                             var nextIndex = index + 1;
 
-                            $scope.complaints[index] = {};
-                            $scope.complaints[index].complaintText = complaintText;
-                            $scope.complaints[index].element = 'IMAGE' + nextIndex;
+                            $sessionStorage.complaints[index] = {};
+                            $sessionStorage.complaints[index].complaintText = complaintText;
+                            $sessionStorage.complaints[index].element = 'IMAGE' + nextIndex;
 
 
                             currentModal.dismiss();
@@ -234,11 +260,11 @@ define(["./module"], function (module) {
                     };
 
                     $scope.storeEdited = function () {
-                        $scope.sendData.base64Images = $scope.base64Images.filter(function(x) {
+                        $scope.sendData.base64Images = $sessionStorage.base64Images.filter(function(x) {
                            return x !== undefined &&  x !== null;
                         });
 
-                        $scope.sendData.complaints = $scope.complaints.filter(function(x) {
+                        $scope.sendData.complaints = $sessionStorage.complaints.filter(function(x) {
                             return x !== undefined &&  x !== null;
                         });
 
