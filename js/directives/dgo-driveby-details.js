@@ -48,6 +48,15 @@ define(["./module"], function (module) {
                         $scope.reset();
 
                         $scope.images = args.data.base64Images;
+                        $scope.videoUrl = 'data:video/mp4;base64,' + args.data.base64Video;
+
+                        $scope.video = [
+                            {
+                                'type': 'video',
+                                'url': $scope.videoUrl,
+                                'thumbUrl': 'https://i.ytimg.com/vi/N7TkK2joi4I/1.jpg'
+                            }
+                        ];
 
                         $scope.titlesImage = [
                              "Objektübersicht",
@@ -150,10 +159,7 @@ define(["./module"], function (module) {
                         //$listenerService.triggerChange("drivebyDetails", "dgoDrivebys", $scope.sendData.location);
                     };
 
-                    // Fotos
-                    $scope.openLightboxModal = function (index) {
-                        Lightbox.openModal($scope.images, index);
-                    };
+                    $scope.Lightbox = Lightbox;
 
                     $scope.accept = function($event, index) {
                         var event = $event.currentTarget,
