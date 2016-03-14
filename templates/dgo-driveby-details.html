@@ -78,7 +78,7 @@
 
             <div class="foto-container">
                 <div ng-repeat="videoItem in video" class="fotos" >
-                    <img ng-src="{{videoItem.thumbUrl}}" ng-click="Lightbox.openModal(video, $index)" class="img-thumbnail">
+                    <img ng-src="{{videoItem.thumbUrl}}" ng-click="openTest($index)" class="img-thumbnail">
                     <div class="nav-list">
                         <a class="accept" ng-class="image.accept ? 'active' : ''" ng-click="accept($event, $index)" ng-dblclick="acceptDblClick($event, $index)"></a>
                         <a class="complaint" ng-class="image.complaint ? 'active' : ''" ng-click="complaint($event, $index)"></a>

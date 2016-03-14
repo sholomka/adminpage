@@ -1,7 +1,7 @@
 define(["./module"], function (module) {
     "use strict";
-    module.directive("dgoDrivebyDetails", ["$urlService", "$constantsService", "$filter", "$restService", "$newsService", "$drivebysService", "$listenerService", "$mapService", "$sucheService", "$uibModal", "$rootScope",
-        function ($urlService, $constantsService, $filter, $restService, $newsService, $drivebysService, $listenerService, $mapService, $sucheService, $uibModal, $rootScope) {
+    module.directive("dgoDrivebyDetails", ["$urlService", "$constantsService", "$filter", "$restService", "$newsService", "$drivebysService", "$listenerService", "$mapService", "$sucheService", "$uibModal", "$rootScope", "$sce",
+        function ($urlService, $constantsService, $filter, $restService, $newsService, $drivebysService, $listenerService, $mapService, $sucheService, $uibModal, $rootScope, $sce) {
             return {
                 restrict: "E",
                 replace: true,
@@ -14,6 +14,11 @@ define(["./module"], function (module) {
                             return ((x < y) ? -1 : ((x > y) ? 1 : 0));
                         });
                     };
+
+
+
+
+
 
                     $scope.$on('accept', function (event, args) {
                         $scope.images[args.index].accept = args.accept;
@@ -48,15 +53,43 @@ define(["./module"], function (module) {
                         $scope.reset();
 
                         $scope.images = args.data.base64Images;
-                        $scope.videoUrl = 'data:video/mp4;base64,' + args.data.base64Video;
+                        //$scope.videoUrl = 'data:video/mp4;base64,' + args.data.base64Video;
+                        $scope.videoUrl = "data:video/mp4;base64," + args.data.base64Video;
+
+                        console.log($scope.videoUrl);
+
+
+                        $scope.config = {
+                            sources: [
+                                {src: $sce.trustAsResourceUrl($scope.videoUrl), type: "video/mp4"},
+                                {src: $sce.trustAsResourceUrl($scope.videoUrl), type: "video/webm"},
+                                {src: $sce.trustAsResourceUrl($scope.videoUrl), type: "video/ogg"}
+                               /* {src: $sce.trustAsResourceUrl("http://static.videogular.com/assets/videos/videogular.webm"), type: "video/webm"},
+                                {src: $sce.trustAsResourceUrl("http://static.videogular.com/assets/videos/videogular.ogg"), type: "video/ogg"}*/
+                            ],
+                            tracks: [
+                                {
+                                    src: "http://www.videogular.com/assets/subs/pale-blue-dot.vtt",
+                                    kind: "subtitles",
+                                    srclang: "en",
+                                    label: "English",
+                                    default: ""
+                                }
+                            ],
+                            theme: "bower_components/videogular-themes-default/videogular.css",
+                            plugins: {
+                                poster: "http://www.videogular.com/assets/images/videogular.png"
+                            }
+                        };
 
                         $scope.video = [
                             {
                                 'type': 'video',
-                                'url': $scope.videoUrl,
+                                'config': $scope.config,
                                 'thumbUrl': 'https://i.ytimg.com/vi/N7TkK2joi4I/1.jpg'
                             }
                         ];
+
 
                         $scope.titlesImage = [
                              "Objektübersicht",
@@ -160,6 +193,17 @@ define(["./module"], function (module) {
                     };
 
                     $scope.Lightbox = Lightbox;
+
+
+
+                    $scope.openTest = function(index) {
+                        Lightbox.openModal($scope.video, index);
+
+
+                        console.log(Lightbox);
+                    };
+
+
 
                     $scope.accept = function($event, index) {
                         var event = $event.currentTarget,

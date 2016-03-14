@@ -11,7 +11,8 @@ require.config({
 		"locale-de": 			"../lib/angular/angular-locale_de-de",
 		"ngStorage":			"../lib/ngstorage/ngStorage.min",
 		"duScroll":				"../lib/angular-scroll/angular-scroll.min",
-		"bootstrapLightbox": "../lib/angular-bootstrap-lightbox/angular-bootstrap-lightbox.min"
+		"bootstrapLightbox": "../lib/angular-bootstrap-lightbox/angular-bootstrap-lightbox.min",
+		"videogular": "../lib/videogular/videogular",
 		//"googlemaps-marker": 	"../lib/google-maps-utility/markerwithlabel.min"
 	},
 	map: {
@@ -48,6 +49,9 @@ require.config({
 			deps: ["angular"]
 		},
 		"duScroll": {
+			deps: ["angular"]
+		},
+		"videogular": {
 			deps: ["angular"]
 		}
 		/*"googlemaps-marker": {

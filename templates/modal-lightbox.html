@@ -24,10 +24,17 @@
              class="embed-responsive embed-responsive-16by9">
             <!-- video file embedded directly -->
 
-            <video
-                   lightbox-src="{{Lightbox.imageUrl}}"
-                   controls>
-            </video>
+            <div class="videogular-container">
+                <videogular>
+                    <vg-media vg-src="Lightbox.image.config.sources"
+                              vg-type="video"
+                              vg-native-controls="true">
+                    </vg-media>
+                </videogular>
+            </div>
+
+        <!--    <video lightbox-src="{{Lightbox.imageUrl}}" controls>
+            </video>-->
 
             <!--<video ng-if="!Lightbox.isSharedVideo(Lightbox.image)"
                    lightbox-src="{{Lightbox.imageUrl}}"
