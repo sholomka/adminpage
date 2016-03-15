@@ -1558,18 +1558,18 @@ span.dropdown  {
     width: 570px;
 }
 
-.fotos  {
+.fotos, .video  {
     cursor: pointer;
     float: left;
     text-align: center;
 }
 
-.fotos span {
+.fotos span, .video span {
     display: block;
     font-size: 10px;
 }
 
-.fotos img {
+.fotos img, .video img {
     height: 104px;
     width: 170px;
 }

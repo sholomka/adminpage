@@ -15,11 +15,6 @@ define(["./module"], function (module) {
                         });
                     };
 
-
-
-
-
-
                     $scope.$on('accept', function (event, args) {
                         $scope.images[args.index].accept = args.accept;
                     });
@@ -47,17 +42,15 @@ define(["./module"], function (module) {
                         $scope.complaints = [];
 
                         $sessionStorage.base64Images = [];
+
                         $sessionStorage.complaints = [];
 
 
                         $scope.reset();
 
                         $scope.images = args.data.base64Images;
-                        //$scope.videoUrl = 'data:video/mp4;base64,' + args.data.base64Video;
                         $scope.videoUrl = "data:video/mp4;base64," + args.data.base64Video;
-
-                        console.log($scope.videoUrl);
-
+                        $scope.base64Video = args.data.base64Video;
 
                         $scope.config = {
                             sources: [
@@ -89,7 +82,6 @@ define(["./module"], function (module) {
                                 'thumbUrl': 'https://i.ytimg.com/vi/N7TkK2joi4I/1.jpg'
                             }
                         ];
-
 
                         $scope.titlesImage = [
                              "Objektübersicht",
@@ -194,18 +186,7 @@ define(["./module"], function (module) {
 
                     $scope.Lightbox = Lightbox;
 
-
-
-                    $scope.openTest = function(index) {
-                        Lightbox.openModal($scope.video, index);
-
-
-                        console.log(Lightbox);
-                    };
-
-
-
-                    $scope.accept = function($event, index) {
+                    $scope.accept = function($event, index, type) {
                         var event = $event.currentTarget,
                             accept = angular.element(event),
                             complaint = accept.next();
@@ -217,19 +198,29 @@ define(["./module"], function (module) {
                         var nextIndex = index + 1;
 
                         if (!accept.hasClass('active')) {
-                            accept.toggleClass('active');
-                            $scope.currentImg = $scope.images[index].thumbUrl.replace('data:image/png;base64,', '');
-                            $sessionStorage.base64Images[index] = {};
-                            $sessionStorage.base64Images[index].index = nextIndex;
-                            $sessionStorage.base64Images[index].base64 = $scope.currentImg;
-
-                            $scope.images[index].accept = true;
+                            if (type == 'video') {
+                                $sessionStorage.base64Video = $scope.base64Video;
+                                $scope.video[index].accept = true;
+                            } else {
+                                $scope.currentImg = $scope.images[index].thumbUrl.replace('data:image/png;base64,', '');
+                                $sessionStorage.base64Images[index] = {};
+                                $sessionStorage.base64Images[index].index = nextIndex;
+                                $sessionStorage.base64Images[index].base64 = $scope.currentImg;
+                                $scope.images[index].accept = true;
+                            }
 
                         } else {
-                            delete $sessionStorage.base64Images[index];
-                            $scope.images[index].accept = false;
-                            accept.toggleClass('active');
+                            if (type == 'video') {
+                                delete $sessionStorage.base64Video;
+                                $scope.video[index].accept = false;
+                            } else {
+                                delete $sessionStorage.base64Images[index];
+                                $scope.images[index].accept = false;
+                            }
                         }
+
+                        console.log($sessionStorage.base64Video);
+
 
                         $rootScope.$broadcast('accept2', {
                             index: index,
@@ -237,35 +228,66 @@ define(["./module"], function (module) {
                         });
                     };
 
-                    $scope.acceptDblClick = function($event, index) {
+                    $scope.acceptDblClick = function($event, index, type) {
                         var event = $event.currentTarget,
                             accept = angular.element(event),
                             complaint = accept.next();
 
                         if (complaint.hasClass('active')) {
-                            complaint.toggleClass('active');
-                            accept.toggleClass('active');
 
-                            $scope.images[index].complaint = false;
-                            $scope.images[index].accept = true;
 
-                            $rootScope.$broadcast('acceptDblClick2', {
-                                index: index,
-                                complaint:  $scope.images[index].complaint,
-                                accept:  $scope.images[index].accept
-                            });
+                            if (type == 'video') {
+                                //complaint.toggleClass('active');
+                                //accept.toggleClass('active');
 
-                            delete $sessionStorage.complaints[index];
+                                $scope.video[index].complaint = false;
+                                $scope.video[index].accept = true;
+
+                               /* $rootScope.$broadcast('acceptDblClick2', {
+                                    index: index,
+                                    complaint:  $scope.images[index].complaint,
+                                    accept:  $scope.images[index].accept
+                                });*/
+
+                                delete $sessionStorage.videoComplaints;
+                            } else {
+                                //complaint.toggleClass('active');
+                                //accept.toggleClass('active');
+
+                                $scope.images[index].complaint = false;
+                                $scope.images[index].accept = true;
+
+                                $rootScope.$broadcast('acceptDblClick2', {
+                                    index: index,
+                                    complaint:  $scope.images[index].complaint,
+                                    accept:  $scope.images[index].accept
+                                });
+
+                                delete $sessionStorage.complaints[index];
+                            }
+
+
                         }
                     };
 
-                    $scope.complaint = function($event, index) {
+                    $scope.complaint = function($event, index, type) {
+                        $scope.check = function(complaintText) {
+                            $scope.disabled = complaintText == '';
+                        };
+
                         var event = $event.currentTarget,
                             complaint = angular.element(event),
                             accept = complaint.parent().children().eq(0);
 
                         $scope.currentImg = $scope.images[index].thumbUrl;
-                        $scope.complaintText = angular.isObject($sessionStorage.complaints[index]) ? $sessionStorage.complaints[index].complaintText : '';
+
+                        if (type == 'video') {
+                            $scope.complaintText = angular.isObject($sessionStorage.videoComplaints) ? $sessionStorage.videoComplaints.complaintText : '';
+                        } else {
+                            $scope.complaintText = angular.isObject($sessionStorage.complaints[index]) ? $sessionStorage.complaints[index].complaintText : '';
+                        }
+
+                        $scope.check($scope.complaintText);
 
                         var currentModal = $uibModal.open({
                             templateUrl: 'templates/modal-complaint.html',
@@ -275,14 +297,27 @@ define(["./module"], function (module) {
                         });
 
                         $scope.save = function(complaintText) {
-                            if (!complaint.hasClass('active')) {
-                                complaint.toggleClass('active');
-                                $scope.images[index].complaint = true;
-                            }
+                            if (type == 'video') {
 
-                            if (accept.hasClass('active')) {
-                                accept.toggleClass('active');
-                                $scope.images[index].complaint = false;
+                                console.log($scope.video);
+
+                                if (!$scope.video[index].complaint) {
+                                    $scope.video[index].complaint = true;
+                                }
+
+                                if ($scope.video[index].accept) {
+                                    $scope.video[index].complaint = true;
+                                    $scope.video[index].accept = false;
+                                }
+                            } else {
+                                if (!$scope.images[index].complaint) {
+                                    $scope.images[index].complaint = true;
+                                }
+
+                                if ($scope.images[index].accept) {
+                                    $scope.images[index].complaint = true;
+                                    $scope.images[index].accept = false;
+                                }
                             }
 
                             $rootScope.$broadcast('complaint2', {
@@ -292,10 +327,18 @@ define(["./module"], function (module) {
 
                             var nextIndex = index + 1;
 
-                            $sessionStorage.complaints[index] = {};
-                            $sessionStorage.complaints[index].complaintText = complaintText;
-                            $sessionStorage.complaints[index].element = 'IMAGE' + nextIndex;
+                            if (type == 'video') {
+                                $sessionStorage.videoComplaints = {};
+                                $sessionStorage.videoComplaints.complaintText = complaintText;
+                                $sessionStorage.videoComplaints.element = 'VIDEO';
+                            } else {
+                                $sessionStorage.complaints[index] = {};
+                                $sessionStorage.complaints[index].complaintText = complaintText;
+                                $sessionStorage.complaints[index].element = 'IMAGE' + nextIndex;
+                            }
 
+                            console.log($sessionStorage.videoComplaints);
+                            console.log($sessionStorage.complaints);
 
                             currentModal.dismiss();
                         };
@@ -304,9 +347,7 @@ define(["./module"], function (module) {
                             currentModal.dismiss();
                         };
 
-                        $scope.check = function(complaintText) {
-                            $scope.disabled = complaintText == '';
-                        }
+
                     };
 
                     $scope.storeEdited = function () {
@@ -318,7 +359,14 @@ define(["./module"], function (module) {
                             return x !== undefined &&  x !== null;
                         });
 
+                        $scope.sendData.base64Video = $sessionStorage.base64Video;
+
+                        if(angular.isObject($sessionStorage.videoComplaints)) {
+                            $scope.sendData.complaints.push($sessionStorage.videoComplaints)
+                        }
+
                         console.log($scope.sendData.complaints);
+                        console.log($scope.sendData);
 
                         $drivebysService.storeEdited($scope.sendData).then(function (data) {
                         }, function (error) {});

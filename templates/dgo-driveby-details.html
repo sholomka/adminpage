@@ -77,11 +77,11 @@
             <h4 style="text-decoration: underline; font-size: 11px; font-weight: bold;">Video</h4>
 
             <div class="foto-container">
-                <div ng-repeat="videoItem in video" class="fotos" >
-                    <img ng-src="{{videoItem.thumbUrl}}" ng-click="openTest($index)" class="img-thumbnail">
+                <div ng-repeat="videoItem in video" class="video" >
+                    <img ng-src="{{videoItem.thumbUrl}}" ng-click="Lightbox.openModal(video, $index)" class="img-thumbnail">
                     <div class="nav-list">
-                        <a class="accept" ng-class="image.accept ? 'active' : ''" ng-click="accept($event, $index)" ng-dblclick="acceptDblClick($event, $index)"></a>
-                        <a class="complaint" ng-class="image.complaint ? 'active' : ''" ng-click="complaint($event, $index)"></a>
+                        <a class="accept" ng-class="videoItem.accept ? 'active' : ''" ng-click="accept($event, $index, 'video')" ng-dblclick="acceptDblClick($event, $index, 'video')"></a>
+                        <a class="complaint" ng-class="videoItem.complaint ? 'active' : ''" ng-click="complaint($event, $index, 'video')"></a>
                     </div>
                 </div>
             </div>
