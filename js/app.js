@@ -158,7 +158,7 @@ define(["angular", "angular-sanitize",  "angular-animate", "angular-touch", "loc
         };
 
     });
-    
+
     app.config(["LightboxProvider", function(LightboxProvider) {
         // set a custom template
         LightboxProvider.templateUrl = 'templates/modal-lightbox.html';
