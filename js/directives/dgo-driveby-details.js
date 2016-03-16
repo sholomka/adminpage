@@ -16,16 +16,30 @@ define(["./module"], function (module) {
                     };
 
                     $scope.$on('accept', function (event, args) {
-                        $scope.images[args.index].accept = args.accept;
+                        if (args.isVideo) {
+                            $scope.video[args.index].accept = args.accept;
+                        } else {
+                            $scope.images[args.index].accept = args.accept;
+                        }
                     });
 
                     $scope.$on('acceptDblClick', function (event, args) {
-                        $scope.images[args.index].accept = args.accept;
-                        $scope.images[args.index].complaint = args.complaint;
+                        if (args.isVideo) {
+                            $scope.video[args.index].accept = args.accept;
+                            $scope.video[args.index].complaint = args.complaint;
+
+                        } else {
+                            $scope.images[args.index].accept = args.accept;
+                            $scope.images[args.index].complaint = args.complaint;
+                        }
                     });
 
                     $scope.$on('complaint', function (event, args) {
-                        $scope.images[args.index].complaint = args.complaint;
+                        if (args.isVideo) {
+                            $scope.video[args.index].complaint = args.complaint;
+                        } else {
+                            $scope.images[args.index].complaint = args.complaint;
+                        }
                     });
 
                     $scope.$on('drivebyDetails', function (event, args) {
@@ -38,13 +52,9 @@ define(["./module"], function (module) {
                         $scope.sendData.userName = args.data.userName;
                         $scope.sendData.dateCreated = args.data.dateCreated;
 
-                        $scope.base64Images = [];
-                        $scope.complaints = [];
-
                         $sessionStorage.base64Images = [];
-
+                        $sessionStorage.videoComplaints = {};
                         $sessionStorage.complaints = [];
-
 
                         $scope.reset();
 
@@ -79,7 +89,8 @@ define(["./module"], function (module) {
                             {
                                 'type': 'video',
                                 'config': $scope.config,
-                                'thumbUrl': 'https://i.ytimg.com/vi/N7TkK2joi4I/1.jpg'
+                                'thumbUrl': 'https://i.ytimg.com/vi/N7TkK2joi4I/1.jpg',
+                                'base64Video': $scope.base64Video
                             }
                         ];
 
@@ -219,9 +230,6 @@ define(["./module"], function (module) {
                             }
                         }
 
-                        console.log($sessionStorage.base64Video);
-
-
                         $rootScope.$broadcast('accept2', {
                             index: index,
                             accept:  $scope.images[index].accept
@@ -231,42 +239,28 @@ define(["./module"], function (module) {
                     $scope.acceptDblClick = function($event, index, type) {
                         var event = $event.currentTarget,
                             accept = angular.element(event),
-                            complaint = accept.next();
+                            complaint = accept.next(),
+                            nextIndex = index + 1;
 
                         if (complaint.hasClass('active')) {
-
-
                             if (type == 'video') {
-                                //complaint.toggleClass('active');
-                                //accept.toggleClass('active');
-
+                                $sessionStorage.base64Video = $scope.base64Video;
                                 $scope.video[index].complaint = false;
                                 $scope.video[index].accept = true;
 
-                               /* $rootScope.$broadcast('acceptDblClick2', {
-                                    index: index,
-                                    complaint:  $scope.images[index].complaint,
-                                    accept:  $scope.images[index].accept
-                                });*/
-
                                 delete $sessionStorage.videoComplaints;
                             } else {
-                                //complaint.toggleClass('active');
-                                //accept.toggleClass('active');
+                                $scope.currentImg = $scope.images[index].thumbUrl.replace('data:image/png;base64,', '');
+
+                                $sessionStorage.base64Images[index] = {};
+                                $sessionStorage.base64Images[index].index = nextIndex;
+                                $sessionStorage.base64Images[index].base64 = $scope.currentImg;
 
                                 $scope.images[index].complaint = false;
                                 $scope.images[index].accept = true;
 
-                                $rootScope.$broadcast('acceptDblClick2', {
-                                    index: index,
-                                    complaint:  $scope.images[index].complaint,
-                                    accept:  $scope.images[index].accept
-                                });
-
                                 delete $sessionStorage.complaints[index];
                             }
-
-
                         }
                     };
 
@@ -275,14 +269,10 @@ define(["./module"], function (module) {
                             $scope.disabled = complaintText == '';
                         };
 
-                        var event = $event.currentTarget,
-                            complaint = angular.element(event),
-                            accept = complaint.parent().children().eq(0);
-
                         $scope.currentImg = $scope.images[index].thumbUrl;
 
                         if (type == 'video') {
-                            $scope.complaintText = angular.isObject($sessionStorage.videoComplaints) ? $sessionStorage.videoComplaints.complaintText : '';
+                            $scope.complaintText = angular.isObject($sessionStorage.videoComplaints) && !angular.equals({}, $sessionStorage.videoComplaints) ? $sessionStorage.videoComplaints.complaintText : '';
                         } else {
                             $scope.complaintText = angular.isObject($sessionStorage.complaints[index]) ? $sessionStorage.complaints[index].complaintText : '';
                         }
@@ -298,9 +288,6 @@ define(["./module"], function (module) {
 
                         $scope.save = function(complaintText) {
                             if (type == 'video') {
-
-                                console.log($scope.video);
-
                                 if (!$scope.video[index].complaint) {
                                     $scope.video[index].complaint = true;
                                 }
@@ -331,14 +318,15 @@ define(["./module"], function (module) {
                                 $sessionStorage.videoComplaints = {};
                                 $sessionStorage.videoComplaints.complaintText = complaintText;
                                 $sessionStorage.videoComplaints.element = 'VIDEO';
+
+                                delete  $sessionStorage.base64Video;
                             } else {
                                 $sessionStorage.complaints[index] = {};
                                 $sessionStorage.complaints[index].complaintText = complaintText;
                                 $sessionStorage.complaints[index].element = 'IMAGE' + nextIndex;
-                            }
 
-                            console.log($sessionStorage.videoComplaints);
-                            console.log($sessionStorage.complaints);
+                                delete $sessionStorage.base64Images[index];
+                            }
 
                             currentModal.dismiss();
                         };
@@ -346,8 +334,6 @@ define(["./module"], function (module) {
                         $scope.cancel = function() {
                             currentModal.dismiss();
                         };
-
-
                     };
 
                     $scope.storeEdited = function () {
@@ -365,8 +351,9 @@ define(["./module"], function (module) {
                             $scope.sendData.complaints.push($sessionStorage.videoComplaints)
                         }
 
-                        console.log($scope.sendData.complaints);
                         console.log($scope.sendData);
+                        //console.log($scope.sendData.base64Video);
+                        //console.log($scope.sendData);
 
                         $drivebysService.storeEdited($scope.sendData).then(function (data) {
                         }, function (error) {});

@@ -24,7 +24,7 @@ define(["angular", "angular-sanitize",  "angular-animate", "angular-touch", "loc
             $scope.Lightbox.image.complaint = args.complaint;
         });
 
-        $scope.accept = function($event) {
+        $scope.accept = function($event, isVideo) {
             var event = $event.currentTarget,
                 accept = angular.element(event),
                 complaint = accept.next(),
@@ -35,43 +35,48 @@ define(["angular", "angular-sanitize",  "angular-animate", "angular-touch", "loc
             }
 
             if (!accept.hasClass('active')) {
-                accept.toggleClass('active');
                 $scope.Lightbox.image.accept = true;
 
-                $sessionStorage.base64Images[index] = {};
-                $sessionStorage.base64Images[index].index = $scope.Lightbox.image.index;
-                $sessionStorage.base64Images[index].base64 = $scope.Lightbox.image.base64;
+                if (isVideo) {
+                    $sessionStorage.base64Video = $scope.Lightbox.image.base64Video;
+                } else {
+                    $sessionStorage.base64Images[index] = {};
+                    $sessionStorage.base64Images[index].index = $scope.Lightbox.image.index;
+                    $sessionStorage.base64Images[index].base64 = $scope.Lightbox.image.base64;
+                }
             } else {
-                delete $sessionStorage.base64Images[index];
                 $scope.Lightbox.image.accept = false;
-                accept.toggleClass('active');
+
+                if (isVideo) {
+                    delete $sessionStorage.base64Video;
+                }  else {
+                    delete $sessionStorage.base64Images[index];
+                }
             }
 
             $rootScope.$broadcast('accept', {
                 index: index,
-                accept:  $scope.Lightbox.image.accept
+                accept:  $scope.Lightbox.image.accept,
+                isVideo: isVideo
             });
+
         };
 
-        $scope.complaint = function($event) {
-            var event = $event.currentTarget,
-                complaint = angular.element(event),
-                accept = complaint.parent().children().eq(0),
-                index = $scope.Lightbox.index;
-
-            var clear = function() {
-                $scope.sendData.complaintText = '';
-                $scope.disabled = true;
+        $scope.complaint = function($event, isVideo) {
+            $scope.check = function(complaintText) {
+                $scope.disabled = complaintText == '';
             };
 
-
-            console.log($sessionStorage.complaints);
-
-
-
-
+            var index = $scope.Lightbox.index;
             $scope.currentImg =   $scope.Lightbox.image.thumbUrl;
-            $scope.complaintText = angular.isObject($sessionStorage.complaints[index]) ? $sessionStorage.complaints[index].complaintText : '';
+
+            if (isVideo) {
+                $scope.complaintText = angular.isObject($sessionStorage.videoComplaints) && !angular.equals({}, $sessionStorage.videoComplaints) ? $sessionStorage.videoComplaints.complaintText : '';
+            } else {
+                $scope.complaintText = angular.isObject($sessionStorage.complaints[index]) ? $sessionStorage.complaints[index].complaintText : '';
+            }
+
+            $scope.check($scope.complaintText);
 
             var currentModal = $uibModal.open({
                 templateUrl: 'templates/modal-complaint.html',
@@ -81,39 +86,34 @@ define(["angular", "angular-sanitize",  "angular-animate", "angular-touch", "loc
             });
 
             $scope.save = function(complaintText) {
-                if (!complaint.hasClass('active')) {
-
-
-                    console.log(complaint);
-
-                    complaint.toggleClass('active');
+                if (!$scope.Lightbox.image.complaint) {
                     $scope.Lightbox.image.complaint = true;
-
-                    $scope.Lightbox.image.accept = false;
-
                 }
 
-                if (accept.hasClass('active')) {
-                    accept.toggleClass('active');
-
-                    $scope.Lightbox.image.complaint = false;
-
+                if ($scope.Lightbox.image.accept) {
+                    $scope.Lightbox.image.complaint = true;
                     $scope.Lightbox.image.accept = false;
-
-                    console.log(accept);
                 }
 
+                if (isVideo) {
+                    $sessionStorage.videoComplaints = {};
+                    $sessionStorage.videoComplaints.complaintText = complaintText;
+                    $sessionStorage.videoComplaints.element = 'VIDEO';
 
-                $sessionStorage.complaints[index] = {};
-                $sessionStorage.complaints[index].complaintText = complaintText;
-                $sessionStorage.complaints[index].element = 'IMAGE' + $scope.Lightbox.image.index;
+                    delete  $sessionStorage.base64Video;
+                } else {
+                    $sessionStorage.complaints[index] = {};
+                    $sessionStorage.complaints[index].complaintText = complaintText;
+                    $sessionStorage.complaints[index].element = 'IMAGE' + $scope.Lightbox.image.index;
 
+                    delete $sessionStorage.base64Images[index];
+                }
 
                 $rootScope.$broadcast('complaint', {
                     index: index,
-                    complaint:  $scope.Lightbox.image.complaint
+                    complaint:  $scope.Lightbox.image.complaint,
+                    isVideo: isVideo
                 });
-
 
                 currentModal.dismiss();
             };
@@ -127,15 +127,21 @@ define(["angular", "angular-sanitize",  "angular-animate", "angular-touch", "loc
             }
         };
 
-        $scope.acceptDblClick = function($event) {
-            var event = $event.currentTarget,
-                accept = angular.element(event),
-                complaint = accept.next(),
-                index = $scope.Lightbox.index;
+        $scope.acceptDblClick = function($event, isVideo) {
+            var index = $scope.Lightbox.index;
 
-            if (complaint.hasClass('active')) {
-                complaint.toggleClass('active');
-                accept.toggleClass('active');
+            if ($scope.Lightbox.image.complaint) {
+                if (isVideo) {
+                    delete $sessionStorage.videoComplaints;
+                    $sessionStorage.base64Video = $scope.Lightbox.image.base64Video;
+                } else {
+                    delete $sessionStorage.complaints[index];
+
+                    $sessionStorage.base64Images[index] = {};
+                    $sessionStorage.base64Images[index].index = $scope.Lightbox.image.index;
+                    $sessionStorage.base64Images[index].base64 = $scope.Lightbox.image.base64;
+                }
+
 
                 $scope.Lightbox.image.complaint = false;
                 $scope.Lightbox.image.accept = true;
@@ -143,23 +149,16 @@ define(["angular", "angular-sanitize",  "angular-animate", "angular-touch", "loc
                 $rootScope.$broadcast('acceptDblClick', {
                     index: index,
                     complaint:  $scope.Lightbox.image.complaint,
-                    accept:  $scope.Lightbox.image.accept
+                    accept:  $scope.Lightbox.image.accept,
+                    isVideo: isVideo
                 });
 
-                delete $sessionStorage.complaints[index];
                 $scope.disabled = true;
-
-                console.log($sessionStorage.complaints);
-
             }
-
-
-
         };
 
     });
-
-
+    
     app.config(["LightboxProvider", function(LightboxProvider) {
         // set a custom template
         LightboxProvider.templateUrl = 'templates/modal-lightbox.html';
@@ -189,8 +188,6 @@ define(["angular", "angular-sanitize",  "angular-animate", "angular-touch", "loc
             };
         };
     }]);
-
-
 
     return app;
 });
