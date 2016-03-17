@@ -86,19 +86,16 @@
                 </div>
             </div>
 
-
             <h4 style="text-decoration: underline; font-size: 11px; font-weight: bold;">Daten</h4>
 
-            <p><span>Änderungen entdeckt</span></p>
-
-            <div class="table-responsive">
+            <div class="table-responsive daten-container">
                 <table class="table table-bordered">
                     <tr>
                         <td>
                             Zustand
                         </td>
                         <td>
-                            Neubau
+                            {{sendData.projectType}}
                         </td>
                     </tr>
                     <tr>
@@ -106,7 +103,7 @@
                             Objekttyp
                         </td>
                         <td>
-                            Mehrfamilienhaus
+                            {{sendData.objectType}}
                         </td>
                     </tr>
                     <tr>
@@ -114,7 +111,7 @@
                             Denkmalschutz
                         </td>
                         <td>
-                            Nein
+                            {{sendData.protectedBuilding}}
                         </td>
                     </tr>
                     <tr>
@@ -122,7 +119,7 @@
                             Bautenstand
                         </td>
                         <td>
-                            Baubeginn
+                            {{sendData.buildingProgress}}
                         </td>
                     </tr>
                     <tr>
@@ -130,7 +127,7 @@
                             Objektstandard nach Fertigstelllung
                         </td>
                         <td>
-                            Normal
+                            {{sendData.objectStandard}}
                         </td>
                     </tr>
                     <tr>
@@ -138,7 +135,7 @@
                             umgebende Bebauung
                         </td>
                         <td>
-                            Normal
+                            {{sendData.objectStandardEnv}}
                         </td>
                     </tr>
                     <tr>
@@ -146,7 +143,7 @@
                             Leerstand
                         </td>
                         <td>
-                            kein erkennbarer Leerstand
+                            {{sendData.vacancyEnv}}
                         </td>
                     </tr>
                     <tr>
@@ -154,7 +151,7 @@
                             Verkehrsanbindung ÖPNV
                         </td>
                         <td>
-                            gut
+                            {{sendData.publicTransport}}
                         </td>
                     </tr>
                     <tr>
@@ -162,23 +159,24 @@
                             Nähe zu Versorgungseinrichtung
                         </td>
                         <td>
-                            gut
+                            {{sendData.nearbySupply}}
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            Nähe zu Versorgungseinrichtung
+                            Nähe zu Erholungsmöglichkeiten
                         </td>
                         <td>
-                            gut
+                            {{sendData.nearbyRecreation}}
                         </td>
                     </tr>
                 </table>
 
 
                 <div class="nav-list">
-                    <a class="accept" ng-class="videoItem.accept ? 'active' : ''" ng-click="accept($event, $index, 'video')" ng-dblclick="acceptDblClick($event, $index, 'video')"></a>
-                    <a class="complaint" ng-class="videoItem.complaint ? 'active' : ''" ng-click="complaint($event, $index, 'video')"></a>
+                    <a class="accept" ng-class="videoItem.accept ? 'active' : ''" ng-click="accept($event, $index, 'daten')" ng-dblclick="acceptDblClick($event, $index, 'daten')"></a>
+                    <a class="info" ng-class="videoItem.complaint ? 'active' : ''" ng-click="complaint($event, $index, 'daten')"></a>
+                    <a class="complaint" ng-class="videoItem.complaint ? 'active' : ''" ng-click="complaint($event, $index, 'daten')"></a>
                 </div>
 
             </div>

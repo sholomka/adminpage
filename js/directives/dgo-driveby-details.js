@@ -52,6 +52,43 @@ define(["./module"], function (module) {
                         $scope.sendData.userName = args.data.userName;
                         $scope.sendData.dateCreated = args.data.dateCreated;
 
+                        $scope.sendData.projectType = args.data.projectType;
+                        $scope.sendData.objectType = args.data.objectType;
+                        $scope.sendData.protectedBuilding = args.data.protectedBuilding;
+                        $scope.sendData.buildingProgress = args.data.buildingProgress;
+                        $scope.sendData.objectStandard = args.data.objectStandard;
+                        $scope.sendData.objectStandardEnv = args.data.objectStandardEnv;
+                        $scope.sendData.vacancyEnv = args.data.vacancyEnv;
+                        $scope.sendData.publicTransport = args.data.publicTransport;
+                        $scope.sendData.nearbySupply = args.data.nearbySupply;
+                        $scope.sendData.nearbyRecreation = args.data.nearbyRecreation;
+
+
+                        /* $scope.zustand
+                         $scope.objekttyp
+                         $scope.Denkmalschutz
+                         $scope.Bautenstand
+                         $scope.Objektstandard nach Fertigstelllung
+                         $scope.umgebende Bebauung
+                         $scope.Leerstand
+                         $scope.Verkehrsanbindung ÖPNV
+                         $scope.Nähe zu Versorgungseinrichtung
+                         $scope.Nähe zu Erholungsmöglichkeiten*/
+
+
+
+                       /* "projectType": "NEW_BUILDING"
+                        "objectType": "MULTI_FAMILY"
+                        "protectedBuilding": null
+                        "buildingProgress": "OBJECT_FINISHED"
+                        "objectStandard": "UPPER"
+                        "objectStandardEnv": "STANDARD"
+                        "vacancyEnv": "NONE"
+                        "publicTransport": "GOOD"
+                        "nearbySupply": "MEDIUM"
+                        "nearbyRecreation": "BAD"*/
+
+
                         $sessionStorage.base64Images = [];
                         $sessionStorage.videoComplaints = {};
                         $sessionStorage.complaints = [];
@@ -209,24 +246,42 @@ define(["./module"], function (module) {
                         var nextIndex = index + 1;
 
                         if (!accept.hasClass('active')) {
-                            if (type == 'video') {
-                                $sessionStorage.base64Video = $scope.base64Video;
-                                $scope.video[index].accept = true;
-                            } else {
-                                $scope.currentImg = $scope.images[index].thumbUrl.replace('data:image/png;base64,', '');
-                                $sessionStorage.base64Images[index] = {};
-                                $sessionStorage.base64Images[index].index = nextIndex;
-                                $sessionStorage.base64Images[index].base64 = $scope.currentImg;
-                                $scope.images[index].accept = true;
-                            }
+                            switch (type) {
+                                case 'video':
+                                    $sessionStorage.base64Video = $scope.base64Video;
+                                    $scope.video[index].accept = true;
+                                    break;
 
+                                case 'daten':
+
+
+
+
+
+                                    $sessionStorage.daten = $scope.daten;
+                                    break;
+
+                                default:
+                                    $scope.currentImg = $scope.images[index].thumbUrl.replace('data:image/png;base64,', '');
+                                    $sessionStorage.base64Images[index] = {};
+                                    $sessionStorage.base64Images[index].index = nextIndex;
+                                    $sessionStorage.base64Images[index].base64 = $scope.currentImg;
+                                    $scope.images[index].accept = true;
+                            }
                         } else {
-                            if (type == 'video') {
-                                delete $sessionStorage.base64Video;
-                                $scope.video[index].accept = false;
-                            } else {
-                                delete $sessionStorage.base64Images[index];
-                                $scope.images[index].accept = false;
+                            switch (type) {
+                                case 'video':
+                                    delete $sessionStorage.base64Video;
+                                    $scope.video[index].accept = false;
+                                    break;
+
+                                case 'daten':
+                                    delete $sessionStorage.daten;
+                                    break;
+
+                                default:
+                                    delete $sessionStorage.base64Images[index];
+                                    $scope.images[index].accept = false;
                             }
                         }
 
