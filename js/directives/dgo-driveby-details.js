@@ -44,6 +44,16 @@ define(["./module"], function (module) {
 
                     $scope.$on('drivebyDetails', function (event, args) {
                         $scope.sendData = {};
+
+
+                        $scope.sendData.base64Images = args.data.base64Images;
+
+
+
+                        console.log(args.data.base64Images);
+                        // console.log($scope.sendData.base64Images);
+
+
                         $scope.sendData.street = args.data.street;
                         $scope.sendData.plz = args.data.plz;
                         $scope.sendData.city = args.data.city;
@@ -51,7 +61,6 @@ define(["./module"], function (module) {
                         $scope.sendData.projectName = args.data.projectName;
                         $scope.sendData.userName = args.data.userName;
                         $scope.sendData.dateCreated = args.data.dateCreated;
-
                         $scope.sendData.projectType = args.data.projectType;
                         $scope.sendData.objectType = args.data.objectType;
                         $scope.sendData.protectedBuilding = args.data.protectedBuilding;
@@ -98,6 +107,9 @@ define(["./module"], function (module) {
                         $scope.images = args.data.base64Images;
                         $scope.videoUrl = "data:video/mp4;base64," + args.data.base64Video;
                         $scope.base64Video = args.data.base64Video;
+
+
+                        $scope.daten = {};
 
                         $scope.config = {
                             sources: [
@@ -253,19 +265,16 @@ define(["./module"], function (module) {
                                     break;
 
                                 case 'daten':
-
-
-
-
-
                                     $sessionStorage.daten = $scope.daten;
+                                    $scope.daten.accept = true;
+
                                     break;
 
                                 default:
-                                    $scope.currentImg = $scope.images[index].thumbUrl.replace('data:image/png;base64,', '');
-                                    $sessionStorage.base64Images[index] = {};
-                                    $sessionStorage.base64Images[index].index = nextIndex;
-                                    $sessionStorage.base64Images[index].base64 = $scope.currentImg;
+                                    // $scope.currentImg = $scope.images[index].thumbUrl.replace('data:image/png;base64,', '');
+                                    // $sessionStorage.base64Images[index] = {};
+                                    // $sessionStorage.base64Images[index].index = nextIndex;
+                                    // $sessionStorage.base64Images[index].base64 = $scope.currentImg;
                                     $scope.images[index].accept = true;
                             }
                         } else {
@@ -277,6 +286,7 @@ define(["./module"], function (module) {
 
                                 case 'daten':
                                     delete $sessionStorage.daten;
+                                    $scope.daten.accept = false;
                                     break;
 
                                 default:
@@ -284,6 +294,9 @@ define(["./module"], function (module) {
                                     $scope.images[index].accept = false;
                             }
                         }
+
+
+                        console.log($scope.daten.accept);
 
                         $rootScope.$broadcast('accept2', {
                             index: index,
@@ -392,9 +405,18 @@ define(["./module"], function (module) {
                     };
 
                     $scope.storeEdited = function () {
-                        $scope.sendData.base64Images = $sessionStorage.base64Images.filter(function(x) {
-                           return x !== undefined &&  x !== null;
-                        });
+
+
+
+                        // $scope.sendData.base64Images = $sessionStorage.base64Images.filter(function(x) {
+                        //    return x !== undefined &&  x !== null;
+                        // });
+
+
+
+
+                        console.log($scope.sendData.base64Images);
+
 
                         $scope.sendData.complaints = $sessionStorage.complaints.filter(function(x) {
                             return x !== undefined &&  x !== null;
@@ -406,7 +428,7 @@ define(["./module"], function (module) {
                             $scope.sendData.complaints.push($sessionStorage.videoComplaints)
                         }
 
-                        console.log($scope.sendData);
+
                         //console.log($scope.sendData.base64Video);
                         //console.log($scope.sendData);
 
