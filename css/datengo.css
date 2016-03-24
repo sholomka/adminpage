@@ -1160,10 +1160,8 @@ hr {
 	background-size: contain;
 	background-position: center;
 	background-repeat: no-repeat;
+    text-align: center;
 }
-
-
-
 
 .carousel .carousel-buttons {
 	height: 50px;
