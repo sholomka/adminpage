@@ -1161,6 +1161,10 @@ hr {
 	background-position: center;
 	background-repeat: no-repeat;
 }
+
+
+
+
 .carousel .carousel-buttons {
 	height: 50px;
 	white-space: nowrap;
@@ -1174,6 +1178,8 @@ hr {
 	background-position: center;
 	background-repeat: no-repeat;
 	border-radius: 0;
+    padding: 0;
+    border: 3px solid;
 }
 .carousel .carousel-buttons .btn.active {
 	opacity: 1;
@@ -1476,6 +1482,28 @@ span.dropdown  {
     width: 480px;
 }
 
+.modal-complaint.daten {
+    height: auto;
+    width: auto;
+    overflow: hidden;
+}
+
+.modal-info {
+    padding: 8px;
+    font-size: 11px;
+}
+
+.modal-info table, .modal-complaint.daten table {
+    margin: 10px 0 10px;
+}
+
+.modal-info .buttons {
+    text-align: center;
+}
+
+.modal-info .buttons .btn-primary {
+    color: #fff;
+}
 
 .modal-complaint h2, .modal-popup-info h2 {
     font-size: 13px;
@@ -1489,7 +1517,6 @@ span.dropdown  {
     font-weight: bold;
     margin-left: 36px;
 }
-
 
 .modal-complaint  input, .modal-complaint  label {
     margin: 0;
@@ -1509,8 +1536,10 @@ span.dropdown  {
     width: 220px;
 }
 
-
-
+.modal-complaint.daten .ax_text_area {
+    float: none;
+    width: 100%;
+}
 
 .modal-complaint .ax_text_area textarea{
     font-size: 10px;
@@ -1519,10 +1548,14 @@ span.dropdown  {
     width: 220px;
 }
 
+.modal-complaint.daten .ax_text_area textarea{
+    height: 100%;
+    width: 100%;
+}
+
 .modal-complaint .ax_checkbox ul {
     float: left;
     padding: 0;
-
 }
 
 .modal-complaint .ax_checkbox ul:first-child {
@@ -1538,6 +1571,11 @@ span.dropdown  {
     margin-top: 5px;
 }
 
+.modal-complaint.daten .email {
+    margin-top: 10px;
+    float: left;
+}
+
 .modal-complaint .email span, .modal-complaint .email input {
     font-size: 10px;
 }
@@ -1551,6 +1589,10 @@ span.dropdown  {
     float: right;
 }
 
+.modal-complaint.daten  .buttons {
+    float: right;
+    margin-top: 10px;
+}
 
 .foto-container {
     margin: 0 0 0 40px;
@@ -1663,5 +1705,20 @@ span.dropdown  {
 
 .daten-container .nav-list {
     text-align: center;
+}
+
+.carousel-button-container img {
+    width: 74px;
+    height: 44px;
+}
+
+.carousel .carousel-images .layer img {
+    cursor: pointer;
+    height: 100%;
+    /*width: 480px;*/
+    /*height: 200px;*/
+    /*background-size: contain;*/
+    /*background-position: center;*/
+    /*background-repeat: no-repeat;*/
 }
 

@@ -8,6 +8,47 @@ define(["./module"], function (module) {
                 scope: true,
                 templateUrl: "templates/dgo-driveby-details.html",
                 controller: function ($scope, $element, Lightbox, $sessionStorage) {
+                    $constantsService.getZustande().then(function(constants){
+                        $scope.zustand = constants;
+                    });
+
+                    $constantsService.getObjektTypen().then(function(constants){
+                        $scope.objekttyp = constants;
+                    });
+
+                    $constantsService.getStates().then(function(constants){
+                        $scope.denkmalschutz = constants;
+                    });
+
+                    $constantsService.getBautenstande().then(function(constants){
+                        $scope.bautenstand = constants;
+                    });
+
+                    $constantsService.getObjektStandard().then(function(constants){
+                        $scope.objektStandardType = constants;
+                    });
+
+                    $constantsService.getObjektStandardUmg().then(function(constants){
+                        $scope.umgebende = constants;
+                    });
+
+                    $constantsService.getLeerstandUmg().then(function(constants){
+                        $scope.leerstand = constants;
+                    });
+
+                    $constantsService.getVerkehr().then(function(constants){
+                        $scope.verkehrsanbindung = constants;
+                    });
+
+                    $constantsService.getVersorgung().then(function(constants){
+                        $scope.versorgungseinrichtung = constants;
+                    });
+
+                    $constantsService.getErholung().then(function(constants){
+                        $scope.erholungsmoglichkeiten = constants;
+                    });
+
+
                     $scope.sortByKey = function(array, key) {
                         return array.sort(function(a, b) {
                             var x = a[key]; var y = b[key];
@@ -53,45 +94,22 @@ define(["./module"], function (module) {
                         // $scope.sendData.projectName = args.data.projectName;
                         // $scope.sendData.userName = args.data.userName;
                         // $scope.sendData.dateCreated = args.data.dateCreated;
-                        // $scope.sendData.projectType = args.data.projectType;
-                        // $scope.sendData.objectType = args.data.objectType;
-                        // $scope.sendData.protectedBuilding = args.data.protectedBuilding;
-                        // $scope.sendData.buildingProgress = args.data.buildingProgress;
-                        // $scope.sendData.objectStandard = args.data.objectStandard;
-                        // $scope.sendData.objectStandardEnv = args.data.objectStandardEnv;
-                        // $scope.sendData.vacancyEnv = args.data.vacancyEnv;
-                        // $scope.sendData.publicTransport = args.data.publicTransport;
-                        // $scope.sendData.nearbySupply = args.data.nearbySupply;
-                        // $scope.sendData.nearbyRecreation = args.data.nearbyRecreation;
 
-
-                        /* $scope.zustand
-                         $scope.objekttyp
-                         $scope.Denkmalschutz
-                         $scope.Bautenstand
-                         $scope.Objektstandard nach Fertigstelllung
-                         $scope.umgebende Bebauung
-                         $scope.Leerstand
-                         $scope.Verkehrsanbindung ÖPNV
-                         $scope.Nähe zu Versorgungseinrichtung
-                         $scope.Nähe zu Erholungsmöglichkeiten*/
-
-
-
-                       /* "projectType": "NEW_BUILDING"
-                        "objectType": "MULTI_FAMILY"
-                        "protectedBuilding": null
-                        "buildingProgress": "OBJECT_FINISHED"
-                        "objectStandard": "UPPER"
-                        "objectStandardEnv": "STANDARD"
-                        "vacancyEnv": "NONE"
-                        "publicTransport": "GOOD"
-                        "nearbySupply": "MEDIUM"
-                        "nearbyRecreation": "BAD"*/
-
+                        $scope.infoData = {};
+                        $scope.infoData.projectType = args.data.projectType;
+                        $scope.infoData.objectType = args.data.objectType;
+                        $scope.infoData.protectedBuilding = args.data.protectedBuilding;
+                        $scope.infoData.buildingProgress = args.data.buildingProgress;
+                        $scope.infoData.objectStandard = args.data.objectStandard;
+                        $scope.infoData.objectStandardEnv = args.data.objectStandardEnv;
+                        $scope.infoData.vacancyEnv = args.data.vacancyEnv;
+                        $scope.infoData.publicTransport = args.data.publicTransport;
+                        $scope.infoData.nearbySupply = args.data.nearbySupply;
+                        $scope.infoData.nearbyRecreation = args.data.nearbyRecreation;
 
                         $sessionStorage.base64Images = [];
                         $sessionStorage.videoComplaints = {};
+                        $sessionStorage.datenComplaints = {};
                         $sessionStorage.complaints = [];
 
                         $scope.reset();
@@ -288,9 +306,6 @@ define(["./module"], function (module) {
                             }
                         }
 
-
-                        console.log($scope.daten.accept);
-
                         $rootScope.$broadcast('accept2', {
                             index: index,
                             accept:  $scope.images[index].accept
@@ -300,28 +315,49 @@ define(["./module"], function (module) {
                     $scope.acceptDblClick = function($event, index, type) {
                         var event = $event.currentTarget,
                             accept = angular.element(event),
-                            complaint = accept.next(),
-                            nextIndex = index + 1;
+                            complaint = accept.next();
 
                         if (complaint.hasClass('active')) {
-                            if (type == 'video') {
-                                $sessionStorage.base64Video = $scope.base64Video;
-                                $scope.video[index].complaint = false;
-                                $scope.video[index].accept = true;
 
-                                delete $sessionStorage.videoComplaints;
-                            } else {
-                                $scope.currentImg = $scope.images[index].thumbUrl.replace('data:image/png;base64,', '');
+                            switch (type) {
+                                case 'video':
+                                    $scope.video[index].complaint = false;
+                                    $scope.video[index].accept = true;
 
-                                $sessionStorage.base64Images[index] = {};
-                                $sessionStorage.base64Images[index].index = nextIndex;
-                                $sessionStorage.base64Images[index].base64 = $scope.currentImg;
+                                    delete $sessionStorage.videoComplaints;
+                                    break;
+                                case 'daten':
+                                    $scope.daten.complaint = false;
+                                    $scope.daten.accept = true;
 
-                                $scope.images[index].complaint = false;
-                                $scope.images[index].accept = true;
+                                    delete $sessionStorage.datenComplaints;
+                                    break;
 
-                                delete $sessionStorage.complaints[index];
+                                default:
+                                    $scope.images[index].complaint = false;
+                                    $scope.images[index].accept = true;
+
+                                    delete $sessionStorage.complaints[index];
                             }
+
+                            // if (type == 'video') {
+                            //     $sessionStorage.base64Video = $scope.base64Video;
+                            //     $scope.video[index].complaint = false;
+                            //     $scope.video[index].accept = true;
+                            //
+                            //     delete $sessionStorage.videoComplaints;
+                            // } else {
+                            //     $scope.currentImg = $scope.images[index].thumbUrl.replace('data:image/png;base64,', '');
+                            //
+                            //     $sessionStorage.base64Images[index] = {};
+                            //     $sessionStorage.base64Images[index].index = nextIndex;
+                            //     $sessionStorage.base64Images[index].base64 = $scope.currentImg;
+                            //
+                            //     $scope.images[index].complaint = false;
+                            //     $scope.images[index].accept = true;
+                            //
+                            //     delete $sessionStorage.complaints[index];
+                            // }
                         }
                     };
 
@@ -332,23 +368,75 @@ define(["./module"], function (module) {
 
                         $scope.currentImg = $scope.images[index].thumbUrl;
 
-                        if (type == 'video') {
+
+                        switch (type) {
+                            case 'video':
+                                $scope.complaintText = angular.isObject($sessionStorage.videoComplaints) && !angular.equals({}, $sessionStorage.videoComplaints) ? $sessionStorage.videoComplaints.complaintText : '';
+                                break;
+
+                            case 'daten':
+                                $scope.complaintText = angular.isObject($sessionStorage.datenComplaints) && !angular.equals({}, $sessionStorage.datenComplaints) ? $sessionStorage.datenComplaints.complaintText : '';
+                                break;
+
+                            default:
+                                $scope.complaintText = angular.isObject($sessionStorage.complaints[index]) ? $sessionStorage.complaints[index].complaintText : '';
+                        }
+                        
+                        /*if (type == 'video') {
                             $scope.complaintText = angular.isObject($sessionStorage.videoComplaints) && !angular.equals({}, $sessionStorage.videoComplaints) ? $sessionStorage.videoComplaints.complaintText : '';
                         } else {
                             $scope.complaintText = angular.isObject($sessionStorage.complaints[index]) ? $sessionStorage.complaints[index].complaintText : '';
-                        }
+                        }*/
 
                         $scope.check($scope.complaintText);
+                        
+                        
+                        $scope.templateUrl = type == 'daten' ? 'templates/modal-daten-complaint.html' : 'templates/modal-complaint.html';
 
                         var currentModal = $uibModal.open({
-                            templateUrl: 'templates/modal-complaint.html',
+                            templateUrl: $scope.templateUrl,
                             backdrop: true,
                             windowClass: 'modal-popup-complaint',
                             scope: $scope
                         });
 
                         $scope.save = function(complaintText) {
-                            if (type == 'video') {
+                            switch (type) {
+                                case 'video':
+                                    if (!$scope.video[index].complaint) {
+                                        $scope.video[index].complaint = true;
+                                    }
+
+                                    if ($scope.video[index].accept) {
+                                        $scope.video[index].complaint = true;
+                                        $scope.video[index].accept = false;
+                                    }
+                                    break;
+
+                                case 'daten':
+                                    if (!$scope.daten.complaint) {
+                                        $scope.daten.complaint = true;
+                                    }
+
+                                    if ($scope.daten.accept) {
+                                        $scope.daten.complaint = true;
+                                        $scope.daten.accept = false;
+                                    }
+                                    break;
+
+                                default:
+                                    if (!$scope.images[index].complaint) {
+                                        $scope.images[index].complaint = true;
+                                    }
+
+                                    if ($scope.images[index].accept) {
+                                        $scope.images[index].complaint = true;
+                                        $scope.images[index].accept = false;
+                                    }
+                            }
+
+
+                            /*if (type == 'video') {
                                 if (!$scope.video[index].complaint) {
                                     $scope.video[index].complaint = true;
                                 }
@@ -366,7 +454,7 @@ define(["./module"], function (module) {
                                     $scope.images[index].complaint = true;
                                     $scope.images[index].accept = false;
                                 }
-                            }
+                            }*/
 
                             $rootScope.$broadcast('complaint2', {
                                 index: index,
@@ -375,19 +463,39 @@ define(["./module"], function (module) {
 
                             var nextIndex = index + 1;
 
-                            if (type == 'video') {
-                                $sessionStorage.videoComplaints = {};
-                                $sessionStorage.videoComplaints.complaintText = complaintText;
-                                $sessionStorage.videoComplaints.element = 'VIDEO';
 
-                                delete  $sessionStorage.base64Video;
-                            } else {
-                                $sessionStorage.complaints[index] = {};
-                                $sessionStorage.complaints[index].complaintText = complaintText;
-                                $sessionStorage.complaints[index].element = 'IMAGE' + nextIndex;
+                            switch (type) {
+                                case 'video':
+                                    $sessionStorage.videoComplaints = {};
+                                    $sessionStorage.videoComplaints.complaintText = complaintText;
+                                    $sessionStorage.videoComplaints.element = 'VIDEO';
+                                    break;
 
-                                delete $sessionStorage.base64Images[index];
+                                case 'daten':
+                                    $sessionStorage.datenComplaints = {};
+                                    $sessionStorage.datenComplaints.complaintText = complaintText;
+                                    $sessionStorage.datenComplaints.element = 'DATEN';
+                                    break;
+
+                                default:
+                                    $sessionStorage.complaints[index] = {};
+                                    $sessionStorage.complaints[index].complaintText = complaintText;
+                                    $sessionStorage.complaints[index].element = 'IMAGE' + nextIndex;
                             }
+
+                            // if (type == 'video') {
+                            //     $sessionStorage.videoComplaints = {};
+                            //     $sessionStorage.videoComplaints.complaintText = complaintText;
+                            //     $sessionStorage.videoComplaints.element = 'VIDEO';
+                            //
+                            //     // delete  $sessionStorage.base64Video;
+                            // } else {
+                            //     $sessionStorage.complaints[index] = {};
+                            //     $sessionStorage.complaints[index].complaintText = complaintText;
+                            //     $sessionStorage.complaints[index].element = 'IMAGE' + nextIndex;
+                            //
+                            //     // delete $sessionStorage.base64Images[index];
+                            // }
 
                             currentModal.dismiss();
                         };
@@ -399,53 +507,49 @@ define(["./module"], function (module) {
 
 
                     $scope.info = function() {
-
-                        $constantsService.getZustande().then(function(constants){
-                            $scope.zustand = constants;
-                        });
-
-                        $constantsService.getObjektTypen().then(function(constants){
-                            $scope.objekttyp = constants;
-                        });
-
-                        $constantsService.getStates().then(function(constants){
-                            $scope.denkmalschutz = constants;
-                        });
-
-                        $constantsService.getBautenstande().then(function(constants){
-                            $scope.bautenstand = constants;
-                        });
-
-                        $constantsService.getObjektStandard().then(function(constants){
-                            $scope.objektStandardType = constants;
-                        });
-
-                        $constantsService.getObjektStandardUmg().then(function(constants){
-                            $scope.umgebende = constants;
-                        });
-
-                        $constantsService.getLeerstandUmg().then(function(constants){
-                            $scope.leerstand = constants;
-                        });
-
-                        $constantsService.getVerkehr().then(function(constants){
-                            $scope.verkehrsanbindung = constants;
-                        });
-
-                        $constantsService.getVersorgung().then(function(constants){
-                            $scope.versorgungseinrichtung = constants;
-                        });
-
-                        $constantsService.getErholung().then(function(constants){
-                            $scope.erholungsmoglichkeiten = constants;
-                        });
-                        
                         var currentModal = $uibModal.open({
                             templateUrl: 'templates/modal-info.html',
                             backdrop: true,
                             windowClass: 'modal-popup-info',
                             scope: $scope
                         });
+
+                        $scope.save = function() {
+
+                            $scope.infoData.projectType = $scope.sendData.projectType;
+                            $scope.infoData.objectType = $scope.sendData.objectType;
+                            $scope.infoData.protectedBuilding = $scope.sendData.protectedBuilding;
+                            $scope.infoData.buildingProgress = $scope.sendData.buildingProgress;
+                            $scope.infoData.objectStandard = $scope.sendData.objectStandard;
+                            $scope.infoData.objectStandardEnv = $scope.sendData.objectStandardEnv;
+                            $scope.infoData.vacancyEnv = $scope.sendData.vacancyEnv;
+                            $scope.infoData.publicTransport = $scope.sendData.publicTransport;
+                            $scope.infoData.nearbySupply = $scope.sendData.nearbySupply;
+                            $scope.infoData.nearbyRecreation = $scope.sendData.nearbyRecreation;
+
+
+                            $scope.daten.accept = true;
+
+                            currentModal.dismiss();
+                         
+                        };
+
+                        $scope.cancel = function() {
+                            $scope.sendData.projectType = $scope.infoData.projectType;
+                            $scope.sendData.objectType = $scope.infoData.objectType;
+                            $scope.sendData.protectedBuilding = $scope.infoData.protectedBuilding;
+                            $scope.sendData.buildingProgress = $scope.infoData.buildingProgress;
+                            $scope.sendData.objectStandard = $scope.infoData.objectStandard;
+                            $scope.sendData.objectStandardEnv = $scope.infoData.objectStandardEnv;
+                            $scope.sendData.vacancyEnv = $scope.infoData.vacancyEnv;
+                            $scope.sendData.publicTransport = $scope.infoData.publicTransport;
+                            $scope.sendData.nearbySupply = $scope.infoData.nearbySupply;
+                            $scope.sendData.nearbyRecreation = $scope.infoData.nearbyRecreation;
+
+                            console.log($scope.sendData);
+
+                            currentModal.dismiss();
+                        };
                     };
 
 
@@ -455,7 +559,6 @@ define(["./module"], function (module) {
                            return x !== undefined &&  x !== null;
                         });
 */
-
                         $scope.sendData.complaints = $sessionStorage.complaints.filter(function(x) {
                             return x !== undefined &&  x !== null;
                         });
@@ -466,9 +569,11 @@ define(["./module"], function (module) {
                             $scope.sendData.complaints.push($sessionStorage.videoComplaints)
                         }
 
+                        if(angular.isObject($sessionStorage.datenComplaints)) {
+                            $scope.sendData.complaints.push($sessionStorage.datenComplaints)
+                        }
 
                         console.log($scope.sendData);
-
 
                         //console.log($scope.sendData.base64Video);
                         //console.log($scope.sendData);

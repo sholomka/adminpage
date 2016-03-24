@@ -1,11 +1,11 @@
 define(["angular", "angular-sanitize",  "angular-animate", "angular-touch", "locale-de",
     "ui-bootstrap", "ngStorage", "duScroll", "./services/index", "./controllers/index",
-    "./directives/index", "bootstrapLightbox", "videogular"], function (angular) {
+    "./directives/index", "angular-carousel", "bootstrapLightbox", "videogular"], function (angular) {
     "use strict";
 
     var app = angular.module("app", ["ngSanitize", "ngAnimate", "ngTouch", "ngRoute", "ngStorage",
         "duScroll", "ui.bootstrap", "app.services", "app.controllers",
-        "app.directives", "bootstrapLightbox", "com.2fdevs.videogular"]);
+        "app.directives", "angular-carousel", "bootstrapLightbox", "com.2fdevs.videogular"]);
 
     app.controller('LightboxCtrl', function ($scope, $window, $sessionStorage, $uibModal, $rootScope) {
 

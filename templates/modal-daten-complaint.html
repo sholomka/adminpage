@@ -1,0 +1,118 @@
+<div>
+    <div class="modal-complaint daten" id="u477_state7_content">
+        <h2>Aufnahme reklamieren</h2>
+
+        <div class="ax_checkbox" id="u618" style="">
+            <table class="table table-bordered">
+                <tr>
+                    <td>
+                        Zustand
+                    </td>
+                    <td>
+                        {{sendData.projectType}}
+                    </td>
+                    <td><input type="checkbox" value="checkbox"></td>
+                </tr>
+                <tr>
+                    <td>
+                        Objekttyp
+                    </td>
+                    <td>
+                        {{sendData.objectType}}
+                    </td>
+                    <td><input type="checkbox" value="checkbox"></td>
+                </tr>
+                <tr>
+                    <td>
+                        Denkmalschutz
+                    </td>
+                    <td>
+                        {{sendData.protectedBuilding}}
+                    </td>
+                    <td><input type="checkbox" value="checkbox"></td>
+                </tr>
+                <tr>
+                    <td>
+                        Bautenstand
+                    </td>
+                    <td>
+                        {{sendData.buildingProgress}}
+                    </td>
+                    <td><input type="checkbox" value="checkbox"></td>
+                </tr>
+                <tr>
+                    <td>
+                        Objektstandard nach Fertigstelllung
+                    </td>
+                    <td>
+                        {{sendData.objectStandard}}
+                    </td>
+                    <td><input type="checkbox" value="checkbox"></td>
+                </tr>
+                <tr>
+                    <td>
+                        umgebende Bebauung
+                    </td>
+                    <td>
+                        {{sendData.objectStandardEnv}}
+                    </td>
+                    <td><input type="checkbox" value="checkbox"></td>
+                </tr>
+                <tr>
+                    <td>
+                        Leerstand
+                    </td>
+                    <td>
+                        {{sendData.vacancyEnv}}
+                    </td>
+                    <td><input type="checkbox" value="checkbox"></td>
+                </tr>
+                <tr>
+                    <td>
+                        Verkehrsanbindung ÖPNV
+                    </td>
+                    <td>
+                        {{sendData.publicTransport}}
+                    </td>
+                    <td><input type="checkbox" value="checkbox"></td>
+                </tr>
+                <tr>
+                    <td>
+                        Nähe zu Versorgungseinrichtung
+                    </td>
+                    <td>
+                        {{sendData.nearbySupply}}
+                    </td>
+                    <td><input type="checkbox" value="checkbox"></td>
+                </tr>
+                <tr>
+                    <td>
+                        Nähe zu Erholungsmöglichkeiten
+                    </td>
+                    <td>
+                        {{sendData.nearbyRecreation}}
+                    </td>
+                    <td><input type="checkbox" value="checkbox"></td>
+                </tr>
+            </table>
+
+
+        </div>
+        <div class="img-content">
+            <div class="ax_text_area">
+              <textarea ng-model="complaintText" ng-change="check(complaintText)">
+              </textarea>
+            </div>
+        </div>
+
+        <div class="email" id="u639" style="">
+            <span>Senden an:</span>
+            <input type="email" value="{{sendData.userName}}">
+        </div>
+
+        <div class="buttons">
+            <button class="btn btn-primary" ng-click="save(complaintText)" ng-disabled="disabled">Senden vermerken</button>
+            <button class="btn btn-default" ng-click="cancel()">Abbrechen</button>
+        </div>
+    </div>
+</div>

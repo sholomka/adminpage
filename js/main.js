@@ -7,6 +7,7 @@ require.config({
 		"angular-sanitize":		"../lib/angular/angular-sanitize.min",
 		"angular-animate":		"../lib/angular/angular-animate.min",
 		"angular-touch":		"../lib/angular/angular-touch.min",
+		"angular-carousel": 	"../lib/angular-carousel/angular-carousel.min",
 		"ui-bootstrap": 		"../lib/angular-bootstrap/ui-bootstrap-tpls-1.0.0.min",
 		"locale-de": 			"../lib/angular/angular-locale_de-de",
 		"ngStorage":			"../lib/ngstorage/ngStorage.min",
@@ -37,6 +38,9 @@ require.config({
 			deps: ["angular"]
 		},
 		"angular-touch": {
+			deps: ["angular"]
+		},
+		"angular-carousel": {
 			deps: ["angular"]
 		},
 		"ui-bootstrap": {
