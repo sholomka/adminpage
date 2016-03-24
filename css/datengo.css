@@ -1477,7 +1477,7 @@ span.dropdown  {
 }
 
 
-.modal-complaint h2 {
+.modal-complaint h2, .modal-popup-info h2 {
     font-size: 13px;
     text-decoration:underline;
     font-weight: bold;

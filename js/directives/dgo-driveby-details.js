@@ -43,34 +43,26 @@ define(["./module"], function (module) {
                     });
 
                     $scope.$on('drivebyDetails', function (event, args) {
-                        $scope.sendData = {};
+                        $scope.sendData = args.data;
 
-
-                        $scope.sendData.base64Images = args.data.base64Images;
-
-
-
-                        console.log(args.data.base64Images);
-                        // console.log($scope.sendData.base64Images);
-
-
-                        $scope.sendData.street = args.data.street;
-                        $scope.sendData.plz = args.data.plz;
-                        $scope.sendData.city = args.data.city;
-                        $scope.sendData.location = args.data.location;
-                        $scope.sendData.projectName = args.data.projectName;
-                        $scope.sendData.userName = args.data.userName;
-                        $scope.sendData.dateCreated = args.data.dateCreated;
-                        $scope.sendData.projectType = args.data.projectType;
-                        $scope.sendData.objectType = args.data.objectType;
-                        $scope.sendData.protectedBuilding = args.data.protectedBuilding;
-                        $scope.sendData.buildingProgress = args.data.buildingProgress;
-                        $scope.sendData.objectStandard = args.data.objectStandard;
-                        $scope.sendData.objectStandardEnv = args.data.objectStandardEnv;
-                        $scope.sendData.vacancyEnv = args.data.vacancyEnv;
-                        $scope.sendData.publicTransport = args.data.publicTransport;
-                        $scope.sendData.nearbySupply = args.data.nearbySupply;
-                        $scope.sendData.nearbyRecreation = args.data.nearbyRecreation;
+                        // $scope.sendData.base64Images = args.data.base64Images;
+                        // $scope.sendData.street = args.data.street;
+                        // $scope.sendData.plz = args.data.plz;
+                        // $scope.sendData.city = args.data.city;
+                        // $scope.sendData.location = args.data.location;
+                        // $scope.sendData.projectName = args.data.projectName;
+                        // $scope.sendData.userName = args.data.userName;
+                        // $scope.sendData.dateCreated = args.data.dateCreated;
+                        // $scope.sendData.projectType = args.data.projectType;
+                        // $scope.sendData.objectType = args.data.objectType;
+                        // $scope.sendData.protectedBuilding = args.data.protectedBuilding;
+                        // $scope.sendData.buildingProgress = args.data.buildingProgress;
+                        // $scope.sendData.objectStandard = args.data.objectStandard;
+                        // $scope.sendData.objectStandardEnv = args.data.objectStandardEnv;
+                        // $scope.sendData.vacancyEnv = args.data.vacancyEnv;
+                        // $scope.sendData.publicTransport = args.data.publicTransport;
+                        // $scope.sendData.nearbySupply = args.data.nearbySupply;
+                        // $scope.sendData.nearbyRecreation = args.data.nearbyRecreation;
 
 
                         /* $scope.zustand
@@ -265,7 +257,8 @@ define(["./module"], function (module) {
                                     break;
 
                                 case 'daten':
-                                    $sessionStorage.daten = $scope.daten;
+                                    // $sessionStorage.daten = $scope.daten;
+
                                     $scope.daten.accept = true;
 
                                     break;
@@ -404,19 +397,64 @@ define(["./module"], function (module) {
                         };
                     };
 
+
+                    $scope.info = function() {
+
+                        $constantsService.getZustande().then(function(constants){
+                            $scope.zustand = constants;
+                        });
+
+                        $constantsService.getObjektTypen().then(function(constants){
+                            $scope.objekttyp = constants;
+                        });
+
+                        $constantsService.getStates().then(function(constants){
+                            $scope.denkmalschutz = constants;
+                        });
+
+                        $constantsService.getBautenstande().then(function(constants){
+                            $scope.bautenstand = constants;
+                        });
+
+                        $constantsService.getObjektStandard().then(function(constants){
+                            $scope.objektStandardType = constants;
+                        });
+
+                        $constantsService.getObjektStandardUmg().then(function(constants){
+                            $scope.umgebende = constants;
+                        });
+
+                        $constantsService.getLeerstandUmg().then(function(constants){
+                            $scope.leerstand = constants;
+                        });
+
+                        $constantsService.getVerkehr().then(function(constants){
+                            $scope.verkehrsanbindung = constants;
+                        });
+
+                        $constantsService.getVersorgung().then(function(constants){
+                            $scope.versorgungseinrichtung = constants;
+                        });
+
+                        $constantsService.getErholung().then(function(constants){
+                            $scope.erholungsmoglichkeiten = constants;
+                        });
+                        
+                        var currentModal = $uibModal.open({
+                            templateUrl: 'templates/modal-info.html',
+                            backdrop: true,
+                            windowClass: 'modal-popup-info',
+                            scope: $scope
+                        });
+                    };
+
+
                     $scope.storeEdited = function () {
 
-
-
-                        // $scope.sendData.base64Images = $sessionStorage.base64Images.filter(function(x) {
-                        //    return x !== undefined &&  x !== null;
-                        // });
-
-
-
-
-                        console.log($scope.sendData.base64Images);
-
+                      /*  $scope.sendData.base64Images = $sessionStorage.base64Images.filter(function(x) {
+                           return x !== undefined &&  x !== null;
+                        });
+*/
 
                         $scope.sendData.complaints = $sessionStorage.complaints.filter(function(x) {
                             return x !== undefined &&  x !== null;
@@ -427,6 +465,9 @@ define(["./module"], function (module) {
                         if(angular.isObject($sessionStorage.videoComplaints)) {
                             $scope.sendData.complaints.push($sessionStorage.videoComplaints)
                         }
+
+
+                        console.log($scope.sendData);
 
 
                         //console.log($scope.sendData.base64Video);

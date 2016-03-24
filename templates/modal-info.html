@@ -1,0 +1,85 @@
+<h2>Details bearbeiten</h2>
+
+<table class="table table-bordered">
+    <tr>
+        <td>
+            Zustand
+        </td>
+        <td>
+            <select  class="form-control" ng-model="sendData.projectType" ng-options="key for (key, value) in zustand"></select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Objekttyp
+        </td>
+        <td>
+            <select  class="form-control" ng-model="sendData.objectType" ng-options="key for (key, value) in objekttyp"></select>
+
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Denkmalschutz
+        </td>
+        <td>
+            <select  class="form-control" ng-model="sendData.protectedBuilding" ng-options="key for (key, value) in denkmalschutz"></select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Bautenstand
+        </td>
+        <td>
+            <select  class="form-control" ng-model="sendData.buildingProgress" ng-options="key for (key, value) in bautenstand"></select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Objektstandard nach Fertigstelllung
+        </td>
+        <td>
+            <select  class="form-control" ng-model="sendData.objectStandard" ng-options="key for (key, value) in objektStandardType"></select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            umgebende Bebauung
+        </td>
+        <td>
+            <select  class="form-control" ng-model="sendData.objectStandardEnv" ng-options="key for (key, value) in umgebende"></select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Leerstand
+        </td>
+        <td>
+            <select  class="form-control" ng-model="sendData.vacancyEnv" ng-options="key for (key, value) in leerstand"></select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Verkehrsanbindung ÖPNV
+        </td>
+        <td>
+            <select  class="form-control" ng-model="sendData.publicTransport" ng-options="key for (key, value) in verkehrsanbindung"></select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Nähe zu Versorgungseinrichtung
+        </td>
+        <td>
+            <select  class="form-control" ng-model="sendData.nearbySupply" ng-options="key for (key, value) in versorgungseinrichtung"></select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Nähe zu Erholungsmöglichkeiten
+        </td>
+        <td>
+            <select  class="form-control" ng-model="sendData.nearbyRecreation" ng-options="key for (key, value) in erholungsmoglichkeiten"></select>
+        </td>
+    </tr>
+</table>
