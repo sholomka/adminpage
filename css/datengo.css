@@ -1685,6 +1685,10 @@ span.dropdown  {
         width: 1170px;
         height: 658.125px;
     }
+
+    .tab-pane .videogular-container {
+        height: 480px;
+    }
 }
 
 @media (min-width: 992px) and (max-width: 1199px) {
@@ -1718,5 +1722,10 @@ span.dropdown  {
     /*background-size: contain;*/
     /*background-position: center;*/
     /*background-repeat: no-repeat;*/
+}
+
+.rating {
+    text-align: center;
+    overflow: hidden;
 }
 

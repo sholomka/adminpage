@@ -13,9 +13,20 @@ define(["./module"], function (module) {
                     $scope.sendData.anzeigen = $scope.anzeigen['Alle'];
 
                     $scope.getCount =function() {
-                        $scope.sendData.createDateFrom = $filter('date')($scope.sendData.createDateFrom, 'yyyy-MM-dd');
-                        $scope.sendData.createDateUntil = $filter('date')($scope.sendData.createDateUntil, 'yyyy-MM-dd');
-                        $restService.countEditNews($scope.sendData).run().then(function(data){
+                        $scope.getCountData = {};
+
+                        angular.forEach($scope.sendData, function(value, key, obj) {
+                            $scope.getCountData[key] = value;
+
+                            if (key == 'createDateFrom')
+                                $scope.getCountData[key] = $filter('date')(value, 'yyyy-MM-dd');
+
+                            if (key == 'createDateUntil')
+                                $scope.getCountData[key] = $filter('date')(value, 'yyyy-MM-dd');
+
+                        });
+
+                        $restService.countEditNews($scope.getCountData).run().then(function(data){
                             $scope.count = data;
                         },function(error) {
 

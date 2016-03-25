@@ -164,11 +164,35 @@ define(["./module"], function (module) {
 
                         $scope.sortByKey($scope.images, 'index');
 
+                        $scope.myInterval = 5000;
+                        $scope.noWrapSlides = false;
+                        $scope.active = 0;
+                        var slides = $scope.slides = [];
+
                         angular.forEach($scope.images, function(value, key, obj) {
                             obj[key].url = 'data:image/png;base64,' + obj[key].base64;
                             obj[key].thumbUrl = 'data:image/png;base64,' + obj[key].base64;
                             obj[key].caption = $scope.titlesImage[key];
+
+                            slides.push({
+                                image: 'data:image/png;base64,' + obj[key].base64,
+                                text: $scope.titlesImage[key],
+                                id: key
+                            });
                         });
+
+                        $scope.max = 5;
+                        $scope.isReadonly = false;
+                        $scope.driveByRate = 0;
+                        
+                        $scope.rateText = [
+                            "Bitte bewerten Sie diesen Upload!",
+                            "Der Upload war unzureichend",
+                            "Der Upload hatte gravierende Mängel",
+                            "Der Upload hatte leichte Mängel",
+                            "Der Upload war weitgehend in Ordnung",
+                            "Der Upload war beanstandungsfrei"
+                        ];
                     });
 
                     $scope.driveByDetail = {
@@ -181,9 +205,6 @@ define(["./module"], function (module) {
                         height: $scope.driveBysListHeight,
                         position: 'relative'
                     };
-
-                    $scope.max = 5;
-                    $scope.isReadonly = true;
 
                     $scope.getStars = function(rating) {
                         // Get the value
@@ -552,6 +573,10 @@ define(["./module"], function (module) {
                         };
                     };
 
+                    $scope.getRate = function(driveByRate) {
+                        $scope.driveByRate = driveByRate;
+                    };
+
 
                     $scope.storeEdited = function () {
 
@@ -573,7 +598,10 @@ define(["./module"], function (module) {
                             $scope.sendData.complaints.push($sessionStorage.datenComplaints)
                         }
 
-                        console.log($scope.sendData);
+
+                        $scope.sendData.rating = $scope.driveByRate;
+
+                        console.log($scope.sendData.rating );
 
                         //console.log($scope.sendData.base64Video);
                         //console.log($scope.sendData);
