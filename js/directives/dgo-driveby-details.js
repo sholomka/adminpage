@@ -7,7 +7,7 @@ define(["./module"], function (module) {
                 replace: true,
                 scope: true,
                 templateUrl: "templates/dgo-driveby-details.html",
-                controller: function ($scope, $element, Lightbox, $sessionStorage) {
+                controller: function ($scope, $element, Lightbox, $sessionStorage, $anchorScroll) {
                     $constantsService.getZustande().then(function(constants){
                         $scope.zustand = constants;
                     });
@@ -84,16 +84,24 @@ define(["./module"], function (module) {
                     });
 
                     $scope.$on('drivebyDetails', function (event, args) {
-                        $scope.sendData = args.data;
+                        $scope.sendData = {};
+                        $scope.showForm = true;
+                        $scope.unbekannt = false;
 
-                        // $scope.sendData.base64Images = args.data.base64Images;
-                        // $scope.sendData.street = args.data.street;
-                        // $scope.sendData.plz = args.data.plz;
-                        // $scope.sendData.city = args.data.city;
-                        // $scope.sendData.location = args.data.location;
-                        // $scope.sendData.projectName = args.data.projectName;
-                        // $scope.sendData.userName = args.data.userName;
-                        // $scope.sendData.dateCreated = args.data.dateCreated;
+                        angular.forEach(args.data, function(value, key, obj) {
+                            if (key == 'base64Images') {
+                                $scope.sendData.base64Images = [];
+
+                                angular.forEach(args.data.base64Images, function(value, key, obj) {
+                                    $scope.sendData.base64Images[key] = {};
+                                    $scope.sendData.base64Images[key].base64 = obj[key].base64;
+                                    $scope.sendData.base64Images[key].index = obj[key].index;
+                                    $scope.sendData.base64Images[key].uri = obj[key].uri;
+                                });
+                            } else {
+                                $scope.sendData[key] = value;
+                            }
+                        });
 
                         $scope.infoData = {};
                         $scope.infoData.projectType = args.data.projectType;
@@ -117,9 +125,10 @@ define(["./module"], function (module) {
                         $scope.images = args.data.base64Images;
                         $scope.videoUrl = "data:video/mp4;base64," + args.data.base64Video;
                         $scope.base64Video = args.data.base64Video;
-
-
-                        $scope.daten = {};
+                        $scope.daten = {
+                            accept: false,
+                            complaint: false
+                        };
 
                         $scope.config = {
                             sources: [
@@ -149,7 +158,9 @@ define(["./module"], function (module) {
                                 'type': 'video',
                                 'config': $scope.config,
                                 'thumbUrl': 'https://i.ytimg.com/vi/N7TkK2joi4I/1.jpg',
-                                'base64Video': $scope.base64Video
+                                'base64Video': $scope.base64Video,
+                                'accept': false,
+                                'complaint': false
                             }
                         ];
 
@@ -173,6 +184,8 @@ define(["./module"], function (module) {
                             obj[key].url = 'data:image/png;base64,' + obj[key].base64;
                             obj[key].thumbUrl = 'data:image/png;base64,' + obj[key].base64;
                             obj[key].caption = $scope.titlesImage[key];
+                            obj[key].accept = false;
+                            obj[key].complaint = false;
 
                             slides.push({
                                 image: 'data:image/png;base64,' + obj[key].base64,
@@ -238,7 +251,6 @@ define(["./module"], function (module) {
                             $scope.mapObjectList = [];
                             angular.forEach(item.objektImBauVorschau, function(data) {
                                 $sucheService.loadItem(data.id).then(function (data) {
-
                                     $scope.mapObjectList.push(data);
                                 });
                             });
@@ -246,7 +258,6 @@ define(["./module"], function (module) {
                     });
 
                     $scope.highlightMarker = function (item, $event) {
-
                         $scope.sendData.mappedImmoObject = {
                             "objectType": item.angebotsart,
                             "objectId": item.id
@@ -271,6 +282,7 @@ define(["./module"], function (module) {
                         angular.element(document.querySelectorAll('.ax_dynamic_panel')).removeClass('active');
                         $mapService.unhighlightAllItems();
                         $mapService.createDrivebyMarker($scope.sendData.location);
+                        $scope.sendData.mappedImmoObject = null;
 
                         //$listenerService.triggerChange("drivebyDetails", "dgoDrivebys", $scope.sendData.location);
                     };
@@ -577,38 +589,101 @@ define(["./module"], function (module) {
                         $scope.driveByRate = driveByRate;
                     };
 
+                    $scope.showError = function() {
+                        var index = [];
+                        $scope.error = false;
+
+                        angular.forEach($scope.images, function(value, key, obj) {
+                                if (!(value.accept || value.complaint)) {
+                                    index.push('image_' + value.index);
+                                    obj[key].error = true;
+                                    $scope.error = true;
+                                } else {
+                                    obj[key].error = false;
+                                }
+
+                            if (value.complaint)
+                                $scope.sendData.state = 'Abgelehnt';
+                        });
+
+                        angular.forEach($scope.video, function(value, key, obj) {
+                            if (!(value.accept || value.complaint)) {
+                                index.push('video');
+                                obj[key].error = true;
+                                $scope.error = true;
+                            } else {
+                                obj[key].error = false;
+                            }
+
+                            if (value.complaint)
+                                $scope.sendData.state = 'Abgelehnt';
+                        });
+
+                        if (!($scope.daten.accept || $scope.daten.complaint)) {
+                            index.push('daten');
+                            $scope.daten.error = true;
+                            $scope.error = true;
+                        } else {
+                            $scope.daten.error = false;
+                        }
+
+                        if ($scope.daten.complaint)
+                            $scope.sendData.state = 'Abgelehnt';
+
+                        if (index.length > 0)
+                            $anchorScroll(index[0]);
+                    };
+
+                    $scope.unbekanntChange = function(unbekannt) {
+                        $scope.unbekannt = unbekannt;
+                    };
 
                     $scope.storeEdited = function () {
+                        $scope.showError();
 
-                      /*  $scope.sendData.base64Images = $sessionStorage.base64Images.filter(function(x) {
-                           return x !== undefined &&  x !== null;
-                        });
-*/
-                        $scope.sendData.complaints = $sessionStorage.complaints.filter(function(x) {
-                            return x !== undefined &&  x !== null;
-                        });
+                        if (!$scope.error) {
+                            if(!angular.equals($sessionStorage.complaints, [])) {
+                                $scope.sendData.complaints = $sessionStorage.complaints.filter(function(x) {
+                                    return x !== undefined &&  x !== null;
+                                });
+                            } else {
+                                $scope.sendData.complaints = [];
+                            }
 
-                        $scope.sendData.base64Video = $sessionStorage.base64Video;
+                            if(angular.isObject($sessionStorage.videoComplaints) && !angular.equals($sessionStorage.videoComplaints, {})) {
+                                $scope.sendData.complaints.push($sessionStorage.videoComplaints)
+                            }
 
-                        if(angular.isObject($sessionStorage.videoComplaints)) {
-                            $scope.sendData.complaints.push($sessionStorage.videoComplaints)
+                            if(angular.isObject($sessionStorage.datenComplaints) && !angular.equals($sessionStorage.datenComplaints, {})) {
+                                $scope.sendData.complaints.push($sessionStorage.datenComplaints)
+                            }
+
+                            if(angular.equals($scope.sendData.complaints, [])) {
+                                $scope.sendData.complaints = null;
+                            }
+
+                            $scope.sendData.rating = $scope.driveByRate;
+
+                            if ($scope.sendData.state != 'Abgelehnt') {
+                                if ($scope.unbekannt)
+                                    $scope.sendData.state = 'Unbekannt';
+                                else
+                                    $scope.sendData.state = 'Abgeschlossen';
+                            }
+
+                            console.log($scope.sendData);
+
+                            $drivebysService.storeEdited($scope.sendData).then(function (data) {
+                                $scope.sendData = {};
+                                $scope.showForm = false;
+                            }, function (error) {});
                         }
-
-                        if(angular.isObject($sessionStorage.datenComplaints)) {
-                            $scope.sendData.complaints.push($sessionStorage.datenComplaints)
-                        }
-
-
-                        $scope.sendData.rating = $scope.driveByRate;
-
-                        console.log($scope.sendData.rating );
-
-                        //console.log($scope.sendData.base64Video);
-                        //console.log($scope.sendData);
-
-                        $drivebysService.storeEdited($scope.sendData).then(function (data) {
-                        }, function (error) {});
                     };
+
+                    $scope.driveByCancel = function() {
+                        $scope.sendData = {};
+                        $scope.showForm = false;
+                    }
                 }
             };
         }]);

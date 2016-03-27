@@ -187,6 +187,9 @@ define(["./module"], function (module) {
 		};
 
 		var getObjektRequestDetail = function (id) {
+			console.log(id);
+
+
 			return getRequest({
 				method: "GET",
 				// url: "http://geomap-intern.test1.evermind.de/service/odb/suche/objekt/objekteimbau?objektId=" + id

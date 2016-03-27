@@ -1,5 +1,5 @@
 <div ng-class="classNamesDeatails" ng-style="driveByDetail">
-    <div ng-if="sendData">
+    <div ng-if="showForm">
         <div class="modal-header">
             <h4 class="modal-title">Daten zu "{{sendData.projectName}}"</h4>
             <span uib-dropdown on-toggle="getUserInfo(sendData.userName, open)">
@@ -39,7 +39,7 @@
                 <span style="color:#699E25; font-size: 10px;">{{street}}, {{plz}} {{city}}</span>
                 <dgo-map type="object" id="object" style="width: 280px; height:285px;"></dgo-map>
 
-                <input type="checkbox" value="checkbox" id="u719_input">
+                <input type="checkbox" value="checkbox" ng-model="unbekannt" ng-change="unbekanntChange(unbekannt)" id="u719_input">
 
                 <label for="u719_input" class="ax_checkbox">
                     <div class="text" id="u720">
@@ -65,10 +65,13 @@
             <div class="foto-container">
                 <div ng-repeat="image in images" class="fotos" ng-style="{margin:  ($index + 1) % 3 == 0 ? '0' : '0 25px 20px 0'}" >
                     <span>{{image.caption}}</span>
-                    <img ng-src="{{image.thumbUrl}}" ng-click="Lightbox.openModal(images, $index)" class="img-thumbnail">
+                    <img id="image_{{image.index}}" ng-src="{{image.thumbUrl}}" ng-click="Lightbox.openModal(images, $index)" class="img-thumbnail">
                     <div class="nav-list">
                         <a class="accept" ng-class="image.accept ? 'active' : ''" ng-click="accept($event, $index)" ng-dblclick="acceptDblClick($event, $index)"></a>
                         <a class="complaint" ng-class="image.complaint ? 'active' : ''" ng-click="complaint($event, $index)"></a>
+                    </div>
+                    <div class="driveby-error" ng-show="image.error">
+                        Element noch nicht bewertet!
                     </div>
                 </div>
             </div>
@@ -76,10 +79,13 @@
             <h4 class="top-50" style="text-decoration: underline; font-size: 11px; font-weight: bold;">Video</h4>
             <div class="foto-container">
                 <div ng-repeat="videoItem in video" class="video" >
-                    <img ng-src="{{videoItem.thumbUrl}}" ng-click="Lightbox.openModal(video, $index)" class="img-thumbnail">
+                    <img id="video" ng-src="{{videoItem.thumbUrl}}" ng-click="Lightbox.openModal(video, $index)" class="img-thumbnail">
                     <div class="nav-list">
                         <a class="accept" ng-class="videoItem.accept ? 'active' : ''" ng-click="accept($event, $index, 'video')" ng-dblclick="acceptDblClick($event, $index, 'video')"></a>
                         <a class="complaint" ng-class="videoItem.complaint ? 'active' : ''" ng-click="complaint($event, $index, 'video')"></a>
+                    </div>
+                    <div class="driveby-error" ng-show="videoItem.error">
+                        Element noch nicht bewertet!
                     </div>
                 </div>
             </div>
@@ -169,10 +175,14 @@
                     </tr>
                 </table>
 
-                <div class="nav-list">
+                <div class="nav-list" id="daten">
                     <a class="accept" ng-class="daten.accept ? 'active' : ''" ng-click="accept($event, $index, 'daten')" ng-dblclick="acceptDblClick($event, $index, 'daten')"></a>
                     <a class="info" ng-class="daten.complaint ? 'active' : ''" ng-click="info($event, $index, 'daten')"></a>
                     <a class="complaint" ng-class="daten.complaint ? 'active' : ''" ng-click="complaint($event, $index, 'daten')"></a>
+                </div>
+
+                <div class="driveby-error" ng-show="daten.error">
+                    Element noch nicht bewertet!
                 </div>
             </div>
 
@@ -442,7 +452,7 @@
 
                 <div class="modal-footer">
                     <button class="btn btn-primary" ng-click="storeEdited()">Speichern & zum Nächsten</button>
-                    <button class="btn btn-default" ng-click="cancel()">Abbrechen</button>
+                    <button class="btn btn-default" ng-click="driveByCancel()">Abbrechen</button>
                 </div>
             </div>
         </div>
