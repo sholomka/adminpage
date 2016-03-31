@@ -8,12 +8,22 @@ define(["./module"], function (module) {
                 scope: true,
                 templateUrl: "templates/dgo-drivebys.html",
                 controller: function ($scope, $attrs) {
+
+                    $scope.$on('updateDriveBy', function (event, args) {
+                        $scope.refreshWindow('neue');
+
+                        if ($scope.driveBys.length > 0) {
+                            var id = $scope.driveBys[0].transactionHash;
+                            $scope.showDrivebysDetails(id);
+                        }
+                    });
+
                     $scope.sortFields = {
                         criterium: 'TIME',
                         order: 'ASC'
                     };
                     $scope.currentPage = 1;
-                    $scope.numberOfResults = 5;
+                    $scope.numberOfResults = 30;
 
                     $scope.pageChanged = function() {
                         $scope.sendData =
@@ -92,7 +102,18 @@ define(["./module"], function (module) {
                         return $scope.isSort(sortCriterium) && $scope.sortFields.order == "DESC";
                     };
 
-                    $scope.showDrivebysDetails = function(id) {
+                    $scope.showDrivebysDetails = function(id, $event) {
+
+
+                        var event = $event.currentTarget,
+                            accept = angular.element(event);
+
+
+                        if (!accept.hasClass('active')) {
+                            accept.toggleClass('active');
+                        }
+
+
                         $drivebysService.showDrivebysDetails(id).then(function (data) {
 
                             $rootScope.$broadcast('drivebyDetails', {

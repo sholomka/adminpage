@@ -33,9 +33,9 @@
         </div>
     </div>
 
-    <div class="news-items" ng-hide="newsError" ng-style="driveBysListStyleObj">
-        <div class="news-item" ng-repeat="n in driveBys">
-            <h4><a href="javascript:void(0);" ng-click="showDrivebysDetails(n.transactionHash)">{{n.projectName}}</a></h4>
+    <div class="driveby-items" ng-hide="newsError" ng-style="driveBysListStyleObj">
+        <div class="driveby-item" ng-click="showDrivebysDetails(n.transactionHash, $event)" ng-repeat="n in driveBys">
+            <h4>{{n.projectName}}</h4>
             <p class="news-text">{{n.city}} / {{n.street}}</p>
             <br>
             <p class="news-text">Erstellt am {{n.dateCreated}}</p>

@@ -52,12 +52,23 @@ define(["./module"], function (module) {
                 return deferred.promise
             };
 
+            var getMapped=function(id){
+                var deferred=$q.defer();
+                $restService.getMapped(id).run().then(function(data){
+                    deferred.resolve(data);
+                },function(error) {
+                    deferred.reject(error);
+                });
+                return deferred.promise
+            };
+            
             return {
                 searchTodayDriveBys:searchTodayDriveBys,
                 showDrivebysDetails:showDrivebysDetails,
                 countEditDriveBy:countEditDriveBy,
                 getUserInfo:getUserInfo,
-                storeEdited:storeEdited
+                storeEdited:storeEdited,
+                getMapped:getMapped
             }
         }]);
 });

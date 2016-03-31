@@ -49,32 +49,32 @@ define(["./module"], function (module) {
         var getNewsThemen = function () {
             return getRequest({
                 method: "GET",
-                // url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/themen"
-                url: "themen.json"
+                url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/themen"
+                // url: "themen.json"
             });
         };
 
 		var getNewsTypen = function () {
 			return getRequest({
 				method: "GET",
-				// url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/typen"
-				url: "typen.json"
+				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/typen"
+				// url: "typen.json"
 			});
 		};
 
 		var getNewsModi = function () {
 			return getRequest({
 				method: "GET",
-				// url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/modus"
-				url: "modus.json"
+				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/modus"
+				// url: "modus.json"
 			});
 		};
 
 		var sucheNews = function (data) {
 			return getRequest({
 				method: "POST",
-				// url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/suche",
-				url: "suchenews.json",
+				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/suche",
+				// url: "suchenews.json",
 				data: data
 			});
 		};
@@ -82,8 +82,8 @@ define(["./module"], function (module) {
 		var getNewsSpeichernRequest = function (data) {
 			return getRequest({
 				method: "POST",
-				// url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/erstelle",
-				url: "erstellen.txt",
+				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/erstelle",
+				// url: "erstellen.txt",
 				data: data
 			});
 		};
@@ -91,8 +91,8 @@ define(["./module"], function (module) {
 		var countEditNews = function (data) {
 			return getRequest({
 				method: "POST",
-				// url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/countEdit",
-				url: "countEdit.txt",
+				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/countEdit",
+				// url: "countEdit.txt",
 				data: data
 			});
 		};
@@ -100,8 +100,8 @@ define(["./module"], function (module) {
 		var sucheEditNews = function (data) {
 			return getRequest({
 				method: "POST",
-				// url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/sucheEdit",
-				url: "sucheEdit.json",
+				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/sucheEdit",
+				// url: "sucheEdit.json",
 				data: data
 			});
 		};
@@ -109,8 +109,8 @@ define(["./module"], function (module) {
 		var searchTodayNews = function (data) {
 			return getRequest({
 				method: "POST",
-				// url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/searchToday",
-				url: "sucheEdit.json",
+				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/searchToday",
+				// url: "sucheEdit.json",
 				data: data
 			});
 		};
@@ -127,8 +127,8 @@ define(["./module"], function (module) {
 		var searchTodayDriveBys = function (data) {
 			return getRequest({
 				method: "POST",
-				// url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/sucheEdit",
-				url: "searchTodayDriveBys.json",
+				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/sucheEdit",
+				// url: "searchTodayDriveBys.json",
 				data: data
 			});
 		};
@@ -136,8 +136,8 @@ define(["./module"], function (module) {
 		var showDrivebysDetails = function (id) {
 			return getRequest({
 				method: "POST",
-				// url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/getDetail",
-				url: "getDetails.json",
+				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/getDetail",
+				// url: "getDetails.json",
 				headers: {
 				 	'Content-Type': 'text/plain'
 				},
@@ -149,8 +149,8 @@ define(["./module"], function (module) {
 		var countEditDriveBy = function () {
 			return getRequest({
 				method: "GET",
-				// url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/countEdit"
-				url: "countEditDriveBy.txt"
+				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/countEdit"
+				// url: "countEditDriveBy.txt"
 			});
 		};
 
@@ -166,8 +166,8 @@ define(["./module"], function (module) {
 		var getUserInfo = function (userName) {
 			return getRequest({
 				method: "POST",
-				// url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/userInfo",
-				url: "getUserInfo.json",
+				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/userInfo",
+				// url: "getUserInfo.json",
 
 				headers: {
 					'Content-Type': 'text/plain'
@@ -180,100 +180,97 @@ define(["./module"], function (module) {
 		var getObjektRequest = function (data) {
 			return getRequest({
 				method: "POST",
-				// url: "http://geomap-intern.test1.evermind.de/service/odb/suche/objekteimbau",
-				url: "objectimbau.json",
+				url: "http://geomap-intern.test1.evermind.de/service/odb/suche/objekteimbau",
+				// url: "objectimbau.json",
 				data: data
 			});
 		};
 
 		var getObjektRequestDetail = function (id) {
-			console.log(id);
-
-
 			return getRequest({
 				method: "GET",
-				// url: "http://geomap-intern.test1.evermind.de/service/odb/suche/objekt/objekteimbau?objektId=" + id
-				url: "objectimbaudetail.json"
+				url: "http://geomap-intern.test1.evermind.de/service/odb/suche/objekt/objekteimbau?objektId=" + id
+				// url: "objectimbaudetail.json"
 			});
 		};
 		
 		var getZustande = function () {
 			return getRequest({
 				method: "GET",
-				// url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/getZustande"
-				url: "zustande.json"
+				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/getZustande"
+				// url: "zustande.json"
 			});
 		};
 
 		var getStates = function () {
 			return getRequest({
 				method: "GET",
-				// url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/getStates"
-				url: "states.json"
+				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/getStates"
+				// url: "states.json"
 			});
 		};
 
 		var getObjektTypen = function () {
 			return getRequest({
 				method: "GET",
-				// url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/getObjektTypen"
-				url: "objektTypen.json"
+				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/getObjektTypen"
+				// url: "objektTypen.json"
 			});
 		};
 
 		var getBautenstande = function () {
 			return getRequest({
 				method: "GET",
-				// url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/getBautenstande"
-				url: "bautenstande.json"
+				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/getBautenstande"
+				// url: "bautenstande.json"
 			});
 		};
 
 		var getObjektStandard = function () {
 			return getRequest({
 				method: "GET",
-				// url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/getObjektStandard"
-				url: "objektStandard.json"
+				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/getObjektStandard"
+				// url: "objektStandard.json"
 			});
 		};
 
 		var getObjektStandardUmg = function () {
 			return getRequest({
 				method: "GET",
-				// url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/getObjektStandardUmg"
-				url: "objektStandardUmg.json"
+				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/getObjektStandardUmg"
+				// url: "objektStandardUmg.json"
 			});
 		};
 
 		var getLeerstandUmg = function () {
 			return getRequest({
 				method: "GET",
-				// url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/getLeerstandUmg"
-				url: "leerstandUmg.json"
+				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/getLeerstandUmg"
+				// url: "leerstandUmg.json"
 			});
 		};
 
 		var getVerkehr = function () {
 			return getRequest({
 				method: "GET",
-				// url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/getVerkehr"
-				url: "verkehr.json"
+				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/getVerkehr"
+				// url: "verkehr.json"
 			});
 		};
 
 		var getVersorgung = function () {
 			return getRequest({
 				method: "GET",
-				// url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/getVersorgung"
-				url: "versorgung.json"
+				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/getVersorgung"
+				// url: "versorgung.json"
 			});
 		};
 
 		var getErholung = function () {
 			return getRequest({
 				method: "GET",
-				// url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/getErholung"
-				url: "erholung.json"
+				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/getErholung"
+				// url: "erholung.json"
 			});
 		};
 
@@ -285,6 +282,14 @@ define(["./module"], function (module) {
 			});
 		};
 
+		var getMapped = function (id) {
+			return getRequest({
+				method: "GET",
+				url: "http://geomap-intern.test1.evermind.de/service/odb/driveby/mapped?id=" + id
+				// url: "mapped.json"
+			});
+		};
+		
         return {
             getNewsThemen: getNewsThemen,
 			getNewsTypen: getNewsTypen,
@@ -312,7 +317,8 @@ define(["./module"], function (module) {
 			getLeerstandUmg:getLeerstandUmg,
 			getVerkehr:getVerkehr,
 			getVersorgung:getVersorgung,
-			getErholung:getErholung
+			getErholung:getErholung,
+			getMapped:getMapped
         };
 
     }]);

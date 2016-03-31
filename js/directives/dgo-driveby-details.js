@@ -17,7 +17,7 @@ define(["./module"], function (module) {
                     });
 
                     $constantsService.getStates().then(function(constants){
-                        $scope.denkmalschutz = constants;
+                        $scope.denkmalschutz = $scope.states = constants;
                     });
 
                     $constantsService.getBautenstande().then(function(constants){
@@ -48,6 +48,9 @@ define(["./module"], function (module) {
                         $scope.erholungsmoglichkeiten = constants;
                     });
 
+                    $constantsService.getErholung().then(function(constants){
+                        $scope.erholungsmoglichkeiten = constants;
+                    });
 
                     $scope.sortByKey = function(array, key) {
                         return array.sort(function(a, b) {
@@ -88,6 +91,15 @@ define(["./module"], function (module) {
                         $scope.showForm = true;
                         $scope.unbekannt = false;
 
+                        var progresses = $scope.bautenstand,
+                            countProgresses = Object.keys(progresses).length;
+                        
+                        var statusWidth = Math.floor(100 / (countProgresses + 1));
+                        $scope.driveByStatusWidth = statusWidth + "%";
+                        $scope.driveByStatusTotalWidth = (statusWidth * (countProgresses)) + "%";
+                        $scope.driveByMap = {};
+
+
                         angular.forEach(args.data, function(value, key, obj) {
                             if (key == 'base64Images') {
                                 $scope.sendData.base64Images = [];
@@ -100,9 +112,35 @@ define(["./module"], function (module) {
                                 });
                             } else {
                                 $scope.sendData[key] = value;
+
+                                if (key == 'buildingProgress') {
+                                    if (!angular.isArray($scope.driveByMap[value])) {
+                                        $scope.driveByMap[value] = [];
+                                    }
+                                    $scope.driveByMap[value].unshift($scope.sendData);
+                                }
                             }
                         });
 
+                        var j = 0;
+                        for(var i in progresses) {
+
+                            if (progresses[i] == $scope.sendData.buildingProgress) {
+                                $scope.driveByStatus = progresses[i];
+                                $scope.driveByStatusIndex = j;
+                                var blockWidth = 100 / (countProgresses);
+                                $scope.driveByStatusBarWidth = (blockWidth * ($scope.driveByStatusIndex)).toFixed(2) + "%";
+                                break;
+                            }
+
+                            j++;
+                        }
+
+                        $scope.driveBy = $scope.sendData;
+                        $scope.selectedDriveBy = $scope.sendData;
+                        $scope.drivebyLoading = false;
+
+                        
                         $scope.infoData = {};
                         $scope.infoData.projectType = args.data.projectType;
                         $scope.infoData.objectType = args.data.objectType;
@@ -272,7 +310,69 @@ define(["./module"], function (module) {
                         $scope.street = item.adresse.strasse;
                         $scope.plz = item.adresse.plz;
                         $scope.city = item.adresse.ort;
+
+                        
+                        $drivebysService.getMapped(item.id).then(function (data) {
+
+                            if (data.length > 0) {
+                                var progresses = $scope.bautenstand,
+                                    countProgresses = Object.keys(progresses).length;
+
+                                var statusWidth = Math.floor(100 / (countProgresses + 1));
+                                $scope.driveByStatusWidth = statusWidth + "%";
+                                $scope.driveByStatusTotalWidth = (statusWidth * (countProgresses)) + "%";
+                                $scope.driveByMap = {};
+
+                                for (var i = 0; i < data.length; i++) {
+                                    if (!angular.isArray($scope.driveByMap[data[i].buildingProgress])) {
+                                        $scope.driveByMap[data[i].buildingProgress] = [];
+                                    }
+                                    $scope.driveByMap[data[i].buildingProgress].unshift(data[i]); //sortierung umkehren
+                                }
+
+                                var j = 0;
+                                for (var i in progresses) {
+                                    if (progresses[i] == data[0].buildingProgress) {
+                                        $scope.driveByStatus = progresses[i];
+                                        $scope.driveByStatusIndex = j;
+                                        var blockWidth = 100 / (countProgresses);
+                                        $scope.driveByStatusBarWidth = (blockWidth * ($scope.driveByStatusIndex)).toFixed(2) + "%";
+                                        break;
+                                    }
+
+                                    j++;
+                                }
+
+                                $scope.driveBy = data;
+                                $scope.selectedDriveBy = $scope.driveBy[0];
+                                $scope.drivebyLoading = false;
+
+                            }  else {
+                                $scope.drivebyLoading = false;
+                            }
+                            
+                        }, function (error) { });
                     };
+
+
+                    $scope.calcOffsets = function (status, statusIndex) {
+                        if (statusIndex == $scope.driveByStatusIndex) {
+                            var driveBys = $scope.driveByMap[status];
+                            if (driveBys && driveBys.length > 0) {
+                                $scope.driveByStatusOffset = ((driveBys.length - 1) / driveBys.length * 100) + "%";
+                            }
+                        }
+                    };
+
+                    $scope.getDriveByOffset = function (status, index) {
+                        var driveBys = $scope.driveByMap[status];
+                        return (index / driveBys.length * 100) + "%";
+                    };
+
+                    $scope.setSelectedDriveBy = function (driveBy) {
+                        $scope.selectedDriveBy = driveBy;
+                    };
+
 
                     $scope.reset = function () {
                         $scope.street = $scope.sendData.street;
@@ -603,7 +703,7 @@ define(["./module"], function (module) {
                                 }
 
                             if (value.complaint)
-                                $scope.sendData.state = 'Abgelehnt';
+                                $scope.sendData.state = $scope.states.Abgelehnt;
                         });
 
                         angular.forEach($scope.video, function(value, key, obj) {
@@ -616,7 +716,7 @@ define(["./module"], function (module) {
                             }
 
                             if (value.complaint)
-                                $scope.sendData.state = 'Abgelehnt';
+                                $scope.sendData.state = $scope.states.Abgelehnt;
                         });
 
                         if (!($scope.daten.accept || $scope.daten.complaint)) {
@@ -628,7 +728,7 @@ define(["./module"], function (module) {
                         }
 
                         if ($scope.daten.complaint)
-                            $scope.sendData.state = 'Abgelehnt';
+                            $scope.sendData.state = $scope.states.Abgelehnt;
 
                         if (index.length > 0)
                             $anchorScroll(index[0]);
@@ -664,18 +764,20 @@ define(["./module"], function (module) {
 
                             $scope.sendData.rating = $scope.driveByRate;
 
-                            if ($scope.sendData.state != 'Abgelehnt') {
+                            if ($scope.sendData.state != $scope.states.Abgelehnt) {
                                 if ($scope.unbekannt)
-                                    $scope.sendData.state = 'Unbekannt';
+                                    $scope.sendData.state =  $scope.states.Unbekannt;
                                 else
-                                    $scope.sendData.state = 'Abgeschlossen';
+                                    $scope.sendData.state = $scope.states.Abgeschlossen;
                             }
 
                             console.log($scope.sendData);
 
-                            $drivebysService.storeEdited($scope.sendData).then(function (data) {
+                            $drivebysService.storeEdited($scope.sendData).then(function () {
                                 $scope.sendData = {};
                                 $scope.showForm = false;
+
+                                $rootScope.$broadcast('updateDriveBy');
                             }, function (error) {});
                         }
                     };

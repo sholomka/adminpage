@@ -1280,7 +1280,7 @@ span.dropdown  {
 }
 
 .driveby-container {
-    padding: 5px 60px 5px 15px;
+    padding: 10px 60px 5px 40px;
     position: relative;
 }
 .driveby-bar {
@@ -1736,3 +1736,15 @@ span.dropdown  {
     width: 151px;
 }
 
+.driveby-items {
+    cursor: pointer;
+}
+
+.driveby-item {
+    border-bottom: 1px dashed #ddd;
+    padding: 15px 25px;
+}
+
+.driveby-item.active {
+    background-color: gray;
+}
