@@ -315,12 +315,22 @@ define(["./module"], function (module) {
                         $drivebysService.getMapped(item.id).then(function (data) {
 
                             if (data.length > 0) {
-                                var progresses = $scope.bautenstand,
-                                    countProgresses = Object.keys(progresses).length;
 
-                                var statusWidth = Math.floor(100 / (countProgresses + 1));
+                                var progresses = [];
+
+                                angular.forEach($scope.bautenstand, function(value, key, obj) {
+                                    progresses.push({
+                                        key: value,
+                                        name: key
+                                    });
+                                });
+
+                                
+
+
+                                var statusWidth = Math.floor(100 / (progresses.length + 1));
                                 $scope.driveByStatusWidth = statusWidth + "%";
-                                $scope.driveByStatusTotalWidth = (statusWidth * (countProgresses)) + "%";
+                                $scope.driveByStatusTotalWidth = (statusWidth * (progresses.length)) + "%";
                                 $scope.driveByMap = {};
 
                                 for (var i = 0; i < data.length; i++) {
@@ -330,21 +340,38 @@ define(["./module"], function (module) {
                                     $scope.driveByMap[data[i].buildingProgress].unshift(data[i]); //sortierung umkehren
                                 }
 
-                                var j = 0;
-                                for (var i in progresses) {
-                                    if (progresses[i] == data[0].buildingProgress) {
-                                        $scope.driveByStatus = progresses[i];
-                                        $scope.driveByStatusIndex = j;
-                                        var blockWidth = 100 / (countProgresses);
+
+
+
+                                for (var i = 0; i < progresses.length; i++) {
+                                    if (progresses[i].key == data[0].buildingProgress) {
+                                        $scope.driveByStatus = progresses[i].key;
+                                        $scope.driveByStatusIndex = i;
+                                        var blockWidth = 100 / (progresses.length);
                                         $scope.driveByStatusBarWidth = (blockWidth * ($scope.driveByStatusIndex)).toFixed(2) + "%";
                                         break;
                                     }
-
-                                    j++;
                                 }
 
                                 $scope.driveBy = data;
                                 $scope.selectedDriveBy = $scope.driveBy[0];
+
+
+                                var slides = $scope.slides = [];
+
+                                console.log( $scope.selectedDriveBy);
+
+
+                                angular.forEach($scope.selectedDriveBy.images, function(value, key, obj) {
+                                    slides.push({
+                                        image: obj[key].uri,
+                                        id: key
+                                    });
+                                });
+
+
+
+
                                 $scope.drivebyLoading = false;
 
                             }  else {
@@ -371,6 +398,20 @@ define(["./module"], function (module) {
 
                     $scope.setSelectedDriveBy = function (driveBy) {
                         $scope.selectedDriveBy = driveBy;
+
+                        var slides = $scope.slides = [];
+
+                        angular.forEach($scope.selectedDriveBy.images, function(value, key, obj) {
+                            slides.push({
+                                image: obj[key].uri,
+                                id: key
+                            });
+                        });
+
+                        $scope.config.sources[0].src = $scope.selectedDriveBy.videoUri
+
+                        // $scope.videoUrl = $scope.selectedDriveBy.videoUri;
+                        
                     };
 
 

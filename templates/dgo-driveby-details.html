@@ -203,6 +203,18 @@
                                                 </div>
                                             </uib-slide>
                                         </uib-carousel>
+
+
+                                        <!--<uib-carousel active="active" interval="myInterval" no-wrap="noWrapSlides">
+                                            <uib-slide ng-repeat="slide in selectedDriveBy.images track by slide.index" index="slide.index">
+                                                <img ng-src="{{slide.uri}}" style="margin:auto;">
+                                                <div class="carousel-caption">
+                                                    <h4>Slide {{slide.id}}</h4>
+                                                    <p>{{slide.text}}</p>
+                                                </div>
+                                            </uib-slide>
+                                        </uib-carousel>-->
+
                                     </div>
                                 </div>
                             </uib-tab>
@@ -224,7 +236,7 @@
                                 Datum:
                             </div>
                             <div class="col-xs-5 nopad-l">
-                                {{sendData.dateCreated}}
+                                {{selectedDriveBy.dateCreated}}
                             </div>
                         </div>
                         <div class="row top-10">
@@ -232,7 +244,7 @@
                                 Zustand:
                             </div>
                             <div class="col-xs-5 nopad-l">
-                                {{sendData.projectType}}
+                                {{selectedDriveBy.projectType}}
                             </div>
                         </div>
                         <div class="row">
@@ -240,7 +252,7 @@
                                 Objekttyp:
                             </div>
                             <div class="col-xs-5 nopad-l">
-                                {{sendData.objectType}}
+                                {{selectedDriveBy.objectType}}
                             </div>
                         </div>
                         <div class="row">
@@ -257,7 +269,7 @@
                                 Bautenstand:
                             </div>
                             <div class="col-xs-5 nopad-l">
-                                {{sendData.buildingProgress}}
+                                {{selectedDriveBy.buildingProgress}}
                             </div>
                         </div>
                         <div class="row">
@@ -265,7 +277,7 @@
                                 Umgebende Bebauung:
                             </div>
                             <div class="col-xs-5 nopad-l">
-                                {{sendData.objectStandardEnv}}
+                                {{selectedDriveBy.objectStandardEnv}}
                             </div>
                         </div>
                         <div class="row">
@@ -273,7 +285,7 @@
                                 Leerstand Umgebung:
                             </div>
                             <div class="col-xs-5 nopad-l">
-                                {{sendData.vacancyEnv}}
+                                {{selectedDriveBy.vacancyEnv}}
                             </div>
                         </div>
                         <div class="row">
@@ -281,7 +293,7 @@
                                 Verkehrsanbindung ÖPNV:
                             </div>
                             <div class="col-xs-5 nopad-l">
-                                {{sendData.publicTransport}}
+                                {{selectedDriveBy.publicTransport}}
                             </div>
                         </div>
                         <div class="row">
@@ -289,7 +301,7 @@
                                 Nähe Versorgungseinrichtungen:
                             </div>
                             <div class="col-xs-5 nopad-l">
-                                {{sendData.nearbySupply}}
+                                {{selectedDriveBy.nearbySupply}}
                             </div>
                         </div>
                         <div class="row">
@@ -297,7 +309,7 @@
                                 Nähe Erholungseinrichtungen:
                             </div>
                             <div class="col-xs-5 nopad-l">
-                                {{sendData.nearbyRecreation}}
+                                {{selectedDriveBy.nearbyRecreation}}
                             </div>
                         </div>
                     </div>
