@@ -34,7 +34,15 @@
     </div>
 
     <div class="driveby-items" ng-hide="newsError" ng-style="driveBysListStyleObj">
+
         <div class="driveby-item" ng-click="showDrivebysDetails(n.transactionHash, $event)" ng-repeat="n in driveBys">
+            <div class="gray">
+                <span>
+                    Wenn Sie diesen DriveBy-Upload öffnen, werden alle Änderungen an ihrem derzeit geladenen DriveBy-Upload verworfen! Klicken Sie erneut, um fortzufahren.
+                </span>
+
+            </div>
+
             <h4>{{n.projectName}}</h4>
             <p class="news-text">{{n.city}} / {{n.street}}</p>
             <br>

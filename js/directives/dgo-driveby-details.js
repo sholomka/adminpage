@@ -98,8 +98,7 @@ define(["./module"], function (module) {
                         $scope.driveByStatusWidth = statusWidth + "%";
                         $scope.driveByStatusTotalWidth = (statusWidth * (countProgresses)) + "%";
                         $scope.driveByMap = {};
-
-
+                        
                         angular.forEach(args.data, function(value, key, obj) {
                             if (key == 'base64Images') {
                                 $scope.sendData.base64Images = [];
@@ -139,7 +138,6 @@ define(["./module"], function (module) {
                         $scope.driveBy = $scope.sendData;
                         $scope.selectedDriveBy = $scope.sendData;
                         $scope.drivebyLoading = false;
-
                         
                         $scope.infoData = {};
                         $scope.infoData.projectType = args.data.projectType;
@@ -310,23 +308,16 @@ define(["./module"], function (module) {
                         $scope.street = item.adresse.strasse;
                         $scope.plz = item.adresse.plz;
                         $scope.city = item.adresse.ort;
-
                         
                         $drivebysService.getMapped(item.id).then(function (data) {
-
                             if (data.length > 0) {
-
                                 var progresses = [];
-
                                 angular.forEach($scope.bautenstand, function(value, key, obj) {
                                     progresses.push({
                                         key: value,
                                         name: key
                                     });
                                 });
-
-                                
-
 
                                 var statusWidth = Math.floor(100 / (progresses.length + 1));
                                 $scope.driveByStatusWidth = statusWidth + "%";
@@ -340,9 +331,7 @@ define(["./module"], function (module) {
                                     $scope.driveByMap[data[i].buildingProgress].unshift(data[i]); //sortierung umkehren
                                 }
 
-
-
-
+                                
                                 for (var i = 0; i < progresses.length; i++) {
                                     if (progresses[i].key == data[0].buildingProgress) {
                                         $scope.driveByStatus = progresses[i].key;
@@ -355,23 +344,16 @@ define(["./module"], function (module) {
 
                                 $scope.driveBy = data;
                                 $scope.selectedDriveBy = $scope.driveBy[0];
-
-
+                                
                                 var slides = $scope.slides = [];
-
-                                console.log( $scope.selectedDriveBy);
-
-
+                                
                                 angular.forEach($scope.selectedDriveBy.images, function(value, key, obj) {
                                     slides.push({
                                         image: obj[key].uri,
                                         id: key
                                     });
                                 });
-
-
-
-
+                                
                                 $scope.drivebyLoading = false;
 
                             }  else {
@@ -408,10 +390,15 @@ define(["./module"], function (module) {
                             });
                         });
 
-                        $scope.config.sources[0].src = $scope.selectedDriveBy.videoUri
+                        $scope.videoUrl = $scope.selectedDriveBy.videoUri;
 
-                        // $scope.videoUrl = $scope.selectedDriveBy.videoUri;
-                        
+                        $scope.config = {
+                            sources: [
+                                {src: $sce.trustAsResourceUrl($scope.videoUrl), type: "video/mp4"},
+                                {src: $sce.trustAsResourceUrl($scope.videoUrl), type: "video/webm"},
+                                {src: $sce.trustAsResourceUrl($scope.videoUrl), type: "video/ogg"}
+                            ]
+                        };
                     };
 
 

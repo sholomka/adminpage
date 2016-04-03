@@ -106,12 +106,14 @@ define(["./module"], function (module) {
 
 
                         var event = $event.currentTarget,
-                            accept = angular.element(event);
+                            accept = angular.element(event).children().eq(0);
 
 
-                        if (!accept.hasClass('active')) {
+                        accept.toggleClass('active');
+
+                       /* if (!accept.hasClass('active')) {
                             accept.toggleClass('active');
-                        }
+                        }*/
 
 
                         $drivebysService.showDrivebysDetails(id).then(function (data) {
