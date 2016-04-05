@@ -86,6 +86,12 @@ define(["./module"], function (module) {
                         }
                     });
 
+                    /*$scope.preloader = false;
+
+                    $scope.$on('preloader', function (event, args) {
+                        $scope.preloader = args.data;
+                    });*/
+                    
                     $scope.$on('drivebyDetails', function (event, args) {
                         $scope.sendData = {};
                         $scope.showForm = true;
@@ -155,6 +161,7 @@ define(["./module"], function (module) {
                         $sessionStorage.videoComplaints = {};
                         $sessionStorage.datenComplaints = {};
                         $sessionStorage.complaints = [];
+                        $sessionStorage.formchanges = [];
 
                         $scope.reset();
 
@@ -294,6 +301,8 @@ define(["./module"], function (module) {
                     });
 
                     $scope.highlightMarker = function (item, $event) {
+                        $sessionStorage.formchanges.push('highlightMarker');
+
                         $scope.sendData.mappedImmoObject = {
                             "objectType": item.angebotsart,
                             "objectId": item.id
@@ -401,7 +410,6 @@ define(["./module"], function (module) {
                         };
                     };
 
-
                     $scope.reset = function () {
                         $scope.street = $scope.sendData.street;
                         $scope.plz = $scope.sendData.plz;
@@ -412,7 +420,15 @@ define(["./module"], function (module) {
                         $mapService.createDrivebyMarker($scope.sendData.location);
                         $scope.sendData.mappedImmoObject = null;
 
+                        $scope.undoForm('highlightMarker');
                         //$listenerService.triggerChange("drivebyDetails", "dgoDrivebys", $scope.sendData.location);
+                    };
+
+                    $scope.undoForm = function(key) {
+                        for (var i in $sessionStorage.formchanges) {
+                            if ($sessionStorage.formchanges[i] == key)
+                                delete $sessionStorage.formchanges[i];
+                        }
                     };
 
                     $scope.Lightbox = Lightbox;
@@ -763,7 +779,16 @@ define(["./module"], function (module) {
                     };
 
                     $scope.unbekanntChange = function(unbekannt) {
+                        
+                        console.log(unbekannt);
+                        
                         $scope.unbekannt = unbekannt;
+
+                        if ($scope.unbekannt) {
+                            $sessionStorage.formchanges.push('unbekannt');
+                        } else {
+                            $scope.undoForm('unbekannt');
+                        }
                     };
 
                     $scope.storeEdited = function () {

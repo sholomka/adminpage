@@ -7,7 +7,7 @@ define(["./module"], function (module) {
                 replace: true,
                 scope: true,
                 templateUrl: "templates/dgo-drivebys.html",
-                controller: function ($scope, $attrs) {
+                controller: function ($scope, $attrs, $sessionStorage) {
 
                     $scope.$on('updateDriveBy', function (event, args) {
                         $scope.refreshWindow('neue');
@@ -103,18 +103,30 @@ define(["./module"], function (module) {
                     };
 
                     $scope.showDrivebysDetails = function(id, $event) {
-
-
                         var event = $event.currentTarget,
                             accept = angular.element(event).children().eq(0);
 
+                        if(angular.isArray($sessionStorage.formchanges) && !angular.equals($sessionStorage.formchanges, [])) {
+                            $sessionStorage.formchanges = $sessionStorage.formchanges.filter(function(x) {
+                                return x !== undefined &&  x !== null;
+                            });
+                        }
 
-                        accept.toggleClass('active');
+                        if (!accept.hasClass('active') && (!$sessionStorage.formchanges || $sessionStorage.formchanges.length == 0) ) {
+                            $sessionStorage.formchanges = [];
+                            $scope.showDrivebysDetailsRest(id);
+                        } else {
+                            if (accept.hasClass('active')) {
+                                $scope.showDrivebysDetailsRest(id);
+                            }
 
-                       /* if (!accept.hasClass('active')) {
                             accept.toggleClass('active');
-                        }*/
+                        }
+                    };
 
+                    $scope.showDrivebysDetailsRest = function(id) {
+                        // $sessionStorage.preloader = true;
+                        // $rootScope.$broadcast('preloader', {data: true});
 
                         $drivebysService.showDrivebysDetails(id).then(function (data) {
 
@@ -130,15 +142,9 @@ define(["./module"], function (module) {
                                 $listenerService.triggerChange("detailItem", "dgoDrivebys", data);
                             });
 
+                            // $rootScope.$broadcast('preloader', {data: false});
 
-                        }, function (error) {
-                            $rootScope.news = undefined;
-                            if (error && error.exception == "PolygonNotInViewportException") {
-                                $rootScope.newsBemerkung = error.error;
-                            } else {
-                                $rootScope.newsError = error;
-                            }
-                        });
+                        }, function (error) {});
                     };
 
                     $scope.searchEdit = function(data) {
