@@ -10,48 +10,84 @@ define(["./module"], function (module) {
                 controller: function ($scope, $element, Lightbox, $sessionStorage, $anchorScroll) {
                     $constantsService.getZustande().then(function(constants){
                         $scope.zustand = constants;
+                        $scope.zustandFront = {};
+                        for (var key in constants) {
+                            $scope.zustandFront[constants[key]] = key;
+                        }
                     });
 
                     $constantsService.getObjektTypen().then(function(constants){
                         $scope.objekttyp = constants;
+                        $scope.objekttypFront = {};
+                        for (var key in constants) {
+                            $scope.objekttypFront[constants[key]] = key;
+                        }
                     });
 
                     $constantsService.getStates().then(function(constants){
                         $scope.denkmalschutz = $scope.states = constants;
+                        $scope.denkmalschutzFront = {};
+                        for (var key in constants) {
+                            $scope.denkmalschutzFront[constants[key]] = key;
+                        }
                     });
 
                     $constantsService.getBautenstande().then(function(constants){
                         $scope.bautenstand = constants;
+                        $scope.bautenstandFront = {};
+                        for (var key in constants) {
+                            $scope.bautenstandFront[constants[key]] = key;
+                        }
                     });
 
                     $constantsService.getObjektStandard().then(function(constants){
                         $scope.objektStandardType = constants;
+                        $scope.objektStandardTypeFront = {};
+                        for (var key in constants) {
+                            $scope.objektStandardTypeFront[constants[key]] = key;
+                        }
                     });
 
                     $constantsService.getObjektStandardUmg().then(function(constants){
                         $scope.umgebende = constants;
+                        $scope.umgebendeFront = {};
+                        for (var key in constants) {
+                            $scope.umgebendeFront[constants[key]] = key;
+                        }
                     });
 
                     $constantsService.getLeerstandUmg().then(function(constants){
                         $scope.leerstand = constants;
+                        $scope.leerstandFront = {};
+                        for (var key in constants) {
+                            $scope.leerstandFront[constants[key]] = key;
+                        }
                     });
 
                     $constantsService.getVerkehr().then(function(constants){
                         $scope.verkehrsanbindung = constants;
+                        $scope.verkehrsanbindungFront = {};
+                        for (var key in constants) {
+                            $scope.verkehrsanbindungFront[constants[key]] = key;
+                        }
                     });
 
                     $constantsService.getVersorgung().then(function(constants){
                         $scope.versorgungseinrichtung = constants;
+                        $scope.versorgungseinrichtungFront = {};
+                        for (var key in constants) {
+                            $scope.versorgungseinrichtungFront[constants[key]] = key;
+                        }
                     });
 
                     $constantsService.getErholung().then(function(constants){
                         $scope.erholungsmoglichkeiten = constants;
+                        $scope.erholungsmoglichkeitenFront = {};
+                        for (var key in constants) {
+                            $scope.erholungsmoglichkeitenFront[constants[key]] = key;
+                        }
                     });
-
-                    $constantsService.getErholung().then(function(constants){
-                        $scope.erholungsmoglichkeiten = constants;
-                    });
-
+                    
                     $scope.sortByKey = function(array, key) {
                         return array.sort(function(a, b) {
                             var x = a[key]; var y = b[key];
@@ -136,7 +172,6 @@ define(["./module"], function (module) {
 
                         var j = 0;
                         for(var i in progresses) {
-
                             if (progresses[i] == $scope.sendData.buildingProgress) {
                                 $scope.driveByStatus = progresses[i];
                                 $scope.driveByStatusIndex = j;
@@ -147,7 +182,7 @@ define(["./module"], function (module) {
 
                             j++;
                         }
-
+                        
                         $scope.driveBy = $scope.sendData;
                         $scope.selectedDriveBy = $scope.sendData;
                         $scope.drivebyLoading = false;
@@ -400,7 +435,7 @@ define(["./module"], function (module) {
                         });
 
                         $scope.videoUrl = $scope.selectedDriveBy.videoUri;
-                        
+
                         $scope.config = {
                             sources: [
                                 {src: $sce.trustAsResourceUrl($scope.videoUrl), type: "video/mp4"},
@@ -666,13 +701,20 @@ define(["./module"], function (module) {
                         } else {
                             $scope.undoForm('driveByRate');
                         }
-
-                        console.log($sessionStorage.formchanges);
                     };
 
                     $scope.showError = function() {
                         var index = [];
                         $scope.error = false;
+                        $scope.mapped = {};
+                        
+                        if ($scope.sendData.mappedImmoObject == null) {
+                            index.push('mappedImmoObject');
+                            $scope.error = true;
+                            $scope.mapped.error = true;
+                        } else {
+                            $scope.mapped.error = false;
+                        }
 
                         angular.forEach($scope.images, function(value, key, obj) {
                                 if (!(value.accept || value.complaint)) {
@@ -710,7 +752,7 @@ define(["./module"], function (module) {
 
                         if ($scope.daten.complaint)
                             $scope.sendData.state = $scope.states.Abgelehnt;
-
+                        
                         if (index.length > 0)
                             $anchorScroll(index[0]);
                     };
@@ -761,6 +803,7 @@ define(["./module"], function (module) {
                             $drivebysService.storeEdited($scope.sendData).then(function () {
                                 $scope.sendData = {};
                                 $scope.showForm = false;
+                                $sessionStorage.formchanges = [];
 
                                 $rootScope.$broadcast('updateDriveBy');
                             }, function (error) {});
