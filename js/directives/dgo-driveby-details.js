@@ -94,8 +94,15 @@ define(["./module"], function (module) {
                     
                     $scope.$on('drivebyDetails', function (event, args) {
                         $scope.sendData = {};
+                        $scope.uploadingObject = {};
+                        $scope.uploadingObject.unbekannt = false;
                         $scope.showForm = true;
-                        $scope.unbekannt = false;
+                        $scope.max = 5;
+                        $scope.isReadonly = false;
+                        $scope.uploadingObject.driveByRate = 0;
+                        $scope.myInterval = 5000;
+                        $scope.noWrapSlides = false;
+                        $scope.active = 0;
 
                         var progresses = $scope.bautenstand,
                             countProgresses = Object.keys(progresses).length;
@@ -217,10 +224,7 @@ define(["./module"], function (module) {
                         ];
 
                         $scope.sortByKey($scope.images, 'index');
-
-                        $scope.myInterval = 5000;
-                        $scope.noWrapSlides = false;
-                        $scope.active = 0;
+                        
                         var slides = $scope.slides = [];
 
                         angular.forEach($scope.images, function(value, key, obj) {
@@ -236,10 +240,6 @@ define(["./module"], function (module) {
                                 id: key
                             });
                         });
-
-                        $scope.max = 5;
-                        $scope.isReadonly = false;
-                        $scope.driveByRate = 0;
                         
                         $scope.rateText = [
                             "Bitte bewerten Sie diesen Upload!",
@@ -400,7 +400,7 @@ define(["./module"], function (module) {
                         });
 
                         $scope.videoUrl = $scope.selectedDriveBy.videoUri;
-
+                        
                         $scope.config = {
                             sources: [
                                 {src: $sce.trustAsResourceUrl($scope.videoUrl), type: "video/mp4"},
@@ -442,45 +442,40 @@ define(["./module"], function (module) {
                             return;
                         }
 
-                        var nextIndex = index + 1;
-
-                        if (!accept.hasClass('active')) {
-                            switch (type) {
-                                case 'video':
+                        switch (type) {
+                            case 'video':
+                                if (!accept.hasClass('active')) {
                                     $sessionStorage.base64Video = $scope.base64Video;
                                     $scope.video[index].accept = true;
-                                    break;
-
-                                case 'daten':
-                                    // $sessionStorage.daten = $scope.daten;
-
-                                    $scope.daten.accept = true;
-
-                                    break;
-
-                                default:
-                                    // $scope.currentImg = $scope.images[index].thumbUrl.replace('data:image/png;base64,', '');
-                                    // $sessionStorage.base64Images[index] = {};
-                                    // $sessionStorage.base64Images[index].index = nextIndex;
-                                    // $sessionStorage.base64Images[index].base64 = $scope.currentImg;
-                                    $scope.images[index].accept = true;
-                            }
-                        } else {
-                            switch (type) {
-                                case 'video':
+                                    $sessionStorage.formchanges.push('videoaccept'+index);
+                                } else {
                                     delete $sessionStorage.base64Video;
                                     $scope.video[index].accept = false;
-                                    break;
+                                    $scope.undoForm('videoaccept'+index);
+                                }
 
-                                case 'daten':
+                                break;
+                            case 'daten':
+                                if (!accept.hasClass('active')) {
+                                    $sessionStorage.formchanges.push('datenaccept');
+                                    $scope.daten.accept = true;
+                                } else {
                                     delete $sessionStorage.daten;
                                     $scope.daten.accept = false;
-                                    break;
+                                    $scope.undoForm('datenaccept');
+                                }
 
-                                default:
+                                break;
+
+                            default:
+                                if (!accept.hasClass('active')) {
+                                    $sessionStorage.formchanges.push('imagesaccept'+index);
+                                    $scope.images[index].accept = true;
+                                } else {
                                     delete $sessionStorage.base64Images[index];
                                     $scope.images[index].accept = false;
-                            }
+                                    $scope.undoForm('imagesaccept'+index);
+                                }
                         }
 
                         $rootScope.$broadcast('accept2', {
@@ -495,19 +490,24 @@ define(["./module"], function (module) {
                             complaint = accept.next();
 
                         if (complaint.hasClass('active')) {
-
                             switch (type) {
                                 case 'video':
                                     $scope.video[index].complaint = false;
                                     $scope.video[index].accept = true;
 
                                     delete $sessionStorage.videoComplaints;
+
+                                    $sessionStorage.formchanges.push('videoaccept'+index);
+                                    $scope.undoForm('videocomplaints'+index);
                                     break;
                                 case 'daten':
                                     $scope.daten.complaint = false;
                                     $scope.daten.accept = true;
 
                                     delete $sessionStorage.datenComplaints;
+
+                                    $sessionStorage.formchanges.push('datenaccept');
+                                    $scope.undoForm('datencomplaints');
                                     break;
 
                                 default:
@@ -515,26 +515,10 @@ define(["./module"], function (module) {
                                     $scope.images[index].accept = true;
 
                                     delete $sessionStorage.complaints[index];
-                            }
 
-                            // if (type == 'video') {
-                            //     $sessionStorage.base64Video = $scope.base64Video;
-                            //     $scope.video[index].complaint = false;
-                            //     $scope.video[index].accept = true;
-                            //
-                            //     delete $sessionStorage.videoComplaints;
-                            // } else {
-                            //     $scope.currentImg = $scope.images[index].thumbUrl.replace('data:image/png;base64,', '');
-                            //
-                            //     $sessionStorage.base64Images[index] = {};
-                            //     $sessionStorage.base64Images[index].index = nextIndex;
-                            //     $sessionStorage.base64Images[index].base64 = $scope.currentImg;
-                            //
-                            //     $scope.images[index].complaint = false;
-                            //     $scope.images[index].accept = true;
-                            //
-                            //     delete $sessionStorage.complaints[index];
-                            // }
+                                    $sessionStorage.formchanges.push('imagesaccept'+index);
+                                    $scope.undoForm('imagecomplaints'+index);
+                            }
                         }
                     };
 
@@ -544,7 +528,6 @@ define(["./module"], function (module) {
                         };
 
                         $scope.currentImg = $scope.images[index].thumbUrl;
-
 
                         switch (type) {
                             case 'video':
@@ -558,16 +541,8 @@ define(["./module"], function (module) {
                             default:
                                 $scope.complaintText = angular.isObject($sessionStorage.complaints[index]) ? $sessionStorage.complaints[index].complaintText : '';
                         }
-                        
-                        /*if (type == 'video') {
-                            $scope.complaintText = angular.isObject($sessionStorage.videoComplaints) && !angular.equals({}, $sessionStorage.videoComplaints) ? $sessionStorage.videoComplaints.complaintText : '';
-                        } else {
-                            $scope.complaintText = angular.isObject($sessionStorage.complaints[index]) ? $sessionStorage.complaints[index].complaintText : '';
-                        }*/
 
                         $scope.check($scope.complaintText);
-                        
-                        
                         $scope.templateUrl = type == 'daten' ? 'templates/modal-daten-complaint.html' : 'templates/modal-complaint.html';
 
                         var currentModal = $uibModal.open({
@@ -578,6 +553,8 @@ define(["./module"], function (module) {
                         });
 
                         $scope.save = function(complaintText) {
+                            var nextIndex = index + 1;
+
                             switch (type) {
                                 case 'video':
                                     if (!$scope.video[index].complaint) {
@@ -588,6 +565,12 @@ define(["./module"], function (module) {
                                         $scope.video[index].complaint = true;
                                         $scope.video[index].accept = false;
                                     }
+
+                                    $sessionStorage.videoComplaints = {};
+                                    $sessionStorage.videoComplaints.complaintText = complaintText;
+                                    $sessionStorage.videoComplaints.element = 'VIDEO';
+
+                                    $sessionStorage.formchanges.push('videocomplaints'+index);
                                     break;
 
                                 case 'daten':
@@ -599,6 +582,11 @@ define(["./module"], function (module) {
                                         $scope.daten.complaint = true;
                                         $scope.daten.accept = false;
                                     }
+                                    $sessionStorage.datenComplaints = {};
+                                    $sessionStorage.datenComplaints.complaintText = complaintText;
+                                    $sessionStorage.datenComplaints.element = 'DATEN';
+
+                                    $sessionStorage.formchanges.push('datencomplaints');
                                     break;
 
                                 default:
@@ -610,69 +598,18 @@ define(["./module"], function (module) {
                                         $scope.images[index].complaint = true;
                                         $scope.images[index].accept = false;
                                     }
+                                    $sessionStorage.complaints[index] = {};
+                                    $sessionStorage.complaints[index].complaintText = complaintText;
+                                    $sessionStorage.complaints[index].element = 'IMAGE' + nextIndex;
+
+                                    $sessionStorage.formchanges.push('imagecomplaints'+index);
                             }
 
-
-                            /*if (type == 'video') {
-                                if (!$scope.video[index].complaint) {
-                                    $scope.video[index].complaint = true;
-                                }
-
-                                if ($scope.video[index].accept) {
-                                    $scope.video[index].complaint = true;
-                                    $scope.video[index].accept = false;
-                                }
-                            } else {
-                                if (!$scope.images[index].complaint) {
-                                    $scope.images[index].complaint = true;
-                                }
-
-                                if ($scope.images[index].accept) {
-                                    $scope.images[index].complaint = true;
-                                    $scope.images[index].accept = false;
-                                }
-                            }*/
 
                             $rootScope.$broadcast('complaint2', {
                                 index: index,
                                 complaint:  $scope.images[index].complaint
                             });
-
-                            var nextIndex = index + 1;
-
-
-                            switch (type) {
-                                case 'video':
-                                    $sessionStorage.videoComplaints = {};
-                                    $sessionStorage.videoComplaints.complaintText = complaintText;
-                                    $sessionStorage.videoComplaints.element = 'VIDEO';
-                                    break;
-
-                                case 'daten':
-                                    $sessionStorage.datenComplaints = {};
-                                    $sessionStorage.datenComplaints.complaintText = complaintText;
-                                    $sessionStorage.datenComplaints.element = 'DATEN';
-                                    break;
-
-                                default:
-                                    $sessionStorage.complaints[index] = {};
-                                    $sessionStorage.complaints[index].complaintText = complaintText;
-                                    $sessionStorage.complaints[index].element = 'IMAGE' + nextIndex;
-                            }
-
-                            // if (type == 'video') {
-                            //     $sessionStorage.videoComplaints = {};
-                            //     $sessionStorage.videoComplaints.complaintText = complaintText;
-                            //     $sessionStorage.videoComplaints.element = 'VIDEO';
-                            //
-                            //     // delete  $sessionStorage.base64Video;
-                            // } else {
-                            //     $sessionStorage.complaints[index] = {};
-                            //     $sessionStorage.complaints[index].complaintText = complaintText;
-                            //     $sessionStorage.complaints[index].element = 'IMAGE' + nextIndex;
-                            //
-                            //     // delete $sessionStorage.base64Images[index];
-                            // }
 
                             currentModal.dismiss();
                         };
@@ -681,7 +618,6 @@ define(["./module"], function (module) {
                             currentModal.dismiss();
                         };
                     };
-
 
                     $scope.info = function() {
                         var currentModal = $uibModal.open({
@@ -692,7 +628,6 @@ define(["./module"], function (module) {
                         });
 
                         $scope.save = function() {
-
                             $scope.infoData.projectType = $scope.sendData.projectType;
                             $scope.infoData.objectType = $scope.sendData.objectType;
                             $scope.infoData.protectedBuilding = $scope.sendData.protectedBuilding;
@@ -704,11 +639,9 @@ define(["./module"], function (module) {
                             $scope.infoData.nearbySupply = $scope.sendData.nearbySupply;
                             $scope.infoData.nearbyRecreation = $scope.sendData.nearbyRecreation;
 
-
                             $scope.daten.accept = true;
 
                             currentModal.dismiss();
-                         
                         };
 
                         $scope.cancel = function() {
@@ -723,14 +656,18 @@ define(["./module"], function (module) {
                             $scope.sendData.nearbySupply = $scope.infoData.nearbySupply;
                             $scope.sendData.nearbyRecreation = $scope.infoData.nearbyRecreation;
 
-                            console.log($scope.sendData);
-
                             currentModal.dismiss();
                         };
                     };
 
-                    $scope.getRate = function(driveByRate) {
-                        $scope.driveByRate = driveByRate;
+                    $scope.getRate = function() {
+                        if ($scope.uploadingObject.driveByRate > 0) {
+                            $sessionStorage.formchanges.push('driveByRate');
+                        } else {
+                            $scope.undoForm('driveByRate');
+                        }
+
+                        console.log($sessionStorage.formchanges);
                     };
 
                     $scope.showError = function() {
@@ -778,13 +715,8 @@ define(["./module"], function (module) {
                             $anchorScroll(index[0]);
                     };
 
-                    $scope.unbekanntChange = function(unbekannt) {
-                        
-                        console.log(unbekannt);
-                        
-                        $scope.unbekannt = unbekannt;
-
-                        if ($scope.unbekannt) {
+                    $scope.unbekanntChange = function() {
+                        if ($scope.uploadingObject.unbekannt) {
                             $sessionStorage.formchanges.push('unbekannt');
                         } else {
                             $scope.undoForm('unbekannt');
@@ -815,10 +747,10 @@ define(["./module"], function (module) {
                                 $scope.sendData.complaints = null;
                             }
 
-                            $scope.sendData.rating = $scope.driveByRate;
+                            $scope.sendData.rating = $scope.uploadingObject.driveByRate;
 
                             if ($scope.sendData.state != $scope.states.Abgelehnt) {
-                                if ($scope.unbekannt)
+                                if ($scope.uploadingObject.unbekannt)
                                     $scope.sendData.state =  $scope.states.Unbekannt;
                                 else
                                     $scope.sendData.state = $scope.states.Abgeschlossen;

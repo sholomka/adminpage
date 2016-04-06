@@ -39,18 +39,24 @@ define(["angular", "angular-sanitize",  "angular-animate", "angular-touch", "loc
 
                 if (isVideo) {
                     $sessionStorage.base64Video = $scope.Lightbox.image.base64Video;
+
+                    $sessionStorage.formchanges.push('videoaccept'+index);
                 } else {
                     $sessionStorage.base64Images[index] = {};
                     $sessionStorage.base64Images[index].index = $scope.Lightbox.image.index;
                     $sessionStorage.base64Images[index].base64 = $scope.Lightbox.image.base64;
+
+                    $sessionStorage.formchanges.push('imagesaccept'+index);
                 }
             } else {
                 $scope.Lightbox.image.accept = false;
 
                 if (isVideo) {
                     delete $sessionStorage.base64Video;
+                    $scope.undoForm('videoaccept'+index);
                 }  else {
                     delete $sessionStorage.base64Images[index];
+                    $scope.undoForm('imagesaccept'+index);
                 }
             }
 
@@ -157,6 +163,12 @@ define(["angular", "angular-sanitize",  "angular-animate", "angular-touch", "loc
             }
         };
 
+        $scope.undoForm = function(key) {
+            for (var i in $sessionStorage.formchanges) {
+                if ($sessionStorage.formchanges[i] == key)
+                    delete $sessionStorage.formchanges[i];
+            }
+        };
     });
 
     app.config(["LightboxProvider", function(LightboxProvider) {

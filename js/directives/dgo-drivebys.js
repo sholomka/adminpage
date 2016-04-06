@@ -102,6 +102,8 @@ define(["./module"], function (module) {
                         return $scope.isSort(sortCriterium) && $scope.sortFields.order == "DESC";
                     };
 
+                    $sessionStorage.formchanges = [];
+                    
                     $scope.showDrivebysDetails = function(id, $event) {
                         var event = $event.currentTarget,
                             accept = angular.element(event).children().eq(0);

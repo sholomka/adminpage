@@ -43,7 +43,7 @@
                 <span style="color:#699E25; font-size: 10px;">{{street}}, {{plz}} {{city}}</span>
                 <dgo-map type="object" id="object" style="width: 280px; height:285px;"></dgo-map>
 
-                <input type="checkbox" value="checkbox" ng-model="unbekannt" ng-change="unbekanntChange(unbekannt)" id="u719_input">
+                <input type="checkbox" value="checkbox" ng-model="uploadingObject.unbekannt" ng-change="unbekanntChange()" id="u719_input">
 
                 <label for="u719_input" class="ax_checkbox">
                     <div class="text" id="u720">
@@ -512,7 +512,7 @@
             </div>
 
             <div class="rating top-50">
-                <uib-rating ng-click="getRate(driveByRate)" ng-model="driveByRate" max="max" read-only="isReadonly" on-hover="hoveringOver(value)" on-leave="overStar = null" titles="['one','two','three']" aria-labelledby="default-rating"></uib-rating>
+                <uib-rating ng-click="getRate()" ng-model="uploadingObject.driveByRate" max="max" read-only="isReadonly" on-hover="hoveringOver(value)" on-leave="overStar = null" titles="['one','two','three']" aria-labelledby="default-rating"></uib-rating>
                 <span class="label" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}" ng-show="overStar && !isReadonly">{{percent}}%</span>
 
                 <p>{{rateText[driveByRate]}}</p>
