@@ -25,10 +25,11 @@ define(["./module"], function (module) {
                     });
 
                     $constantsService.getStates().then(function(constants){
-                        $scope.denkmalschutz = $scope.states = constants;
+                        $scope.states = constants;
+                        $scope.denkmalschutz = {"Unbekannt": null, "Ja": true, "Nein": false};
                         $scope.denkmalschutzFront = {};
-                        for (var key in constants) {
-                            $scope.denkmalschutzFront[constants[key]] = key;
+                        for (var key in $scope.denkmalschutz) {
+                            $scope.denkmalschutzFront[$scope.denkmalschutz[key]] = key;
                         }
                     });
 
@@ -139,6 +140,9 @@ define(["./module"], function (module) {
                         $scope.myInterval = 5000;
                         $scope.noWrapSlides = false;
                         $scope.active = 0;
+                        $scope.mapped = {};
+                        $scope.driveByRate = {};
+                        $scope.rateTextStyle = {};
 
                         var progresses = $scope.bautenstand,
                             countProgresses = Object.keys(progresses).length;
@@ -346,7 +350,7 @@ define(["./module"], function (module) {
                         angular.element(document.querySelectorAll('.ax_dynamic_panel')).removeClass('active');
                         angular.element(document.querySelector('#u722')).css('opacity', '1');
                         angular.element($event.currentTarget).toggleClass('active');
-                        $mapService.removeDrivebyMarker();
+                        // $mapService.removeDrivebyMarker();
                         $mapService.highlightItem(item);
 
                         $scope.street = item.adresse.strasse;
@@ -698,6 +702,8 @@ define(["./module"], function (module) {
                     $scope.getRate = function() {
                         if ($scope.uploadingObject.driveByRate > 0) {
                             $sessionStorage.formchanges.push('driveByRate');
+                            $scope.driveByRate.error = false;
+                            $scope.rateTextStyle.color = 'black';
                         } else {
                             $scope.undoForm('driveByRate');
                         }
@@ -706,8 +712,7 @@ define(["./module"], function (module) {
                     $scope.showError = function() {
                         var index = [];
                         $scope.error = false;
-                        $scope.mapped = {};
-                        
+
                         if ($scope.sendData.mappedImmoObject == null) {
                             index.push('mappedImmoObject');
                             $scope.error = true;
@@ -748,6 +753,17 @@ define(["./module"], function (module) {
                             $scope.error = true;
                         } else {
                             $scope.daten.error = false;
+                        }
+
+                        if ($scope.uploadingObject.driveByRate == 0) {
+                            index.push('driveByRate');
+                            $scope.error = true;
+                            $scope.driveByRate.error = true;
+
+                            $scope.rateTextStyle = {color: $scope.driveByRate.error ? 'red' : 'black'};
+
+                        } else {
+                            $scope.driveByRate.error = false;
                         }
 
                         if ($scope.daten.complaint)

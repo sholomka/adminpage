@@ -8,6 +8,12 @@ define(["./module"], function (module) {
                 scope: true,
                 templateUrl: "templates/dgo-drivebys.html",
                 controller: function ($scope, $attrs, $sessionStorage) {
+                    $constantsService.getStates().then(function(constants){
+                        $scope.statesFront = {};
+                        for (var key in constants) {
+                            $scope.statesFront[constants[key]] = key;
+                        }
+                    });
 
                     $scope.$on('updateDriveBy', function (event, args) {
                         $scope.refreshWindow('neue');
@@ -137,7 +143,7 @@ define(["./module"], function (module) {
                             });
 
                             $listenerService.triggerChange("drivebyDetails", "dgoDrivebys", data.location);
-
+                            
                             var suchProfil = {"suchoptionen":{},"sortOrder":{"sortField":"bauende","order":"asc"},"offset":0,"geo":{},"view":{"viewport":[[51.450189013791665,12.073658093359427],[51.450189013791665,12.495601757910208],[51.23336583234749,12.495601757910208],[51.23336583234749,12.073658093359427]],"zoomlevel":12},"type":"objekteimbau"};
 
                             $sucheService.loadItems(suchProfil, id).then(function (data) {
