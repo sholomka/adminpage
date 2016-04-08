@@ -35,6 +35,7 @@ define(["./module", "googlemaps"], function (module) {
             var boundsToCoords = function (bounds) {
                 var sw = bounds.getSouthWest();
                 var ne = bounds.getNorthEast();
+
                 return [[ne.lat(), sw.lng()],
                     [ne.lat(), ne.lng()],
                     [sw.lat(), ne.lng()],
@@ -127,7 +128,7 @@ define(["./module", "googlemaps"], function (module) {
 
                 //unterscheiden je nach mapType, welche Funktionalitäten enthalten sollen
 
-
+                console.log(mapType);
 
                 if (mapType == "suche") {
                     map = new google.maps.Map(mapRootElement, {
@@ -161,6 +162,7 @@ define(["./module", "googlemaps"], function (module) {
 
                         //zoom änderung mitteilen
                         google.maps.event.addListener(map, "zoom_changed", function () {
+
                             if (zoomListenerIsDisabled) return;
 
                             //alle markierungen entfernen (werden eh neu geladen, nach dem zoom)
@@ -539,11 +541,69 @@ define(["./module", "googlemaps"], function (module) {
                         zoom: 15
                     });
 
+
+
+
                     //unsere eigenen listener registrieren (aber erst, nachdem die map sich selbst intialisiert hat)
                     google.maps.event.addListenerOnce(map, 'idle', function () {
 
+
+                        
+                        google.maps.event.addListener(map, "zoom_changed", function () {
+                            if (zoomListenerIsDisabled) return;
+
+                            //alle markierungen entfernen (werden eh neu geladen, nach dem zoom)
+                            for (var key in markerMap) {
+                                markerMap[key].setMap(null);
+                            }
+                            markerMap = {};
+
+                            for (var key in boundaryMap) {
+                                boundaryMap[key].setMap(null);
+                            }
+                            boundaryMap = {};
+                            keepExistingMarkers = false;
+
+                            //wir warten bis der zoom fertig ist
+                            google.maps.event.addListenerOnce(map, "idle", function () {
+                                // updateViewport(map);
+
+                                $listenerService.triggerChange("viewport", "mapService", boundsToCoords(map.getBounds()));
+
+                                // console.log(boundsToCoords(map.getBounds()));
+
+                                // loadSpezialgebieteWithTimeout(map);
+                                // $listenerService.triggerChange("zoomlevel", "mapService", map.getZoom());
+                            });
+
+
+
+                        });
+
+
+
+                      /*  $listenerService.addChangeListener("viewport", "mapService", function (viewport) {
+                            keepExistingMarkers = false;
+                            if (angular.isArray(viewport) && viewport.length == 4) {
+                                map.fitBounds(coordsToBounds(viewport));
+                                map.setZoom(map.getZoom() + 1);
+                            }
+                        });*/
+
+
+                        //zoomlevel entsprechend anpassen, wenn viewport sich extern ändert (z.b. durch laden)
+                        $listenerService.addChangeListener("zoomlevel", "mapService", function (zoomlevel, alt, source) {
+                            keepExistingMarkers = false;
+                            if (zoomlevel >= 0)
+                                map.setZoom(zoomlevel);
+                        });
+
+
                         //kartenausschnitt entsprechend anpassen, wenn object sich geändert ändert
                         $listenerService.addChangeListener("detailItem", "mapService", function (item) {
+
+                            console.log(item + 'item');
+
                             if (angular.isObject(item)) {
 
                                 item = item.objektImBauVorschau;
@@ -551,6 +611,8 @@ define(["./module", "googlemaps"], function (module) {
                                 $listenerService.addChangeListener("drivebyDetails", "mapService", function (driveby) {
                                     updateDrivebyMarker(map, driveby);
                                 });
+
+
 
                                 angular.forEach(item, function (items) {
                                     var icon, title, zoomlevel;
@@ -937,6 +999,7 @@ define(["./module", "googlemaps"], function (module) {
 
             var updateViewport = function (map) {
                 keepExistingMarkers = true;
+
                 $listenerService.triggerChange("viewport", "mapService", boundsToCoords(map.getBounds()));
             };
 

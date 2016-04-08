@@ -109,8 +109,30 @@ define(["./module"], function (module) {
                     };
 
                     $sessionStorage.formchanges = [];
-                    
+
                     $scope.showDrivebysDetails = function(id, $event) {
+
+                        
+                        // Править тут
+                        $listenerService.addChangeListener("viewport", "dgoDrivebys", function (viewport) {
+                            $drivebysService.showDrivebysDetails(id).then(function (data) {
+                                
+                                /*$rootScope.$broadcast('drivebyDetails', {
+                                    data: data
+                                });*/
+
+                                $listenerService.triggerChange("drivebyDetails", "dgoDrivebys", data.location);
+                                // $listenerService.addChangeListener("viewport", "dgoDrivebys", function (viewport) { });
+                                // var viewport = [[51.450189013791665,12.073658093359427],[51.450189013791665,12.495601757910208],[51.23336583234749,12.495601757910208],[51.23336583234749,12.073658093359427]];
+                                var suchProfil = {"suchoptionen":{},"sortOrder":{"sortField":"bauende","order":"asc"},"offset":0,"geo":{},"view":{"viewport":viewport,"zoomlevel":12},"type":"objekteimbau"};
+
+                                $sucheService.loadItems(suchProfil, id).then(function (data) {
+                                    $listenerService.triggerChange("detailItem", "dgoDrivebys", data);
+                                });
+                            }, function (error) {});
+
+                        });
+
                         var event = $event.currentTarget,
                             accept = angular.element(event).children().eq(0);
 
@@ -143,12 +165,21 @@ define(["./module"], function (module) {
                             });
 
                             $listenerService.triggerChange("drivebyDetails", "dgoDrivebys", data.location);
-                            
-                            var suchProfil = {"suchoptionen":{},"sortOrder":{"sortField":"bauende","order":"asc"},"offset":0,"geo":{},"view":{"viewport":[[51.450189013791665,12.073658093359427],[51.450189013791665,12.495601757910208],[51.23336583234749,12.495601757910208],[51.23336583234749,12.073658093359427]],"zoomlevel":12},"type":"objekteimbau"};
 
-                            $sucheService.loadItems(suchProfil, id).then(function (data) {
-                                $listenerService.triggerChange("detailItem", "dgoDrivebys", data);
-                            });
+                            
+                            // $listenerService.addChangeListener("viewport", "dgoDrivebys", function (viewport) { });
+                                
+
+                                var viewport = [[51.450189013791665,12.073658093359427],[51.450189013791665,12.495601757910208],[51.23336583234749,12.495601757910208],[51.23336583234749,12.073658093359427]];
+
+
+                                var suchProfil = {"suchoptionen":{},"sortOrder":{"sortField":"bauende","order":"asc"},"offset":0,"geo":{},"view":{"viewport":viewport,"zoomlevel":12},"type":"objekteimbau"};
+
+                                $sucheService.loadItems(suchProfil, id).then(function (data) {
+                                    $listenerService.triggerChange("detailItem", "dgoDrivebys", data);
+                                });
+
+
 
                             // $rootScope.$broadcast('preloader', {data: false});
 

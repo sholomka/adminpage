@@ -329,6 +329,8 @@ define(["./module"], function (module) {
                     };
 
                     $listenerService.addChangeListener("detailItem", "dgoDrivebyDetails", function (item) {
+                        // console.log();
+                        
                         if (angular.isObject(item)) {
                             $scope.mapObjectList = [];
                             angular.forEach(item.objektImBauVorschau, function(data) {
