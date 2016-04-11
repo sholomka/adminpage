@@ -154,7 +154,7 @@ define(["./module", "googlemaps"], function (module) {
 //	            			places[key].forEach(function(value){
 //						 		value.setMap(null)
 //						 	});
-//							delete $scope.placesMap[key];	
+//							delete $scope.placesMap[key];
 //							$scope.showPlaces(key);
 //	            		});
 
@@ -541,44 +541,35 @@ define(["./module", "googlemaps"], function (module) {
                         zoom: 15
                     });
 
-
-
-
                     //unsere eigenen listener registrieren (aber erst, nachdem die map sich selbst intialisiert hat)
                     google.maps.event.addListenerOnce(map, 'idle', function () {
 
 
                         
-                        google.maps.event.addListener(map, "zoom_changed", function () {
-                            if (zoomListenerIsDisabled) return;
-
-                            //alle markierungen entfernen (werden eh neu geladen, nach dem zoom)
-                            for (var key in markerMap) {
-                                markerMap[key].setMap(null);
-                            }
-                            markerMap = {};
-
-                            for (var key in boundaryMap) {
-                                boundaryMap[key].setMap(null);
-                            }
-                            boundaryMap = {};
-                            keepExistingMarkers = false;
-
-                            //wir warten bis der zoom fertig ist
-                            google.maps.event.addListenerOnce(map, "idle", function () {
-                                // updateViewport(map);
-
-                                $listenerService.triggerChange("viewport", "mapService", boundsToCoords(map.getBounds()));
-
-                                // console.log(boundsToCoords(map.getBounds()));
-
-                                // loadSpezialgebieteWithTimeout(map);
-                                // $listenerService.triggerChange("zoomlevel", "mapService", map.getZoom());
-                            });
-
-
-
-                        });
+                        // google.maps.event.addListener(map, "zoom_changed", function () {
+                        //     if (zoomListenerIsDisabled) return;
+                        //
+                        //     //alle markierungen entfernen (werden eh neu geladen, nach dem zoom)
+                        //     for (var key in markerMap) {
+                        //         markerMap[key].setMap(null);
+                        //     }
+                        //     markerMap = {};
+                        //
+                        //     for (var key in boundaryMap) {
+                        //         boundaryMap[key].setMap(null);
+                        //     }
+                        //     boundaryMap = {};
+                        //     keepExistingMarkers = false;
+                        //
+                        //     //wir warten bis der zoom fertig ist
+                        //     google.maps.event.addListenerOnce(map, "idle", function () {
+                        //         // updateViewport(map);
+                        //
+                        //         $listenerService.triggerChange("viewport", "mapService", boundsToCoords(map.getBounds()));
+                        //         // loadSpezialgebieteWithTimeout(map);
+                        //         // $listenerService.triggerChange("zoomlevel", "mapService", map.getZoom());
+                        //     });
+                        // });
 
 
 
@@ -602,7 +593,8 @@ define(["./module", "googlemaps"], function (module) {
                         //kartenausschnitt entsprechend anpassen, wenn object sich geändert ändert
                         $listenerService.addChangeListener("detailItem", "mapService", function (item) {
 
-                            console.log(item + 'item');
+                            console.log("detailItem");
+
 
                             if (angular.isObject(item)) {
 
@@ -611,8 +603,6 @@ define(["./module", "googlemaps"], function (module) {
                                 $listenerService.addChangeListener("drivebyDetails", "mapService", function (driveby) {
                                     updateDrivebyMarker(map, driveby);
                                 });
-
-
 
                                 angular.forEach(item, function (items) {
                                     var icon, title, zoomlevel;
@@ -944,6 +934,8 @@ define(["./module", "googlemaps"], function (module) {
             };
 
             var updateDrivebyMarker = function(map, driveby) {
+                console.log("updateDrivebyMarker");
+
                 removeDrivebyMarker();
                 var color =  "green";
                 var drivebyLatlon = new google.maps.LatLng(driveby.lon, driveby.lat);
