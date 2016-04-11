@@ -1,7 +1,7 @@
 <div ng-class="classNamesDeatails" ng-style="driveByDetail">
-    <!--<div ng-show="preloader" class="preloader">-->
-        <!--&lt;!&ndash; image here via CSS &ndash;&gt;-->
-    <!--</div>-->
+    <div ng-if="preloader" class="top-25 inner-25-h">
+        <div class="alert alert-info"><i class="fa fa-fw fa-spin fa-refresh"></i> Daten werden geladen...</div>
+    </div>
 
     <div ng-if="showForm">
         <div class="modal-header">
@@ -516,6 +516,7 @@
 
                 <div class="modal-footer">
                     <button class="btn btn-primary" ng-click="storeEdited()">Speichern & zum Nächsten</button>
+                    <button class="btn btn-default" ng-click="delete()">Löschen</button>
                     <button class="btn btn-default" ng-click="driveByCancel()">Abbrechen</button>
                 </div>
             </div>

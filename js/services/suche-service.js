@@ -92,7 +92,14 @@ define(["./module"], function (module) {
         var cachedItemDetails = {};
         var loadItems = function (data, id) {
             var deferred = $q.defer();
-            if (angular.isObject(cachedItemDetails[id])) {
+
+            $restService.getObjektRequest(data).run().then(function (data) {
+                deferred.resolve(data);
+            }, function () {
+                deferred.reject("Fehler beim Laden der Objektdetails!");
+            });
+
+           /* if (angular.isObject(cachedItemDetails[id])) {
                 deferred.resolve(cachedItemDetails[id]);
             } else {
                 $restService.getObjektRequest(data).run().then(function (data) {
@@ -101,7 +108,7 @@ define(["./module"], function (module) {
                 }, function () {
                     deferred.reject("Fehler beim Laden der Objektdetails!");
                 });
-            }
+            }*/
             return deferred.promise;
         };
 

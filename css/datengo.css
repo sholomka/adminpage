@@ -1499,15 +1499,39 @@ span.dropdown  {
     text-align: center;
 }
 
+.modal-delete {
+    min-height:300px;
+}
+
+.modal-popup-delete .buttons {
+    bottom: 10px;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+}
+
 .modal-info .buttons .btn-primary {
     color: #fff;
 }
 
-.modal-complaint h2, .modal-popup-info h2 {
+.modal-complaint h2, .modal-popup-info h2, .modal-popup-delete h2 {
     font-size: 13px;
     text-decoration:underline;
     font-weight: bold;
     margin: 0;
+}
+
+
+.modal-popup-delete h2 {
+    font-size: 23px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 73%;
+    height: 30%;
+    margin: auto;
 }
 
 .modal-complaint .checkbox-title {
@@ -1776,6 +1800,6 @@ span.dropdown  {
 
 .preloader {
     padding: 50px;
-    background: url('../img/ajax-loader.gif') no-repeat 50% 50% transparent;
+    background: url('../img/preloader.gif') no-repeat 50% 50% transparent;
 }
 

@@ -7,7 +7,7 @@ define(["./module"], function (module) {
                 replace: true,
                 scope: true,
                 templateUrl: "templates/dgo-driveby-details.html",
-                controller: function ($scope, $element, Lightbox, $sessionStorage, $anchorScroll) {
+                controller: function ($scope, $element, Lightbox, $sessionStorage, $anchorScroll, $timeout) {
                     $constantsService.getZustande().then(function(constants){
                         $scope.zustand = constants;
                         $scope.zustandFront = {};
@@ -123,13 +123,9 @@ define(["./module"], function (module) {
                         }
                     });
 
-                    /*$scope.preloader = false;
 
-                    $scope.$on('preloader', function (event, args) {
-                        $scope.preloader = args.data;
-                    });*/
-                    
-                    $scope.$on('drivebyDetails', function (event, args) {
+
+                    $scope.loadItems = function(args) {
                         $scope.sendData = {};
                         $scope.uploadingObject = {};
                         $scope.uploadingObject.unbekannt = false;
@@ -146,12 +142,12 @@ define(["./module"], function (module) {
 
                         var progresses = $scope.bautenstand,
                             countProgresses = Object.keys(progresses).length;
-                        
+
                         var statusWidth = Math.floor(100 / (countProgresses + 1));
                         $scope.driveByStatusWidth = statusWidth + "%";
                         $scope.driveByStatusTotalWidth = (statusWidth * (countProgresses)) + "%";
                         $scope.driveByMap = {};
-                        
+
                         angular.forEach(args.data, function(value, key, obj) {
                             if (key == 'base64Images') {
                                 $scope.sendData.base64Images = [];
@@ -186,11 +182,11 @@ define(["./module"], function (module) {
 
                             j++;
                         }
-                        
+
                         $scope.driveBy = $scope.sendData;
                         $scope.selectedDriveBy = $scope.sendData;
                         $scope.drivebyLoading = false;
-                        
+
                         $scope.infoData = {};
                         $scope.infoData.projectType = args.data.projectType;
                         $scope.infoData.objectType = args.data.objectType;
@@ -224,8 +220,8 @@ define(["./module"], function (module) {
                                 {src: $sce.trustAsResourceUrl($scope.videoUrl), type: "video/mp4"},
                                 {src: $sce.trustAsResourceUrl($scope.videoUrl), type: "video/webm"},
                                 {src: $sce.trustAsResourceUrl($scope.videoUrl), type: "video/ogg"}
-                               /* {src: $sce.trustAsResourceUrl("http://static.videogular.com/assets/videos/videogular.webm"), type: "video/webm"},
-                                {src: $sce.trustAsResourceUrl("http://static.videogular.com/assets/videos/videogular.ogg"), type: "video/ogg"}*/
+                                /* {src: $sce.trustAsResourceUrl("http://static.videogular.com/assets/videos/videogular.webm"), type: "video/webm"},
+                                 {src: $sce.trustAsResourceUrl("http://static.videogular.com/assets/videos/videogular.ogg"), type: "video/ogg"}*/
                             ],
                             tracks: [
                                 {
@@ -254,16 +250,16 @@ define(["./module"], function (module) {
                         ];
 
                         $scope.titlesImage = [
-                             "Objektübersicht",
-                             "Bauschild",
-                             "Objekteingang",
-                             "Rückseite",
-                             "Objektumgebung 1",
-                             "Objektumgebung 2"
+                            "Objektübersicht",
+                            "Bauschild",
+                            "Objekteingang",
+                            "Rückseite",
+                            "Objektumgebung 1",
+                            "Objektumgebung 2"
                         ];
 
                         $scope.sortByKey($scope.images, 'index');
-                        
+
                         var slides = $scope.slides = [];
 
                         angular.forEach($scope.images, function(value, key, obj) {
@@ -279,7 +275,7 @@ define(["./module"], function (module) {
                                 id: key
                             });
                         });
-                        
+
                         $scope.rateText = [
                             "Bitte bewerten Sie diesen Upload!",
                             "Der Upload war unzureichend",
@@ -288,6 +284,27 @@ define(["./module"], function (module) {
                             "Der Upload war weitgehend in Ordnung",
                             "Der Upload war beanstandungsfrei"
                         ];
+
+                        $scope.preloader = false;
+                        $scope.showForm = true;
+                    };
+
+                    $scope.preloader = false;
+
+                    $scope.$on('preloader', function (event, args) {
+                        if (angular.isDefined(currentItemsTimer)) {
+                            $timeout.cancel(currentItemsTimer);
+                        }
+                        $scope.preloader = args.data;
+                        $scope.showForm = false;
+                    });
+
+                    var currentItemsTimer;
+
+                    $scope.$on('drivebyDetails', function (event, args) {
+                        currentItemsTimer = $timeout(function () {
+                            $scope.loadItems(args);
+                        }, 500);
                     });
 
                     $scope.driveByDetail = {
@@ -814,8 +831,6 @@ define(["./module"], function (module) {
                                     $scope.sendData.state = $scope.states.Abgeschlossen;
                             }
 
-                            console.log($scope.sendData);
-
                             $drivebysService.storeEdited($scope.sendData).then(function () {
                                 $scope.sendData = {};
                                 $scope.showForm = false;
@@ -829,6 +844,30 @@ define(["./module"], function (module) {
                     $scope.driveByCancel = function() {
                         $scope.sendData = {};
                         $scope.showForm = false;
+                    };
+
+                    $scope.delete = function() {
+                        var currentModal = $uibModal.open({
+                            templateUrl: 'templates/modal-delete.html',
+                            backdrop: true,
+                            windowClass: 'modal-popup-delete',
+                            scope: $scope
+                        });
+
+                        $scope.yes = function() {
+                            $drivebysService.deleteDriveBy($scope.sendData.transactionHash).then(function () {
+                                currentModal.dismiss();
+                                $scope.sendData = {};
+                                $scope.showForm = false;
+                                $sessionStorage.formchanges = [];
+
+                                $rootScope.$broadcast('updateDriveBy');
+                            }, function (error) {});
+                        };
+
+                        $scope.no = function() {
+                            currentModal.dismiss();
+                        };
                     }
                 }
             };

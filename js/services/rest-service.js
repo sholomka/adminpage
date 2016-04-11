@@ -162,7 +162,6 @@ define(["./module"], function (module) {
 			});
 		};
 
-
 		var getUserInfo = function (userName) {
 			return getRequest({
 				method: "POST",
@@ -282,6 +281,14 @@ define(["./module"], function (module) {
 			});
 		};
 
+		var deleteDriveBy = function (id) {
+			return getRequest({
+				method: "POST",
+				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/delete",
+				data: id
+			});
+		};
+		
 		var getMapped = function (id) {
 			return getRequest({
 				method: "GET",
@@ -308,6 +315,7 @@ define(["./module"], function (module) {
 			getObjektRequest: getObjektRequest,
 			getObjektRequestDetail: getObjektRequestDetail,
 			storeEdited: storeEdited,
+			deleteDriveBy: deleteDriveBy,
 			getZustande: getZustande,
 			getStates: getStates,
 			getObjektTypen:getObjektTypen,

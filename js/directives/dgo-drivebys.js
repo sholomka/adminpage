@@ -86,16 +86,7 @@ define(["./module"], function (module) {
                             ]
                         };
 
-                        $drivebysService.searchTodayDriveBys($scope.sendData).then(function(data){
-                            $scope.driveBys = data;
-                        }, function(error){
-                            $rootScope.news = undefined;
-                            if(error && error.exception=="PolygonNotInViewportException"){
-                                $rootScope.newsBemerkung = error.error;
-                            }else{
-                                $rootScope.newsError = error;
-                            }
-                        });
+                        $scope.searchEdit($scope.sendData);
                     };
 
                     $scope.isSort = function (sortCriterium) {
@@ -112,10 +103,7 @@ define(["./module"], function (module) {
 
                     $scope.showDrivebysDetails = function(id, $event) {
                         // Править тут
-                        $listenerService.addChangeListener("viewport", "dgoDrivebys", function (viewport) {
-                            $scope.retriggerMap(id, viewport);
-                        });
-
+                        $sessionStorage.driveById = id;
 
                         var event = $event.currentTarget,
                             accept = angular.element(event).children().eq(0);
@@ -138,32 +126,29 @@ define(["./module"], function (module) {
                         }
                     };
 
-                    $scope.showDrivebysDetailsRest = function(id) {
-                        // $sessionStorage.preloader = true;
-                        // $rootScope.$broadcast('preloader', {data: true});
 
+                    $scope.showDrivebysDetailsRest = function(id) {
+                        $rootScope.$broadcast('preloader', {data: true});
                         $scope.retriggerMap(id);
+                        // $rootScope.$broadcast('preloader', {data: false});
                     };
 
-                    $scope.retriggerMap = function(id, viewport) {
+                    $scope.retriggerMap = function(id) {
                         $drivebysService.showDrivebysDetails(id).then(function (data) {
-                            var defaultViewport = viewport || [[51.450189013791665,12.073658093359427],[51.450189013791665,12.495601757910208],[51.23336583234749,12.495601757910208],[51.23336583234749,12.073658093359427]];
+                            var viewport = [[51.450189013791665,12.073658093359427],[51.450189013791665,12.495601757910208],[51.23336583234749,12.495601757910208],[51.23336583234749,12.073658093359427]];
 
-                            if (viewport) {
-                                $rootScope.$broadcast('drivebyDetails', {
-                                    data: data
-                                });
+                            $rootScope.$broadcast('drivebyDetails', {
+                                data: data
+                            });
 
-                                $listenerService.triggerChange("drivebyDetails", "dgoDrivebys", data.location);
-                            }
-                            
-                            var suchProfil = {"suchoptionen":{},"sortOrder":{"sortField":"bauende","order":"asc"},"offset":0,"geo":{},"view":{"viewport":defaultViewport,"zoomlevel":12},"type":"objekteimbau"};
+                            $listenerService.triggerChange("drivebyDetails", "dgoDrivebys", data.location);
+
+                            var suchProfil = {"suchoptionen":{},"sortOrder":{"sortField":"bauende","order":"asc"},"offset":0,"geo":{},"view":{"viewport":viewport,"zoomlevel":12},"type":"objekteimbau"};
 
                             $sucheService.loadItems(suchProfil, id).then(function (data) {
-
                                 $listenerService.triggerChange("detailItem", "dgoDrivebys", data);
                             });
-                            // $rootScope.$broadcast('preloader', {data: false});
+
                         }, function (error) {})
                     };
 
@@ -201,12 +186,12 @@ define(["./module"], function (module) {
 
                             $scope.countEdit(data);
 
-                            data = {
+                            data = $scope.sendData || {
                                 "pageNumber": $scope.currentPage,
                                 "numberOfResults": $scope.numberOfResults
                             };
-
-                            $scope.searchEdit(data);
+                            
+                             $scope.searchEdit(data);
                         } else if($attrs.className == 'bestehende' && type == 'bestehende') {
                            /* $scope.sendData.size = 10;
                             $scope.sendData.from = 0;
