@@ -17,10 +17,11 @@ define(["./module"], function (module) {
 
                     $scope.$on('updateDriveBy', function (event, args) {
                         $scope.refreshWindow('neue');
-
-                        if ($scope.driveBys.length > 0) {
-                            var id = $scope.driveBys[0].transactionHash;
-                            $scope.showDrivebysDetails(id);
+                        
+                        if ($rootScope.driveBys.length > 1) {
+                            var id = $rootScope.driveBys[1].transactionHash;
+                            
+                            $scope.showDrivebysDetailsRest(id);
                         }
                     });
 
@@ -48,7 +49,7 @@ define(["./module"], function (module) {
                         };
 
                         $drivebysService.searchTodayDriveBys($scope.sendData).then(function(data){
-                            $scope.driveBys = data;
+                            $rootScope.driveBys = data;
                         }, function(error){
                             $rootScope.news = undefined;
                             if(error && error.exception=="PolygonNotInViewportException"){
@@ -102,7 +103,9 @@ define(["./module"], function (module) {
                     $sessionStorage.formchanges = [];
 
                     $scope.showDrivebysDetails = function(id, $event) {
-                        // Править тут
+
+                        console.log($event);
+
                         $sessionStorage.driveById = id;
 
                         var event = $event.currentTarget,
@@ -154,7 +157,7 @@ define(["./module"], function (module) {
 
                     $scope.searchEdit = function(data) {
                         $drivebysService.searchTodayDriveBys(data).then(function (data) {
-                            $scope.driveBys = data;
+                            $rootScope.driveBys = data;
                         }, function (error) {
                             $rootScope.driveBys = undefined;
                             if (error && error.exception == "PolygonNotInViewportException") {
@@ -190,7 +193,7 @@ define(["./module"], function (module) {
                                 "pageNumber": $scope.currentPage,
                                 "numberOfResults": $scope.numberOfResults
                             };
-                            
+
                              $scope.searchEdit(data);
                         } else if($attrs.className == 'bestehende' && type == 'bestehende') {
                            /* $scope.sendData.size = 10;

@@ -831,12 +831,14 @@ define(["./module"], function (module) {
                                     $scope.sendData.state = $scope.states.Abgeschlossen;
                             }
 
+                            $scope.preloader = true;
+                            $scope.showForm = false;
+
                             $drivebysService.storeEdited($scope.sendData).then(function () {
                                 $scope.sendData = {};
-                                $scope.showForm = false;
                                 $sessionStorage.formchanges = [];
-
                                 $rootScope.$broadcast('updateDriveBy');
+
                             }, function (error) {});
                         }
                     };
