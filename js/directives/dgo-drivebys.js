@@ -20,7 +20,7 @@ define(["./module"], function (module) {
 
                     $scope.$on('updateDriveBy', function (event, args) {
                         $scope.refreshWindow('neue');
-                        
+
                         if ($scope.driveBys.length > 1) {
                             var id = $scope.driveBys[1].transactionHash;
                             
