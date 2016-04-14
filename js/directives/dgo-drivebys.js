@@ -21,8 +21,8 @@ define(["./module"], function (module) {
                     $scope.$on('updateDriveBy', function (event, args) {
                         $scope.refreshWindow('neue');
                         
-                        if ($rootScope.driveBys.length > 1) {
-                            var id = $rootScope.driveBys[1].transactionHash;
+                        if ($scope.driveBys.length > 1) {
+                            var id = $scope.driveBys[1].transactionHash;
                             
                             $scope.showDrivebysDetailsRest(id);
                         }
