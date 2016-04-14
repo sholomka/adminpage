@@ -8,6 +8,9 @@ define(["./module"], function (module) {
                 scope: true,
                 templateUrl: "templates/dgo-drivebys.html",
                 controller: function ($scope, $attrs, $sessionStorage) {
+
+                    $scope.type = $attrs.className == 'neue' ? 'neue' : 'bestehende';
+
                     $constantsService.getStates().then(function(constants){
                         $scope.statesFront = {};
                         for (var key in constants) {
@@ -48,13 +51,13 @@ define(["./module"], function (module) {
                             ]
                         };
 
-                        $drivebysService.searchTodayDriveBys($scope.sendData).then(function(data){
-                            $rootScope.driveBys = data;
+                        $drivebysService.searchTodayDriveBys($scope.sendData, $scope.type).then(function(data){
+                            $scope.driveBys = data;
                         }, function(error){
-                            $rootScope.news = undefined;
-                            if(error && error.exception=="PolygonNotInViewportException"){
+                            $scope.driveBys = undefined;
+                            if (error && error.exception == "PolygonNotInViewportException") {
                                 $rootScope.newsBemerkung = error.error;
-                            }else{
+                            } else {
                                 $rootScope.newsError = error;
                             }
                         });
@@ -87,7 +90,7 @@ define(["./module"], function (module) {
                             ]
                         };
 
-                        $scope.searchEdit($scope.sendData);
+                        $scope.searchEdit($scope.sendData, $scope.type);
                     };
 
                     $scope.isSort = function (sortCriterium) {
@@ -103,9 +106,6 @@ define(["./module"], function (module) {
                     $sessionStorage.formchanges = [];
 
                     $scope.showDrivebysDetails = function(id, $event) {
-
-                        console.log($event);
-
                         $sessionStorage.driveById = id;
 
                         var event = $event.currentTarget,
@@ -155,11 +155,11 @@ define(["./module"], function (module) {
                         }, function (error) {})
                     };
 
-                    $scope.searchEdit = function(data) {
-                        $drivebysService.searchTodayDriveBys(data).then(function (data) {
-                            $rootScope.driveBys = data;
+                    $scope.searchEdit = function(data, type) {
+                        $drivebysService.searchTodayDriveBys(data, type).then(function (data) {
+                            $scope.driveBys = data;
                         }, function (error) {
-                            $rootScope.driveBys = undefined;
+                            $scope.driveBys = undefined;
                             if (error && error.exception == "PolygonNotInViewportException") {
                                 $rootScope.newsBemerkung = error.error;
                             } else {
@@ -168,16 +168,11 @@ define(["./module"], function (module) {
                         });
                     };
 
-                    $scope.countEdit = function(data) {
-                        $drivebysService.countEditDriveBy(data).then(function (count) {
+                    $scope.countEdit = function(type) {
+                        $drivebysService.countEditDriveBy(type).then(function (count) {
                             $scope.totalItems = count;
                         }, function (error) {
-                            $rootScope.driveBys = undefined;
-                            if (error && error.exception == "PolygonNotInViewportException") {
-                                $rootScope.newsBemerkung = error.error;
-                            } else {
-                                $rootScope.newsError = error;
-                            }
+                            $scope.driveBys = undefined;
                         });
                     };
 
@@ -187,28 +182,27 @@ define(["./module"], function (module) {
                                 "pageNumber": $scope.currentPage
                             };
 
-                            $scope.countEdit(data);
+                            $scope.countEdit(type);
 
                             data = $scope.sendData || {
                                 "pageNumber": $scope.currentPage,
                                 "numberOfResults": $scope.numberOfResults
                             };
 
-                             $scope.searchEdit(data);
+                             $scope.searchEdit(data, type);
                         } else if($attrs.className == 'bestehende' && type == 'bestehende') {
-                           /* $scope.sendData.size = 10;
-                            $scope.sendData.from = 0;
+                            var data = {
+                                "pageNumber": $scope.currentPage
+                            };
 
-                            $newsService.sucheNews($scope.sendData).then(function(data){
-                                $scope.news = data;
-                            }, function(error){
-                                $rootScope.news = undefined;
-                                if(error && error.exception=="PolygonNotInViewportException"){
-                                    $rootScope.newsBemerkung = error.error;
-                                }else{
-                                    $rootScope.newsError = error;
-                                }
-                            });*/
+                            $scope.countEdit(type);
+
+                            data = $scope.sendData || {
+                                    "pageNumber": $scope.currentPage,
+                                    "numberOfResults": $scope.numberOfResults
+                                };
+
+                            $scope.searchEdit(data, type);
                         }
                     };
 
@@ -227,6 +221,10 @@ define(["./module"], function (module) {
                         $scope.refreshWindow('neue');
                     } else {
                         $scope.title = 'Gesuchte DriveBys';
+
+                        $scope.refreshWindow('bestehende');
+                       
+                        
                     }
                 }
             };

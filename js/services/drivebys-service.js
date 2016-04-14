@@ -2,9 +2,9 @@ define(["./module"], function (module) {
     "use strict";
     module.factory("$drivebysService", ["$q","$rootScope", "$restService", "$listenerService", "$sucheService",
         function($q,$rootScope,$restService, $listenerService, $sucheService) {
-            var searchTodayDriveBys=function(data){
+            var searchTodayDriveBys=function(data, type){
                 var deferred=$q.defer();
-                $restService.searchTodayDriveBys(data).run().then(function(data){
+                $restService.searchTodayDriveBys(data, type).run().then(function(data){
                     deferred.resolve(data);
                 },function(error) {
                     deferred.reject(error);
@@ -22,9 +22,9 @@ define(["./module"], function (module) {
                 return deferred.promise
             };
 
-            var countEditDriveBy=function(data){
+            var countEditDriveBy=function(type){
                 var deferred=$q.defer();
-                $restService.countEditDriveBy(data).run().then(function(data){
+                $restService.countEditDriveBy(type).run().then(function(data){
                     deferred.resolve(data);
                 },function(error) {
                     deferred.reject(error);

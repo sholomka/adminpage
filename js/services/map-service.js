@@ -947,13 +947,16 @@ define(["./module", "googlemaps"], function (module) {
             };
 
             var updateDrivebyMarker = function(map, driveby) {
-                console.log("updateDrivebyMarker");
+
 
                 removeDrivebyMarker();
                 var color =  "green";
                 var drivebyLatlon = new google.maps.LatLng(driveby.lon, driveby.lat);
 
                 if (angular.isObject(map)) {
+
+                    console.log("updateDrivebyMarker");
+
                     map.setZoom(12);
                     map.setCenter(drivebyLatlon);
 
