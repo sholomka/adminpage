@@ -1,0 +1,525 @@
+<div ng-class="classNamesDeatails" ng-style="driveByDetail">
+    <div ng-if="preloader" class="top-25 inner-25-h">
+        <div class="alert alert-info"><i class="fa fa-fw fa-spin fa-refresh"></i> Daten werden geladen...</div>
+    </div>
+
+    <div ng-if="showForm">
+        <div class="modal-header">
+            <h4 class="modal-title">Daten zu "{{sendData.projectName}}"</h4>
+            <span uib-dropdown on-toggle="getUserInfo(sendData.userName, open)">
+                &nbsp;&nbsp;&nbsp;gesammelt von
+                <a href="javascript:void(0)" id="simple-dropdown" uib-dropdown-toggle>{{sendData.userName}}</a>
+                 <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
+                     <li>
+                         <span>Durchschnittliche DriveBy-Qualität:</span><br>
+
+                        <span class="stars">
+                            <span ng-style="{ 'width': getStars(rate) }"></span>
+                        </span>
+                     </li>
+                     <li>
+                         <span>Telefonnummer:</span><br>
+                         <strong>{{userInfo.telephone}}</strong>
+                     </li>
+                     <li>
+                         <span>Emailadresse:</span><br>
+                         <strong>{{userInfo.email}}</strong>
+                     </li>
+                 </ul>
+
+                am {{sendData.dateCreated}}
+            </span>
+        </div>
+
+        <div ng-style="driveBysListStyleObj">
+            <h4 style="text-decoration: underline; font-size: 11px; font-weight: bold;">Lokalisierung der DriveBy-Objekt-Adresse</h4>
+
+            <div title="Adresse auf Ausgangslage zurücksetzen" data-label="RedoInakttiv" id="u722" ng-click="reset()">
+                <img src="img/redoinakttiv_u701.png" class="img" id="u701_img">
+            </div>
+
+            <div style="width: 496px; margin: 0 0 0 40px;" id="mappedImmoObject">
+                <span style="color:#333333; font-size: 11px;">DriveBy-Objekt-Adresse: </span>
+                <span style="color:#699E25; font-size: 10px;">{{street}}, {{plz}} {{city}}</span>
+                <dgo-map type="object" id="object" style="width: 280px; height:285px;"></dgo-map>
+
+                <input type="checkbox" value="checkbox" ng-model="uploadingObject.unbekannt" ng-change="unbekanntChange()" id="u719_input">
+
+                <label for="u719_input" class="ax_checkbox">
+                    <div class="text" id="u720">
+                        <p><span>Lässt sich der Upload nicht eindeutig einem Objek</span><span>t</span><span> zuordnen?</span></p>
+                    </div>
+                </label>
+
+                <div class="driveby-error" ng-show="mapped.error">
+                    Element noch nicht bewertet!
+                </div>
+            </div>
+
+            <div class="ax_shape">
+                <div class="ax_dynamic_panel" ng-repeat="item in mapObjectList" ng-click="highlightMarker(item, $event)">
+                    <p><span>{{item.titel}}</span></p>
+                    <p>
+                        <span>{{item.adresse.strasse}},</span>
+                        <span>{{item.adresse.plz}} {{item.adresse.ort}},</span>
+                    </p>
+                    <p><span>{{item.bauart}}</span></p>
+                    <p><span>{{item.kontakt}}</span></p>
+                </div>
+            </div>
+
+            <h4 class="top-50" style="text-decoration: underline; font-size: 11px; font-weight: bold;">Fotos</h4>
+
+            <div class="foto-container">
+                <div ng-repeat="image in images" class="fotos" ng-style="{margin:  ($index + 1) % 3 == 0 ? '0' : '0 25px 20px 0'}" >
+                    <span>{{image.caption}}</span>
+                    <img id="image_{{image.index}}" ng-src="{{image.thumbUrl}}" ng-click="Lightbox.openModal(images, $index)" class="img-thumbnail">
+                    <div class="nav-list">
+                        <a class="accept" ng-class="image.accept ? 'active' : ''" ng-click="accept($event, $index)" ng-dblclick="acceptDblClick($event, $index)"></a>
+                        <a class="complaint" ng-class="image.complaint ? 'active' : ''" ng-click="complaint($event, $index)"></a>
+                    </div>
+                    <div class="driveby-error" ng-show="image.error">
+                        Element noch nicht bewertet!
+                    </div>
+                </div>
+            </div>
+
+            <h4 class="top-50" style="text-decoration: underline; font-size: 11px; font-weight: bold;">Video</h4>
+            <div class="foto-container">
+                <div ng-repeat="videoItem in video" class="video" >
+                    <img id="video" ng-src="{{videoItem.thumbUrl}}" ng-click="Lightbox.openModal(video, $index)" class="img-thumbnail">
+                    <div class="nav-list">
+                        <a class="accept" ng-class="videoItem.accept ? 'active' : ''" ng-click="accept($event, $index, 'video')" ng-dblclick="acceptDblClick($event, $index, 'video')"></a>
+                        <a class="complaint" ng-class="videoItem.complaint ? 'active' : ''" ng-click="complaint($event, $index, 'video')"></a>
+                    </div>
+                    <div class="driveby-error" ng-show="videoItem.error">
+                        Element noch nicht bewertet!
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive daten-container top-50">
+                <h4 style="text-decoration: underline; font-size: 11px; font-weight: bold;">Daten</h4>
+                <table class="table table-bordered">
+                    <tr>
+                        <td>
+                            Zustand
+                        </td>
+                        <td>
+                            {{zustandFront[sendData.projectType]}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Objekttyp
+                        </td>
+                        <td>
+                            {{objekttypFront[sendData.objectType]}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Denkmalschutz
+                        </td>
+                        <td>
+                            {{denkmalschutzFront[sendData.protectedBuilding]}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Bautenstand
+                        </td>
+                        <td>
+                            {{bautenstandFront[sendData.buildingProgress]}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Objektstandard nach Fertigstelllung
+                        </td>
+                        <td>
+                            {{objektStandardTypeFront[sendData.objectStandard]}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            umgebende Bebauung
+                        </td>
+                        <td>
+                            {{umgebendeFront[sendData.objectStandardEnv]}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Leerstand
+                        </td>
+                        <td>
+                            {{leerstandFront[sendData.vacancyEnv]}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Verkehrsanbindung ÖPNV
+                        </td>
+                        <td>
+                            {{verkehrsanbindungFront[sendData.publicTransport]}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Nähe zu Versorgungseinrichtung
+                        </td>
+                        <td>
+                            {{versorgungseinrichtungFront[sendData.nearbySupply]}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Nähe zu Erholungsmöglichkeiten
+                        </td>
+                        <td>
+                            {{erholungsmoglichkeitenFront[sendData.nearbyRecreation]}}
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="nav-list" id="daten">
+                    <a class="accept" ng-class="daten.accept ? 'active' : ''" ng-click="accept($event, $index, 'daten')" ng-dblclick="acceptDblClick($event, $index, 'daten')"></a>
+                    <a class="info" ng-class="daten.complaint ? 'active' : ''" ng-click="info($event, $index, 'daten')"></a>
+                    <a class="complaint" ng-class="daten.complaint ? 'active' : ''" ng-click="complaint($event, $index, 'daten')"></a>
+                </div>
+
+                <div class="driveby-error" ng-show="daten.error">
+                    Element noch nicht bewertet!
+                </div>
+            </div>
+
+            <h4 class="top-50" style="text-decoration: underline; font-size: 11px; font-weight: bold;">DriveBy-Daten bisher</h4>
+            <div id="driveby" >
+                <div class="row">
+                    <div style="overflow: hidden;" class="col-xs-6">
+                        <uib-tabset justified="true">
+                            <uib-tab heading="Bilder">
+                                <div>
+                                    <div>
+                                        <uib-carousel active="active" interval="myInterval" no-wrap="noWrapSlides">
+                                            <uib-slide ng-repeat="slide in slides track by slide.id" index="slide.id">
+                                                <img ng-src="{{slide.image}}" style="margin:auto;">
+                                                <div class="carousel-caption">
+                                                    <h4>Slide {{slide.id}}</h4>
+                                                    <p>{{slide.text}}</p>
+                                                </div>
+                                            </uib-slide>
+                                        </uib-carousel>
+                                        <!--<uib-carousel active="active" interval="myInterval" no-wrap="noWrapSlides">
+                                            <uib-slide ng-repeat="slide in selectedDriveBy.images track by slide.index" index="slide.index">
+                                                <img ng-src="{{slide.uri}}" style="margin:auto;">
+                                                <div class="carousel-caption">
+                                                    <h4>Slide {{slide.id}}</h4>
+                                                    <p>{{slide.text}}</p>
+                                                </div>
+                                            </uib-slide>
+                                        </uib-carousel>-->
+                                    </div>
+                                </div>
+                            </uib-tab>
+                            <uib-tab heading="Video">
+                                <div class="top-10" ng-if="!config.sources">
+                                    <img src="../img/video_dummy.png"/>
+                                </div>
+                                <div class="videogular-container" ng-if="config.sources">
+                                    <videogular>
+                                        <vg-media vg-src="config.sources" vg-type="video" vg-native-controls="true"></vg-media>
+                                    </videogular>
+                                </div>
+                            </uib-tab>
+                        </uib-tabset>
+                    </div>
+                    <div class="col-xs-6 text-medium">
+                        <div class="row top-25">
+                            <div class="col-xs-7 text-right">
+                                Datum:
+                            </div>
+                            <div class="col-xs-5 nopad-l">
+                                {{selectedDriveBy.dateCreated}}
+                            </div>
+                        </div>
+                        <div class="row top-10">
+                            <div class="col-xs-7 text-right">
+                                Zustand:
+                            </div>
+                            <div class="col-xs-5 nopad-l">
+                                {{zustandFront[selectedDriveBy.projectType]}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-7 text-right">
+                                Objekttyp:
+                            </div>
+                            <div class="col-xs-5 nopad-l">
+                                {{objekttypFront[selectedDriveBy.objectType]}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-7 text-right">
+                                Denkmalschutz:
+                            </div>
+                            <div class="col-xs-5 nopad-l">
+                                {{denkmalschutzFront[selectedDriveBy.protectedBuilding]}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-7 text-right">
+                                Bautenstand:
+                            </div>
+                            <div class="col-xs-5 nopad-l">
+                                {{bautenstandFront[selectedDriveBy.buildingProgress]}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-7 text-right">
+                                Umgebende Bebauung:
+                            </div>
+                            <div class="col-xs-5 nopad-l">
+                                {{umgebendeFront[selectedDriveBy.objectStandardEnv]}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-7 text-right">
+                                Leerstand Umgebung:
+                            </div>
+                            <div class="col-xs-5 nopad-l">
+                                {{leerstandFront[selectedDriveBy.vacancyEnv]}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-7 text-right">
+                                Verkehrsanbindung ÖPNV:
+                            </div>
+                            <div class="col-xs-5 nopad-l">
+                                {{verkehrsanbindungFront[selectedDriveBy.publicTransport]}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-7 text-right">
+                                Nähe Versorgungseinrichtungen:
+                            </div>
+                            <div class="col-xs-5 nopad-l">
+                                {{versorgungseinrichtungFront[selectedDriveBy.nearbySupply]}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-7 text-right">
+                                Nähe Erholungseinrichtungen:
+                            </div>
+                            <div class="col-xs-5 nopad-l">
+                                {{erholungsmoglichkeitenFront[selectedDriveBy.nearbyRecreation]}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="clearfix driveby-container">
+                        <div class="driveby-bar"
+                             style="width:{{driveByStatusTotalWidth}};margin-left:{{driveByStatusWidth}}">
+                            <div class="driveby-bar-bumper" style="left:-50px"></div>
+                            <div class="driveby-bar-bumper" style="left:-30px"></div>
+                            <div class="driveby-bar-bumper" style="left:-10px"></div>
+                            <div class="driveby-bar-bumper" style="right:-10px"></div>
+                            <div class="driveby-bar-bumper" style="right:-30px"></div>
+                            <div class="driveby-bar-bumper" style="right:-50px"></div>
+                            <div class="driveby-dots"></div>
+                            <div class="driveby-progressbar" style="width:{{driveByStatusBarWidth}}"></div>
+                            <div class="driveby-line" style="width:{{driveByStatusBarWidth}}"></div>
+                        </div>
+                        <div class="driveby-status-helper" ng-repeat="(key, value) in bautenstand track by $index"
+                             style="width:{{driveByStatusWidth}}" ng-init="calcOffsets(value,$index)">
+                            <div ng-if="$index==driveByStatusIndex && driveByStatusOffset"
+                                 class="driveby-status-progressbar"
+                                 style="width:{{driveByStatusOffset}};right:-{{driveByStatusOffset}}"></div>
+                            <div ng-if="$index==driveByStatusIndex && driveByStatusOffset" class="driveby-status-line"
+                                 style="width:{{driveByStatusOffset}};right:-{{driveByStatusOffset}}"></div>
+                            <div class="driveby-status-dot" ng-class="{'active':$index<=driveByStatusIndex}"></div>
+                            <div class="driveby-status-arrow"></div>
+                            <div class="driveby-status text-small" ng-class="{'active':$index<=driveByStatusIndex}">
+                                {{key}}
+                            </div>
+                            <div class="driveby-dot"
+                                 style="right:-{{getDriveByOffset(value,$index)}}"
+                                 ng-class="{'active': selectedDriveBy.transactionHash==driveBy.transactionHash}"
+                                 ng-repeat="driveBy in driveByMap[value] track by $index"
+                                 uib-tooltip="{{driveBy.dateCreated|date}}"
+                                 ng-click="setSelectedDriveBy(driveBy)">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div id="driveby2" class="top-50">
+                <h4 style="text-decoration: underline; font-size: 11px; font-weight: bold;"> DriveBy-Daten nach Speichern</h4>
+                <div class="row">
+                    <div style="overflow: hidden;" class="col-xs-6">
+                        <uib-tabset justified="true">
+                            <uib-tab heading="Bilder">
+                                <div>
+                                    <div>
+                                        <uib-carousel active="active" interval="myInterval" no-wrap="noWrapSlides">
+                                            <uib-slide ng-repeat="slide in slides track by slide.id" index="slide.id">
+                                                <img ng-src="{{slide.image}}" style="margin:auto;">
+                                                <div class="carousel-caption">
+                                                    <h4>Slide {{slide.id}}</h4>
+                                                    <p>{{slide.text}}</p>
+                                                </div>
+                                            </uib-slide>
+                                        </uib-carousel>
+                                    </div>
+                                </div>
+                            </uib-tab>
+                            <uib-tab heading="Video">
+                                <div class="top-10" ng-if="!config.sources">
+                                    <img src="../img/video_dummy.png"/>
+                                </div>
+                                <div class="videogular-container" ng-if="config.sources">
+                                    <videogular>
+                                        <vg-media vg-src="config.sources" vg-type="video" vg-native-controls="true"></vg-media>
+                                    </videogular>
+                                </div>
+                            </uib-tab>
+                        </uib-tabset>
+                    </div>
+                    <div class="col-xs-6 text-medium">
+                        <div class="row top-25">
+                            <div class="col-xs-7 text-right">
+                                Datum:
+                            </div>
+                            <div class="col-xs-5 nopad-l">
+                                {{selectedDriveBy.dateCreated}}
+                            </div>
+                        </div>
+                        <div class="row top-10">
+                            <div class="col-xs-7 text-right">
+                                Zustand:
+                            </div>
+                            <div class="col-xs-5 nopad-l">
+                                {{zustandFront[selectedDriveBy.projectType]}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-7 text-right">
+                                Objekttyp:
+                            </div>
+                            <div class="col-xs-5 nopad-l">
+                                {{objekttypFront[selectedDriveBy.objectType]}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-7 text-right">
+                                Denkmalschutz:
+                            </div>
+                            <div class="col-xs-5 nopad-l">
+                                {{denkmalschutzFront[selectedDriveBy.protectedBuilding]}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-7 text-right">
+                                Bautenstand:
+                            </div>
+                            <div class="col-xs-5 nopad-l">
+                                {{bautenstandFront[selectedDriveBy.buildingProgress]}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-7 text-right">
+                                Umgebende Bebauung:
+                            </div>
+                            <div class="col-xs-5 nopad-l">
+                                {{umgebendeFront[selectedDriveBy.objectStandardEnv]}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-7 text-right">
+                                Leerstand Umgebung:
+                            </div>
+                            <div class="col-xs-5 nopad-l">
+                                {{leerstandFront[selectedDriveBy.vacancyEnv]}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-7 text-right">
+                                Verkehrsanbindung ÖPNV:
+                            </div>
+                            <div class="col-xs-5 nopad-l">
+                                {{verkehrsanbindungFront[selectedDriveBy.publicTransport]}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-7 text-right">
+                                Nähe Versorgungseinrichtungen:
+                            </div>
+                            <div class="col-xs-5 nopad-l">
+                                {{versorgungseinrichtungFront[selectedDriveBy.nearbySupply]}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-7 text-right">
+                                Nähe Erholungseinrichtungen:
+                            </div>
+                            <div class="col-xs-5 nopad-l">
+                                {{erholungsmoglichkeitenFront[selectedDriveBy.nearbyRecreation]}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="clearfix driveby-container">
+                        <div class="driveby-bar"
+                             style="width:{{driveByStatusTotalWidth}};margin-left:{{driveByStatusWidth}}">
+                            <div class="driveby-bar-bumper" style="left:-50px"></div>
+                            <div class="driveby-bar-bumper" style="left:-30px"></div>
+                            <div class="driveby-bar-bumper" style="left:-10px"></div>
+                            <div class="driveby-bar-bumper" style="right:-10px"></div>
+                            <div class="driveby-bar-bumper" style="right:-30px"></div>
+                            <div class="driveby-bar-bumper" style="right:-50px"></div>
+                            <div class="driveby-dots"></div>
+                            <div class="driveby-progressbar" style="width:{{driveByStatusBarWidth}}"></div>
+                            <div class="driveby-line" style="width:{{driveByStatusBarWidth}}"></div>
+                        </div>
+                        <div class="driveby-status-helper" ng-repeat="(key, value) in bautenstand track by $index"
+                             style="width:{{driveByStatusWidth}}" ng-init="calcOffsets(value,$index)">
+                            <div ng-if="$index==driveByStatusIndex && driveByStatusOffset"
+                                 class="driveby-status-progressbar"
+                                 style="width:{{driveByStatusOffset}};right:-{{driveByStatusOffset}}"></div>
+                            <div ng-if="$index==driveByStatusIndex && driveByStatusOffset" class="driveby-status-line"
+                                 style="width:{{driveByStatusOffset}};right:-{{driveByStatusOffset}}"></div>
+                            <div class="driveby-status-dot" ng-class="{'active':$index<=driveByStatusIndex}"></div>
+                            <div class="driveby-status-arrow"></div>
+                            <div class="driveby-status text-small" ng-class="{'active':$index<=driveByStatusIndex}">
+                                {{key}}
+                            </div>
+                            <div class="driveby-dot"
+                                 style="right:-{{getDriveByOffset(value,$index)}}"
+                                 ng-class="{'active': selectedDriveBy.transactionHash==driveBy.transactionHash}"
+                                 ng-repeat="driveBy in driveByMap[value] track by $index"
+                                 uib-tooltip="{{driveBy.dateCreated|date}}"
+                                 ng-click="setSelectedDriveBy(driveBy)">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="rating top-50">
+                <uib-rating ng-click="getRate()" ng-model="uploadingObject.driveByRate" max="max" read-only="isReadonly" on-hover="hoveringOver(value)" on-leave="overStar = null" titles="['one','two','three']" aria-labelledby="default-rating"></uib-rating>
+                <span class="label" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}" ng-show="overStar && !isReadonly">{{percent}}%</span>
+
+                <p id="driveByRate" ng-style="rateTextStyle">{{driveByRate.error ? 'Element noch nicht bewertet!' : rateText[uploadingObject.driveByRate]}}</p>
+
+                <div class="modal-footer">
+                    <button class="btn btn-primary" ng-click="storeEdited()">Speichern & zum Nächsten</button>
+                    <button class="btn btn-default" ng-click="delete()">Löschen</button>
+                    <button class="btn btn-default" ng-click="driveByCancel()">Abbrechen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

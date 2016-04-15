@@ -1,7 +1,7 @@
 define(["./module"], function (module) {
     "use strict";
-    module.directive("dgoDrivebys", ["$rootScope", "$urlService", "$constantsService", "$filter", "$restService", "$drivebysService", "$sucheService", "$listenerService",
-        function ($rootScope, $urlService, $constantsService, $filter, $restService, $drivebysService, $sucheService, $listenerService) {
+    module.directive("dgoDrivebys", ["$rootScope", "$urlService", "$constantsService", "$filter", "$restService", "$drivebysService", "$sucheService", "$listenerService", "$mapService",
+        function ($rootScope, $urlService, $constantsService, $filter, $restService, $drivebysService, $sucheService, $listenerService, $mapService) {
             return {
                 restrict: "E",
                 replace: true,
@@ -131,25 +131,38 @@ define(["./module"], function (module) {
 
 
                     $scope.showDrivebysDetailsRest = function(id) {
+
+
                         $rootScope.$broadcast('preloader', {data: true});
                         $scope.retriggerMap(id);
-                        // $rootScope.$broadcast('preloader', {data: false});
+                        
                     };
 
                     $scope.retriggerMap = function(id) {
                         $drivebysService.showDrivebysDetails(id).then(function (data) {
+
+
+
                             var viewport = [[51.450189013791665,12.073658093359427],[51.450189013791665,12.495601757910208],[51.23336583234749,12.495601757910208],[51.23336583234749,12.073658093359427]];
 
                             $rootScope.$broadcast('drivebyDetails', {
-                                data: data
+                                data: data,
+                                type: $scope.type
                             });
 
-                            $listenerService.triggerChange("drivebyDetails", "dgoDrivebys", data.location);
+                            $mapService.detailsItem(data.location);
+
+                            // $listenerService.triggerChange("drivebyDetails", "dgoDrivebys", data.location);
 
                             var suchProfil = {"suchoptionen":{},"sortOrder":{"sortField":"bauende","order":"asc"},"offset":0,"geo":{},"view":{"viewport":viewport,"zoomlevel":12},"type":"objekteimbau"};
+                            
+                            $mapService.disableZoomListener(true);
 
                             $sucheService.loadItems(suchProfil, id).then(function (data) {
-                                $listenerService.triggerChange("detailItem", "dgoDrivebys", data);
+
+                                $mapService.detailItem(data);
+
+                                // $listenerService.triggerChange("detailItem", "dgoDrivebys", data);
                             });
 
                         }, function (error) {})

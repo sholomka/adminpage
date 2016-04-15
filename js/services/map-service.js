@@ -543,9 +543,10 @@ define(["./module", "googlemaps"], function (module) {
 
                     //unsere eigenen listener registrieren (aber erst, nachdem die map sich selbst intialisiert hat)
                     google.maps.event.addListenerOnce(map, 'idle', function () {
+                        console.log(1);
 
                         google.maps.event.addListener(map, "zoom_changed", function () {
-
+                            console.log(2);
                             if (zoomListenerIsDisabled) return;
 
                             //alle markierungen entfernen (werden eh neu geladen, nach dem zoom)
@@ -562,10 +563,11 @@ define(["./module", "googlemaps"], function (module) {
 
                             //wir warten bis der zoom fertig ist
                             google.maps.event.addListenerOnce(map, "idle", function () {
+                                console.log(3);
                                 // $listenerService.triggerChange("viewport", "mapService", boundsToCoords(map.getBounds()));
-                                // updateViewport(map);
+                                updateViewport(map);
 
-                                $drivebysService.retriggerMap($sessionStorage.driveById, boundsToCoords(map.getBounds()));
+                                // $drivebysService.retriggerMap($sessionStorage.driveById, boundsToCoords(map.getBounds()));
 
                                 // loadSpezialgebieteWithTimeout(map);
                                 // $listenerService.triggerChange("zoomlevel", "mapService", map.getZoom());
@@ -574,14 +576,15 @@ define(["./module", "googlemaps"], function (module) {
 
                         //wenn man die map verschiebt, wird der viewport aktualisiert
                         google.maps.event.addListener(map, "dragend", function () {
+                            console.log(4);
                             keepExistingMarkers = true;
 
-                            $drivebysService.retriggerMap($sessionStorage.driveById, boundsToCoords(map.getBounds()));
-                            // updateViewport(map);
+                            // $drivebysService.retriggerMap($sessionStorage.driveById, boundsToCoords(map.getBounds()));
+                            updateViewport(map);
                             // loadSpezialgebieteWithTimeout(map);
                         });
 
-                        $listenerService.addChangeListener("viewport", "mapService", function (viewport) {
+                        /*$listenerService.addChangeListener("viewport", "mapService", function (viewport) {
                             keepExistingMarkers = false;
                             if (angular.isArray(viewport) && viewport.length == 4) {
                                 map.fitBounds(coordsToBounds(viewport));
@@ -596,18 +599,15 @@ define(["./module", "googlemaps"], function (module) {
                             if (zoomlevel >= 0)
                                 map.setZoom(zoomlevel);
                         });
+*/
 
-
-                        $listenerService.addChangeListener("drivebyDetails", "mapService", function (driveby) {
+                       /* $listenerService.addChangeListener("drivebyDetails", "mapService", function (driveby) {
                             updateDrivebyMarker(map, driveby);
-                        });
+                        });*/
 
                         //kartenausschnitt entsprechend anpassen, wenn object sich geändert ändert
-                        $listenerService.addChangeListener("detailItem", "mapService", function (item) {
-
+                        /*$listenerService.addChangeListener("detailItem", "mapService", function (item) {
                             console.log("detailItem");
-
-
                             if (angular.isObject(item)) {
 
                                 item = item.objektImBauVorschau;
@@ -621,7 +621,7 @@ define(["./module", "googlemaps"], function (module) {
                                     title = "Position: PLZ-genau";
 
 
-                                    /*if (item.geoAccuracy == "PlzOrt" || item.geoAccuracy == "Ortsteil" || item.geoAccuracy == "Stadtteil" || item.geoAccuracy == "Stadtbezirk" ||
+                                    /!*if (item.geoAccuracy == "PlzOrt" || item.geoAccuracy == "Ortsteil" || item.geoAccuracy == "Stadtteil" || item.geoAccuracy == "Stadtbezirk" ||
                                      item.adresse.genauigkeit == "PlzOrt" || item.adresse.genauigkeit == "Ortsteil" || item.adresse.genauigkeit == "Stadtteil" ||
                                      item.adresse.genauigkeit == "Stadtbezirk") {
                                      icon = createWolkeMarkerIcon(24, undefined, color);
@@ -635,7 +635,7 @@ define(["./module", "googlemaps"], function (module) {
                                      icon = createPinMarkerIcon(undefined, color, false);
                                      title = undefined;
                                      zoomlevel = 18;
-                                     }*/
+                                     }*!/
 
                                     if (icon) {
                                         var latlon = new google.maps.LatLng(items.location.lat, items.location.lon);
@@ -666,14 +666,13 @@ define(["./module", "googlemaps"], function (module) {
                                     }
                                 });
 
-
-
+                                disableZoomListener(false);
                             } else {
                                 if (angular.isObject(objektMarker)) {
                                     objektMarker.setMap(null);
                                 }
                             }
-                        });
+                        });*/
                     });
                 }
 
@@ -687,6 +686,60 @@ define(["./module", "googlemaps"], function (module) {
                         google.maps.event.clearInstanceListeners(map);
                         delete maps[mapId];
                     });
+                }
+            };
+
+
+            var detailsItem = function(driveby) {
+
+                console.log(driveby);
+                console.log(map);
+
+                updateDrivebyMarker(map, driveby);
+            };
+
+            var detailItem = function(item) {
+
+                if (angular.isObject(item)) {
+
+                    item = item.objektImBauVorschau;
+                    
+                    angular.forEach(item, function (items) {
+                        var icon, title, zoomlevel;
+                        var color = getMarkerColor(items.angebotsart);
+                        icon = createPinMarkerIcon(undefined, color, false);
+                        title = "Position: PLZ-genau";
+                        
+                        if (icon) {
+                            var latlon = new google.maps.LatLng(items.location.lat, items.location.lon);
+                            
+                            var objektMarker = new google.maps.Marker({
+                                position: latlon,
+                                map: map,
+                                icon: icon,
+                                title: title,
+                                zIndex: 1,
+                                dgoIsGroup: false,
+                                dgoIsOffline: false,
+                                dgoLabel: undefined,
+                                dgoColor: color
+                            });
+
+
+                            markerMap[items.location.geohash] = objektMarker;
+
+                        } else {
+                            if (angular.isObject(objektMarker)) {
+                                objektMarker.setMap(null);
+                            }
+                        }
+                    });
+
+                    disableZoomListener(false);
+                } else {
+                    if (angular.isObject(objektMarker)) {
+                        objektMarker.setMap(null);
+                    }
                 }
             };
 
@@ -1007,9 +1060,7 @@ define(["./module", "googlemaps"], function (module) {
 
             var updateViewport = function (map) {
                 keepExistingMarkers = true;
-
-                // $drivebysService.retriggerMap($sessionStorage.driveById, boundsToCoords(map.getBounds()));
-
+                $drivebysService.retriggerMap($sessionStorage.driveById, boundsToCoords(map.getBounds()));
                 // $listenerService.triggerChange("viewport", "mapService", boundsToCoords(map.getBounds()));
             };
 
@@ -1440,7 +1491,9 @@ define(["./module", "googlemaps"], function (module) {
                 disableZoomListener: disableZoomListener,
                 unhighlightAllItems: unhighlightAllItems,
                 removeDrivebyMarker: removeDrivebyMarker,
-                createDrivebyMarker: createDrivebyMarker
+                createDrivebyMarker: createDrivebyMarker,
+                detailItem: detailItem,
+                detailsItem: detailsItem
             };
 
         }]);

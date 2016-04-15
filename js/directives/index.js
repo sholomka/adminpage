@@ -10,7 +10,8 @@ define([
     "./dgo-bestehende-driveby",
     "./dgo-driveby-details",
     "./dgo-drivebys",
-    "./dgo-map"
+    "./dgo-map",
+    "./dgo-driveby-bestehendedetails"
 
 
 ], function () {});

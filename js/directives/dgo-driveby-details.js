@@ -7,7 +7,7 @@ define(["./module"], function (module) {
                 replace: true,
                 scope: true,
                 templateUrl: "templates/dgo-driveby-details.html",
-                controller: function ($scope, $element, Lightbox, $sessionStorage, $anchorScroll, $timeout) {
+                controller: function ($scope, $attrs, Lightbox, $sessionStorage, $anchorScroll, $timeout) {
                     $constantsService.getZustande().then(function(constants){
                         $scope.zustand = constants;
                         $scope.zustandFront = {};
@@ -122,7 +122,6 @@ define(["./module"], function (module) {
                             $scope.images[args.index].complaint = args.complaint;
                         }
                     });
-
 
 
                     $scope.loadItems = function(args) {
@@ -302,9 +301,14 @@ define(["./module"], function (module) {
                     var currentItemsTimer;
 
                     $scope.$on('drivebyDetails', function (event, args) {
-                        currentItemsTimer = $timeout(function () {
-                            $scope.loadItems(args);
-                        }, 500);
+
+
+
+                        if (args.type == 'neue') {
+                            currentItemsTimer = $timeout(function () {
+                                $scope.loadItems(args);
+                            }, 500);
+                        }
                     });
 
                     $scope.driveByDetail = {
@@ -329,6 +333,9 @@ define(["./module"], function (module) {
                     };
 
                     $scope.getUserInfo = function(userName, open) {
+
+
+
                         if (open) {
                             $drivebysService.getUserInfo(userName).then(function (data) {
                                 $scope.userInfo = data;
@@ -344,6 +351,7 @@ define(["./module"], function (module) {
                             });
                         }
                     };
+
 
                     $listenerService.addChangeListener("detailItem", "dgoDrivebyDetails", function (item) {
                         if (angular.isObject(item)) {
