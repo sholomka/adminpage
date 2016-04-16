@@ -90,10 +90,10 @@ define(["./module"], function (module) {
         };
 
         var cachedItemDetails = {};
-        var loadItems = function (data, id) {
+        var loadItems = function (data, type) {
             var deferred = $q.defer();
 
-            $restService.getObjektRequest(data).run().then(function (data) {
+            $restService.getObjektRequest(data, type).run().then(function (data) {
                 deferred.resolve(data);
             }, function () {
                 deferred.reject("Fehler beim Laden der Objektdetails!");
@@ -112,10 +112,10 @@ define(["./module"], function (module) {
             return deferred.promise;
         };
 
-        var loadItem = function (id) {
+        var loadItem = function (id, type) {
             var deferred = $q.defer();
 
-            $restService.getObjektRequestDetail(id).run().then(function (data) {
+            $restService.getObjektRequestDetail(id, type).run().then(function (data) {
                 deferred.resolve(data);
             }, function () {
                 deferred.reject("Fehler beim Laden der Objektdetails!");

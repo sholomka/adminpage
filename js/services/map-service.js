@@ -128,8 +128,7 @@ define(["./module", "googlemaps"], function (module) {
 
                 //unterscheiden je nach mapType, welche Funktionalitäten enthalten sollen
 
-                console.log(mapType);
-
+               
                 if (mapType == "suche") {
                     map = new google.maps.Map(mapRootElement, {
                         mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -601,12 +600,12 @@ define(["./module", "googlemaps"], function (module) {
                         });
 */
 
-                       /* $listenerService.addChangeListener("drivebyDetails", "mapService", function (driveby) {
+                        $listenerService.addChangeListener("drivebyDetailsneue", "mapService", function (driveby) {
                             updateDrivebyMarker(map, driveby);
-                        });*/
+                        });
 
                         //kartenausschnitt entsprechend anpassen, wenn object sich geändert ändert
-                        /*$listenerService.addChangeListener("detailItem", "mapService", function (item) {
+                        $listenerService.addChangeListener("detailItem", "mapService", function (item) {
                             console.log("detailItem");
                             if (angular.isObject(item)) {
 
@@ -621,7 +620,7 @@ define(["./module", "googlemaps"], function (module) {
                                     title = "Position: PLZ-genau";
 
 
-                                    /!*if (item.geoAccuracy == "PlzOrt" || item.geoAccuracy == "Ortsteil" || item.geoAccuracy == "Stadtteil" || item.geoAccuracy == "Stadtbezirk" ||
+                                    /*if (item.geoAccuracy == "PlzOrt" || item.geoAccuracy == "Ortsteil" || item.geoAccuracy == "Stadtteil" || item.geoAccuracy == "Stadtbezirk" ||
                                      item.adresse.genauigkeit == "PlzOrt" || item.adresse.genauigkeit == "Ortsteil" || item.adresse.genauigkeit == "Stadtteil" ||
                                      item.adresse.genauigkeit == "Stadtbezirk") {
                                      icon = createWolkeMarkerIcon(24, undefined, color);
@@ -635,7 +634,7 @@ define(["./module", "googlemaps"], function (module) {
                                      icon = createPinMarkerIcon(undefined, color, false);
                                      title = undefined;
                                      zoomlevel = 18;
-                                     }*!/
+                                     }*/
 
                                     if (icon) {
                                         var latlon = new google.maps.LatLng(items.location.lat, items.location.lon);
@@ -672,7 +671,7 @@ define(["./module", "googlemaps"], function (module) {
                                     objektMarker.setMap(null);
                                 }
                             }
-                        });*/
+                        });
                     });
                 }
 
@@ -690,15 +689,17 @@ define(["./module", "googlemaps"], function (module) {
             };
 
 
+/*
             var detailsItem = function(driveby) {
-
-                console.log(driveby);
-                console.log(map);
-
                 updateDrivebyMarker(map, driveby);
             };
+*/
 
-            var detailItem = function(item) {
+            /*var detailItem = function(item) {
+
+
+                console.log(driveby);
+                console.log('map'  + map );
 
                 if (angular.isObject(item)) {
 
@@ -741,7 +742,7 @@ define(["./module", "googlemaps"], function (module) {
                         objektMarker.setMap(null);
                     }
                 }
-            };
+            };*/
 
 
             $listenerService.addChangeListener("angebotsart", "mapService", function (angebotsart) {
@@ -1000,8 +1001,6 @@ define(["./module", "googlemaps"], function (module) {
             };
 
             var updateDrivebyMarker = function(map, driveby) {
-
-
                 removeDrivebyMarker();
                 var color =  "green";
                 var drivebyLatlon = new google.maps.LatLng(driveby.lon, driveby.lat);
@@ -1491,9 +1490,7 @@ define(["./module", "googlemaps"], function (module) {
                 disableZoomListener: disableZoomListener,
                 unhighlightAllItems: unhighlightAllItems,
                 removeDrivebyMarker: removeDrivebyMarker,
-                createDrivebyMarker: createDrivebyMarker,
-                detailItem: detailItem,
-                detailsItem: detailsItem
+                createDrivebyMarker: createDrivebyMarker
             };
 
         }]);

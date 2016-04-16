@@ -24,10 +24,10 @@ define(["./module"], function (module) {
     	var getDefaultRegion=function() {
 			return {
 				name: "Leipzig, Deutschland",
-				coords: [[51.441415936255886,12.175624951269583],
-				         [51.441415936255886,12.61164484873052],
-				         [51.242178819504296,12.61164484873052],
-				         [51.242178819504296,12.175624951269583]]
+				coords: [[51.450189013791665,12.073658093359427],
+						[51.450189013791665,12.495601757910208],
+						[51.23336583234749,12.495601757910208],
+						[51.23336583234749,12.073658093359427]]
 			};
     	};
     	
@@ -48,6 +48,8 @@ define(["./module"], function (module) {
     		region: getDefaultRegion(),
     		areas: [],
     		detailItem: undefined,
+    		detailItemneue: undefined,
+    		detailItembestehende: undefined,
     		detailItemCollection: undefined,
     		detailCluster: undefined,
     		suchprofil: {},
@@ -93,12 +95,15 @@ define(["./module"], function (module) {
     		referenzprofil: true,	//Referenzobjektprofil (metadaten)
     		suchergebnisseTab: true,//Tab Objekte/Marktdaten/SozioDaten
     		detailItem: true,		//Aktuelles Objekt in Detailansicht
+    		detailItemneue: true,		//Aktuelles Objekt in Detailansicht
+    		detailItembestehende: true,		//Aktuelles Objekt in Detailansicht
     		detailItemCollection: true, //Liste von Objekt-IDs zum Durchschalten in Detailansicht
     		detailCluster: true,	//Aktueller Cluster in Clusteransicht
     		spezialgebiete: true,	//Ausgewählte spezialgebiete
             news: true,             //Nachrichten mit Koordinaten
     		uisettings: true,		//GUI-Einstellungen, was z.b. ausgeklappt ist
-			drivebyDetails: true		//drivebyDetails
+			drivebyDetailsneue: true,		//drivebyDetails
+			drivebyDetailsbestehende: true		//drivebyDetails
     	};
     	
     	var listeners={};
@@ -213,6 +218,8 @@ define(["./module"], function (module) {
     		triggerChange("viewport","listenerService",angular.copy(defaultValues.viewport));
     		triggerChange("areas","listenerService",angular.copy(defaultValues.areas));
     		triggerChange("detailItem","listenerService",angular.copy(defaultValues.detailItem));
+    		triggerChange("detailItemneue","listenerService",angular.copy(defaultValues.detailItemneue));
+    		triggerChange("detailItembestehende","listenerService",angular.copy(defaultValues.detailItembestehende));
     		triggerChange("detailItemCollection","listenerService",angular.copy(defaultValues.detailItemCollection));
     		triggerChange("detailCluster","listenerService",angular.copy(defaultValues.detailCluster));
     		triggerChange("suchprofil","listenerService",angular.copy(defaultValues.suchprofil));
@@ -275,7 +282,8 @@ define(["./module"], function (module) {
     		getDefaultValue: getDefaultValue,
     		getCompleteStorage: getCompleteStorage,
     		setCompleteStorage: setCompleteStorage,
-    		isLoadingCompleteStorage: isLoadingCompleteStorage
+    		isLoadingCompleteStorage: isLoadingCompleteStorage,
+			getDefaultViewport: getDefaultViewport
     	};
     	
     }]);

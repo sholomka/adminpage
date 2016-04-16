@@ -12,9 +12,9 @@ define(["./module"], function (module) {
                 return deferred.promise
             };
 
-            var showDrivebysDetails=function(data){
+            var showDrivebysDetails=function(data, type){
                 var deferred=$q.defer();
-                $restService.showDrivebysDetails(data).run().then(function(data){
+                $restService.showDrivebysDetails(data, type).run().then(function(data){
                     deferred.resolve(data);
                 },function(error) {
                     deferred.reject(error);

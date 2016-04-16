@@ -131,42 +131,35 @@ define(["./module"], function (module) {
 
 
                     $scope.showDrivebysDetailsRest = function(id) {
-
-
-                        $rootScope.$broadcast('preloader', {data: true});
-                        $scope.retriggerMap(id);
-                        
+                        $scope.retriggerMap(id, $scope.type);
                     };
 
-                    $scope.retriggerMap = function(id) {
-                        $drivebysService.showDrivebysDetails(id).then(function (data) {
+                    $scope.retriggerMap = function(id, type) {
+                        $rootScope.$broadcast('preloader'+type, {data: true});
+                        $drivebysService.showDrivebysDetails(id, type).then(function (data) {
 
+                            var viewport =  $listenerService.getDefaultViewport();
 
-
-                            var viewport = [[51.450189013791665,12.073658093359427],[51.450189013791665,12.495601757910208],[51.23336583234749,12.495601757910208],[51.23336583234749,12.073658093359427]];
-
-                            $rootScope.$broadcast('drivebyDetails', {
+                            $rootScope.$broadcast('drivebyDetails'+type, {
                                 data: data,
                                 type: $scope.type
                             });
-
-                            $mapService.detailsItem(data.location);
-
-                            // $listenerService.triggerChange("drivebyDetails", "dgoDrivebys", data.location);
+                            
+                            $listenerService.triggerChange("drivebyDetails"+type, "dgoDrivebys", data.location);
 
                             var suchProfil = {"suchoptionen":{},"sortOrder":{"sortField":"bauende","order":"asc"},"offset":0,"geo":{},"view":{"viewport":viewport,"zoomlevel":12},"type":"objekteimbau"};
                             
                             $mapService.disableZoomListener(true);
 
-                            $sucheService.loadItems(suchProfil, id).then(function (data) {
-
-                                $mapService.detailItem(data);
-
-                                // $listenerService.triggerChange("detailItem", "dgoDrivebys", data);
+                            $sucheService.loadItems(suchProfil, type).then(function (data) {
+                                $listenerService.triggerChange("detailItem"+type, "dgoDrivebys", data);
+                                $listenerService.triggerChange("detailItem", "dgoDrivebys", data);
                             });
 
                         }, function (error) {})
                     };
+
+                    
 
                     $scope.searchEdit = function(data, type) {
                         $drivebysService.searchTodayDriveBys(data, type).then(function (data) {

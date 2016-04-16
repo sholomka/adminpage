@@ -286,11 +286,13 @@ define(["./module"], function (module) {
 
                         $scope.preloader = false;
                         $scope.showForm = true;
+
+                       
                     };
 
                     $scope.preloader = false;
 
-                    $scope.$on('preloader', function (event, args) {
+                    $scope.$on('preloaderneue', function (event, args) {
                         if (angular.isDefined(currentItemsTimer)) {
                             $timeout.cancel(currentItemsTimer);
                         }
@@ -300,15 +302,13 @@ define(["./module"], function (module) {
 
                     var currentItemsTimer;
 
-                    $scope.$on('drivebyDetails', function (event, args) {
-
-
-
-                        if (args.type == 'neue') {
-                            currentItemsTimer = $timeout(function () {
-                                $scope.loadItems(args);
-                            }, 500);
-                        }
+                    $scope.$on('drivebyDetailsneue', function (event, args) {
+                        console.log(1);
+                        
+                        currentItemsTimer = $timeout(function () {
+                            $scope.loadItems(args);
+                        }, 500);
+                       
                     });
 
                     $scope.driveByDetail = {
@@ -353,11 +353,11 @@ define(["./module"], function (module) {
                     };
 
 
-                    $listenerService.addChangeListener("detailItem", "dgoDrivebyDetails", function (item) {
+                    $listenerService.addChangeListener("detailItemneue", "dgoDrivebyDetails", function (item) {
                         if (angular.isObject(item)) {
                             $scope.mapObjectList = [];
                             angular.forEach(item.objektImBauVorschau, function(data) {
-                                $sucheService.loadItem(data.id).then(function (data) {
+                                $sucheService.loadItem(data.id,'neue').then(function (data) {
                                     $scope.mapObjectList.push(data);
                                 });
                             });

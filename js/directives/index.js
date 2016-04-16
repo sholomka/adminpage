@@ -11,6 +11,7 @@ define([
     "./dgo-driveby-details",
     "./dgo-drivebys",
     "./dgo-map",
+    "./dgo-map-bestehende",
     "./dgo-driveby-bestehendedetails"
 
 
