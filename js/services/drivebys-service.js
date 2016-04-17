@@ -73,11 +73,11 @@ define(["./module"], function (module) {
                 return deferred.promise
             };
             
-            var retriggerMap = function(id, viewport) {
+            var retriggerMap = function(type, viewport) {
                 var suchProfil = {"suchoptionen":{},"sortOrder":{"sortField":"bauende","order":"asc"},"offset":0,"geo":{},"view":{"viewport":viewport,"zoomlevel":12},"type":"objekteimbau"};
 
-                $sucheService.loadItems(suchProfil, id).then(function (data) {
-                    $listenerService.triggerChange("detailItem", "dgoDrivebys", data);
+                $sucheService.loadItems(suchProfil, type).then(function (data) {
+                    $listenerService.triggerChange("detailItem"+type, "dgoDrivebys", data);
                 });
             };
 

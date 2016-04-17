@@ -1,7 +1,7 @@
 define(["./module"], function (module) {
     "use strict";
-    module.directive("dgoDrivebyBestehendedetails", ["$urlService", "$constantsService", "$filter", "$restService", "$newsService", "$drivebysService", "$listenerService", "$mapService", "$sucheService", "$uibModal", "$rootScope", "$sce",
-        function ($urlService, $constantsService, $filter, $restService, $newsService, $drivebysService, $listenerService, $mapService, $sucheService, $uibModal, $rootScope, $sce) {
+    module.directive("dgoDrivebyBestehendedetails", ["$urlService", "$constantsService", "$filter", "$restService", "$newsService", "$drivebysService", "$listenerService", "$mapServiceBestehende", "$sucheService", "$uibModal", "$rootScope", "$sce",
+        function ($urlService, $constantsService, $filter, $restService, $newsService, $drivebysService, $listenerService, $mapServiceBestehende, $sucheService, $uibModal, $rootScope, $sce) {
             return {
                 restrict: "E",
                 replace: true,
@@ -202,7 +202,7 @@ define(["./module"], function (module) {
                         $sessionStorage.videoComplaints = {};
                         $sessionStorage.datenComplaints = {};
                         $sessionStorage.complaints = [];
-                        $sessionStorage.formchanges = [];
+                        $sessionStorage.formchangesbestehende = [];
 
                         $scope.reset();
 
@@ -366,7 +366,8 @@ define(["./module"], function (module) {
                     });
 
                     $scope.highlightMarker = function (item, $event) {
-                        $sessionStorage.formchanges.push('highlightMarker');
+                       
+                        $sessionStorage.formchangesbestehende.push('highlightMarker');
 
                         $scope.sendData.mappedImmoObject = {
                             "objectType": item.angebotsart,
@@ -376,8 +377,8 @@ define(["./module"], function (module) {
                         angular.element(document.querySelectorAll('.ax_dynamic_panel')).removeClass('active');
                         angular.element(document.querySelector('#u722')).css('opacity', '1');
                         angular.element($event.currentTarget).toggleClass('active');
-                        // $mapService.removeDrivebyMarker();
-                        $mapService.highlightItem(item);
+                        // $mapServiceBestehende.removeDrivebyMarker();
+                        $mapServiceBestehende.highlightItem(item);
 
                         $scope.street = item.adresse.strasse;
                         $scope.plz = item.adresse.plz;
@@ -481,8 +482,8 @@ define(["./module"], function (module) {
                         $scope.city = $scope.sendData.city;
                         angular.element(document.querySelector('#u722')).css('opacity', '0.4');
                         angular.element(document.querySelectorAll('.ax_dynamic_panel')).removeClass('active');
-                        $mapService.unhighlightAllItems();
-                        $mapService.createDrivebyMarker($scope.sendData.location);
+                        $mapServiceBestehende.unhighlightAllItems();
+                        $mapServiceBestehende.createDrivebyMarker($scope.sendData.location);
                         $scope.sendData.mappedImmoObject = null;
 
                         $scope.undoForm('highlightMarker');
@@ -490,9 +491,9 @@ define(["./module"], function (module) {
                     };
 
                     $scope.undoForm = function(key) {
-                        for (var i in $sessionStorage.formchanges) {
-                            if ($sessionStorage.formchanges[i] == key)
-                                delete $sessionStorage.formchanges[i];
+                        for (var i in $sessionStorage.formchangesbestehende) {
+                            if ($sessionStorage.formchangesbestehende[i] == key)
+                                delete $sessionStorage.formchangesbestehende[i];
                         }
                     };
 
@@ -512,7 +513,7 @@ define(["./module"], function (module) {
                                 if (!accept.hasClass('active')) {
                                     $sessionStorage.base64Video = $scope.base64Video;
                                     $scope.video[index].accept = true;
-                                    $sessionStorage.formchanges.push('videoaccept'+index);
+                                    $sessionStorage.formchangesbestehende.push('videoaccept'+index);
                                 } else {
                                     delete $sessionStorage.base64Video;
                                     $scope.video[index].accept = false;
@@ -522,7 +523,7 @@ define(["./module"], function (module) {
                                 break;
                             case 'daten':
                                 if (!accept.hasClass('active')) {
-                                    $sessionStorage.formchanges.push('datenaccept');
+                                    $sessionStorage.formchangesbestehende.push('datenaccept');
                                     $scope.daten.accept = true;
                                 } else {
                                     delete $sessionStorage.daten;
@@ -534,7 +535,7 @@ define(["./module"], function (module) {
 
                             default:
                                 if (!accept.hasClass('active')) {
-                                    $sessionStorage.formchanges.push('imagesaccept'+index);
+                                    $sessionStorage.formchangesbestehende.push('imagesaccept'+index);
                                     $scope.images[index].accept = true;
                                 } else {
                                     delete $sessionStorage.base64Images[index];
@@ -562,7 +563,7 @@ define(["./module"], function (module) {
 
                                     delete $sessionStorage.videoComplaints;
 
-                                    $sessionStorage.formchanges.push('videoaccept'+index);
+                                    $sessionStorage.formchangesbestehende.push('videoaccept'+index);
                                     $scope.undoForm('videocomplaints'+index);
                                     break;
                                 case 'daten':
@@ -571,7 +572,7 @@ define(["./module"], function (module) {
 
                                     delete $sessionStorage.datenComplaints;
 
-                                    $sessionStorage.formchanges.push('datenaccept');
+                                    $sessionStorage.formchangesbestehende.push('datenaccept');
                                     $scope.undoForm('datencomplaints');
                                     break;
 
@@ -581,7 +582,7 @@ define(["./module"], function (module) {
 
                                     delete $sessionStorage.complaints[index];
 
-                                    $sessionStorage.formchanges.push('imagesaccept'+index);
+                                    $sessionStorage.formchangesbestehende.push('imagesaccept'+index);
                                     $scope.undoForm('imagecomplaints'+index);
                             }
                         }
@@ -635,7 +636,7 @@ define(["./module"], function (module) {
                                     $sessionStorage.videoComplaints.complaintText = complaintText;
                                     $sessionStorage.videoComplaints.element = 'VIDEO';
 
-                                    $sessionStorage.formchanges.push('videocomplaints'+index);
+                                    $sessionStorage.formchangesbestehende.push('videocomplaints'+index);
                                     break;
 
                                 case 'daten':
@@ -651,7 +652,7 @@ define(["./module"], function (module) {
                                     $sessionStorage.datenComplaints.complaintText = complaintText;
                                     $sessionStorage.datenComplaints.element = 'DATEN';
 
-                                    $sessionStorage.formchanges.push('datencomplaints');
+                                    $sessionStorage.formchangesbestehende.push('datencomplaints');
                                     break;
 
                                 default:
@@ -667,7 +668,7 @@ define(["./module"], function (module) {
                                     $sessionStorage.complaints[index].complaintText = complaintText;
                                     $sessionStorage.complaints[index].element = 'IMAGE' + nextIndex;
 
-                                    $sessionStorage.formchanges.push('imagecomplaints'+index);
+                                    $sessionStorage.formchangesbestehende.push('imagecomplaints'+index);
                             }
 
 
@@ -727,7 +728,7 @@ define(["./module"], function (module) {
 
                     $scope.getRate = function() {
                         if ($scope.uploadingObject.driveByRate > 0) {
-                            $sessionStorage.formchanges.push('driveByRate');
+                            $sessionStorage.formchangesbestehende.push('driveByRate');
                             $scope.driveByRate.error = false;
                             $scope.rateTextStyle.color = 'black';
                         } else {
@@ -801,7 +802,7 @@ define(["./module"], function (module) {
 
                     $scope.unbekanntChange = function() {
                         if ($scope.uploadingObject.unbekannt) {
-                            $sessionStorage.formchanges.push('unbekannt');
+                            $sessionStorage.formchangesbestehende.push('unbekannt');
                         } else {
                             $scope.undoForm('unbekannt');
                         }
@@ -845,7 +846,7 @@ define(["./module"], function (module) {
 
                             $drivebysService.storeEdited($scope.sendData).then(function () {
                                 $scope.sendData = {};
-                                $sessionStorage.formchanges = [];
+                                $sessionStorage.formchangesbestehende = [];
                                 $rootScope.$broadcast('updateDriveBy');
 
                             }, function (error) {});
@@ -870,7 +871,7 @@ define(["./module"], function (module) {
                                 currentModal.dismiss();
                                 $scope.sendData = {};
                                 $scope.showForm = false;
-                                $sessionStorage.formchanges = [];
+                                $sessionStorage.formchangesbestehende = [];
 
                                 $rootScope.$broadcast('updateDriveBy');
                             }, function (error) {});

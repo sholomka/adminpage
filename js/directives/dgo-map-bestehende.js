@@ -1,12 +1,12 @@
 define(["./module"], function (module) {
     "use strict";
-    module.directive("dgoMapBestehende", ["$mapService", function ($mapService) {
+    module.directive("dgoMapBestehende", ["$mapServiceBestehende", function ($mapServiceBestehende) {
         return {
             restrict: "E",
             replace: true,
-            template: "<div class=\"mapcanvas\">Map loading...</div>",
+            template: "<div class=\"mapcanvasbestehende\">Map loading...</div>",
             controller: function ($scope,$element,$attrs) {
-                $mapService.createMap($element[0],$attrs.type,$attrs.id);
+                $mapServiceBestehende.createMap($element[0],$attrs.type,$attrs.id);
             }
         };
     }]);

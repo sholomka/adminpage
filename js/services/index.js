@@ -9,6 +9,7 @@ define([
     "./news-service",
     "./drivebys-service",
     "./map-service",
+    "./map-service-bestehende",
     "./message-service",
     "./spezialgebiete-service",
     "./feedback-service",

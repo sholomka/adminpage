@@ -1,6 +1,6 @@
 define(["./module", "googlemaps"], function (module) {
     "use strict";
-    module.factory("$mapService", ["$rootScope", "$timeout", "$filter", "$compile", "$window", "$messageService", "$listenerService", "$sucheService", "$spezialgebieteService", "$http", "$drivebysService", "$sessionStorage",
+    module.factory("$mapServiceBestehende", ["$rootScope", "$timeout", "$filter", "$compile", "$window", "$messageService", "$listenerService", "$sucheService", "$spezialgebieteService", "$http", "$drivebysService", "$sessionStorage",
         function ($scope, $timeout, $filter, $compile, $window, $messageService, $listenerService, $sucheService, $spezialgebieteService, $http, $drivebysService, $sessionStorage) {
             var maps = {},
                 initialBounds,
@@ -61,7 +61,7 @@ define(["./module", "googlemaps"], function (module) {
 //					    bounds: map.getBounds(),
 //					    types: [placeType]
 //					  }, callback);
-//					  
+//
 //					function callback(results, status) {
 //						if (status === google.maps.places.PlacesServiceStatus.OK) {
 //							$scope.placesMap[placeType]=[];
@@ -72,7 +72,7 @@ define(["./module", "googlemaps"], function (module) {
 //					}
 //
 //					function createMarker(place,placeType) {
-//						
+//
 //						var placeLoc = place.geometry.location;
 //						var labelcontent = '';
 //						if(placeType=='grocery_or_supermarket'){
@@ -98,7 +98,7 @@ define(["./module", "googlemaps"], function (module) {
 //						return marker;
 //					}
 //				}
-//			
+//
 //		    	var placs = [];
 //				placs.push('<div class="map-control-gebiete map-control-gebiete-open">');
 //				//TODO - Better width for this control pannel
@@ -116,9 +116,10 @@ define(["./module", "googlemaps"], function (module) {
             var map = undefined;
 
             var createMap = function (mapRootElement, mapType, mapId) {
-                console.log(1);
-
-
+                
+                console.log(2);
+                
+                
                 $scope.placesMap = {};
                 if (angular.isUndefined(mapRootElement)) {
                     $messageService.showError("kein Map-Root-Element definiert!");
@@ -131,7 +132,7 @@ define(["./module", "googlemaps"], function (module) {
 
                 //unterscheiden je nach mapType, welche Funktionalitäten enthalten sollen
 
-               
+
                 if (mapType == "suche") {
                     map = new google.maps.Map(mapRootElement, {
                         mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -192,7 +193,7 @@ define(["./module", "googlemaps"], function (module) {
 //		            			places[key].forEach(function(value){
 //							 		value.setMap(null)
 //							 	});
-//								delete $scope.placesMap[key];	
+//								delete $scope.placesMap[key];
 //								$scope.showPlaces(key);
 //	            			}
 //	            		});
@@ -587,30 +588,29 @@ define(["./module", "googlemaps"], function (module) {
                         });
 
                         /*$listenerService.addChangeListener("viewport", "mapService", function (viewport) {
-                            keepExistingMarkers = false;
-                            if (angular.isArray(viewport) && viewport.length == 4) {
-                                map.fitBounds(coordsToBounds(viewport));
-                                map.setZoom(map.getZoom() + 1);
-                            }
-                        });
+                         keepExistingMarkers = false;
+                         if (angular.isArray(viewport) && viewport.length == 4) {
+                         map.fitBounds(coordsToBounds(viewport));
+                         map.setZoom(map.getZoom() + 1);
+                         }
+                         });
 
 
-                        //zoomlevel entsprechend anpassen, wenn viewport sich extern ändert (z.b. durch laden)
-                        $listenerService.addChangeListener("zoomlevel", "mapService", function (zoomlevel, alt, source) {
-                            keepExistingMarkers = false;
-                            if (zoomlevel >= 0)
-                                map.setZoom(zoomlevel);
-                        });
-*/
+                         //zoomlevel entsprechend anpassen, wenn viewport sich extern ändert (z.b. durch laden)
+                         $listenerService.addChangeListener("zoomlevel", "mapService", function (zoomlevel, alt, source) {
+                         keepExistingMarkers = false;
+                         if (zoomlevel >= 0)
+                         map.setZoom(zoomlevel);
+                         });
+                         */
 
                         $listenerService.addChangeListener("drivebyDetailsneue", "mapService", function (driveby) {
                             updateDrivebyMarker(map, driveby);
                         });
 
                         //kartenausschnitt entsprechend anpassen, wenn object sich geändert ändert
-                        $listenerService.addChangeListener("detailItemneue", "mapService", function (item) {
-                            console.log("detailItemneue");
-                            console.log(item);
+                        $listenerService.addChangeListener("detailItembestehende", "mapService", function (item) {
+                            console.log("detailItembestehende");
                             if (angular.isObject(item)) {
 
                                 item = item.objektImBauVorschau;
@@ -693,60 +693,60 @@ define(["./module", "googlemaps"], function (module) {
             };
 
 
-/*
-            var detailsItem = function(driveby) {
-                updateDrivebyMarker(map, driveby);
-            };
-*/
+            /*
+             var detailsItem = function(driveby) {
+             updateDrivebyMarker(map, driveby);
+             };
+             */
 
             /*var detailItem = function(item) {
 
 
-                console.log(driveby);
-                console.log('map'  + map );
+             console.log(driveby);
+             console.log('map'  + map );
 
-                if (angular.isObject(item)) {
+             if (angular.isObject(item)) {
 
-                    item = item.objektImBauVorschau;
-                    
-                    angular.forEach(item, function (items) {
-                        var icon, title, zoomlevel;
-                        var color = getMarkerColor(items.angebotsart);
-                        icon = createPinMarkerIcon(undefined, color, false);
-                        title = "Position: PLZ-genau";
-                        
-                        if (icon) {
-                            var latlon = new google.maps.LatLng(items.location.lat, items.location.lon);
-                            
-                            var objektMarker = new google.maps.Marker({
-                                position: latlon,
-                                map: map,
-                                icon: icon,
-                                title: title,
-                                zIndex: 1,
-                                dgoIsGroup: false,
-                                dgoIsOffline: false,
-                                dgoLabel: undefined,
-                                dgoColor: color
-                            });
+             item = item.objektImBauVorschau;
+
+             angular.forEach(item, function (items) {
+             var icon, title, zoomlevel;
+             var color = getMarkerColor(items.angebotsart);
+             icon = createPinMarkerIcon(undefined, color, false);
+             title = "Position: PLZ-genau";
+
+             if (icon) {
+             var latlon = new google.maps.LatLng(items.location.lat, items.location.lon);
+
+             var objektMarker = new google.maps.Marker({
+             position: latlon,
+             map: map,
+             icon: icon,
+             title: title,
+             zIndex: 1,
+             dgoIsGroup: false,
+             dgoIsOffline: false,
+             dgoLabel: undefined,
+             dgoColor: color
+             });
 
 
-                            markerMap[items.location.geohash] = objektMarker;
+             markerMap[items.location.geohash] = objektMarker;
 
-                        } else {
-                            if (angular.isObject(objektMarker)) {
-                                objektMarker.setMap(null);
-                            }
-                        }
-                    });
+             } else {
+             if (angular.isObject(objektMarker)) {
+             objektMarker.setMap(null);
+             }
+             }
+             });
 
-                    disableZoomListener(false);
-                } else {
-                    if (angular.isObject(objektMarker)) {
-                        objektMarker.setMap(null);
-                    }
-                }
-            };*/
+             disableZoomListener(false);
+             } else {
+             if (angular.isObject(objektMarker)) {
+             objektMarker.setMap(null);
+             }
+             }
+             };*/
 
 
             $listenerService.addChangeListener("angebotsart", "mapService", function (angebotsart) {
@@ -781,7 +781,7 @@ define(["./module", "googlemaps"], function (module) {
             };
 
             var highlightItem = function (item) {
-                console.log('highlightItem');
+                console.log('highlightItembestehende');
 
                 unhighlightAllItems();
 
@@ -1000,8 +1000,8 @@ define(["./module", "googlemaps"], function (module) {
             var createDrivebyMarker = function(driveby) {
                 updateDrivebyMarker(map, driveby);
                 /*$listenerService.addChangeListener("drivebyDetails", "mapService", function (driveby) {
-                    updateDrivebyMarker(map, driveby);
-                });*/
+                 updateDrivebyMarker(map, driveby);
+                 });*/
             };
 
             var updateDrivebyMarker = function(map, driveby) {
@@ -1063,7 +1063,7 @@ define(["./module", "googlemaps"], function (module) {
 
             var updateViewport = function (map) {
                 keepExistingMarkers = true;
-                $drivebysService.retriggerMap('neue', boundsToCoords(map.getBounds()));
+                $drivebysService.retriggerMap('bestehende', boundsToCoords(map.getBounds()));
                 // $listenerService.triggerChange("viewport", "mapService", boundsToCoords(map.getBounds()));
             };
 

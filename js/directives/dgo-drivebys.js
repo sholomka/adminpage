@@ -104,6 +104,7 @@ define(["./module"], function (module) {
                     };
 
                     $sessionStorage.formchanges = [];
+                    $sessionStorage.formchangesbestehende = [];
 
                     $scope.showDrivebysDetails = function(id, $event) {
                         $sessionStorage.driveById = id;
@@ -111,22 +112,44 @@ define(["./module"], function (module) {
                         var event = $event.currentTarget,
                             accept = angular.element(event).children().eq(0);
 
-                        if(angular.isArray($sessionStorage.formchanges) && !angular.equals($sessionStorage.formchanges, [])) {
-                            $sessionStorage.formchanges = $sessionStorage.formchanges.filter(function(x) {
-                                return x !== undefined &&  x !== null;
-                            });
-                        }
 
-                        if (!accept.hasClass('active') && (!$sessionStorage.formchanges || $sessionStorage.formchanges.length == 0) ) {
-                            $sessionStorage.formchanges = [];
-                            $scope.showDrivebysDetailsRest(id);
-                        } else {
-                            if (accept.hasClass('active')) {
-                                $scope.showDrivebysDetailsRest(id);
+                        if ($scope.type == 'neue') {
+                            if(angular.isArray($sessionStorage.formchanges) && !angular.equals($sessionStorage.formchanges, [])) {
+                                $sessionStorage.formchanges = $sessionStorage.formchanges.filter(function(x) {
+                                    return x !== undefined &&  x !== null;
+                                });
                             }
 
-                            accept.toggleClass('active');
+                            if (!accept.hasClass('active') && (!$sessionStorage.formchanges || $sessionStorage.formchanges.length == 0) ) {
+                                $sessionStorage.formchanges = [];
+                                $scope.showDrivebysDetailsRest(id);
+                            } else {
+                                if (accept.hasClass('active')) {
+                                    $scope.showDrivebysDetailsRest(id);
+                                }
+
+                                accept.toggleClass('active');
+                            }
+                        } else {
+                            if(angular.isArray($sessionStorage.formchangesbestehende) && !angular.equals($sessionStorage.formchangesbestehende, [])) {
+                                $sessionStorage.formchangesbestehende = $sessionStorage.formchanges.filter(function(x) {
+                                    return x !== undefined &&  x !== null;
+                                });
+                            }
+
+                            if (!accept.hasClass('active') && (!$sessionStorage.formchangesbestehende || $sessionStorage.formchangesbestehende.length == 0) ) {
+                                $sessionStorage.formchangesbestehende = [];
+                                $scope.showDrivebysDetailsRest(id);
+                            } else {
+                                if (accept.hasClass('active')) {
+                                    $scope.showDrivebysDetailsRest(id);
+                                }
+
+                                accept.toggleClass('active');
+                            }
                         }
+
+
                     };
 
 
@@ -153,7 +176,7 @@ define(["./module"], function (module) {
 
                             $sucheService.loadItems(suchProfil, type).then(function (data) {
                                 $listenerService.triggerChange("detailItem"+type, "dgoDrivebys", data);
-                                $listenerService.triggerChange("detailItem", "dgoDrivebys", data);
+                                // $listenerService.triggerChange("detailItem", "dgoDrivebys", data);
                             });
 
                         }, function (error) {})
