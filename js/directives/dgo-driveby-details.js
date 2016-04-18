@@ -97,6 +97,7 @@ define(["./module"], function (module) {
                     };
 
                     $scope.$on('accept', function (event, args) {
+                        console.log('accept');
                         if (args.isVideo) {
                             $scope.video[args.index].accept = args.accept;
                         } else {

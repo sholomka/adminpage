@@ -96,7 +96,9 @@ define(["./module"], function (module) {
                         });
                     };
 
-                    $scope.$on('accept', function (event, args) {
+                    $scope.$on('acceptbestehende', function (event, args) {
+                        console.log('acceptbestehende');
+
                         if (args.isVideo) {
                             $scope.video[args.index].accept = args.accept;
                         } else {
@@ -198,15 +200,20 @@ define(["./module"], function (module) {
                         $scope.infoData.nearbySupply = args.data.nearbySupply;
                         $scope.infoData.nearbyRecreation = args.data.nearbyRecreation;
 
-                        $sessionStorage.base64Images = [];
+                       
+                        $sessionStorage.base64Imagesbestehende = [];
+                        $sessionStorage.formchangesbestehende = [];
+                        
                         $sessionStorage.videoComplaints = {};
                         $sessionStorage.datenComplaints = {};
                         $sessionStorage.complaints = [];
-                        $sessionStorage.formchangesbestehende = [];
+                       
 
                         $scope.reset();
 
                         $scope.images = args.data.base64Images;
+
+
                         $scope.videoUrl = "data:video/mp4;base64," + args.data.base64Video;
                         $scope.base64Video = args.data.base64Video;
                         $scope.daten = {
@@ -240,6 +247,7 @@ define(["./module"], function (module) {
                         $scope.video = [
                             {
                                 'type': 'video',
+                                'tab': 'bestehende',
                                 'config': $scope.config,
                                 'thumbUrl': 'https://i.ytimg.com/vi/N7TkK2joi4I/1.jpg',
                                 'base64Video': $scope.base64Video,
@@ -267,6 +275,8 @@ define(["./module"], function (module) {
                             obj[key].caption = $scope.titlesImage[key];
                             obj[key].accept = false;
                             obj[key].complaint = false;
+                            obj[key].tab = 'bestehende';
+
 
                             slides.push({
                                 image: 'data:image/png;base64,' + obj[key].base64,
@@ -303,13 +313,9 @@ define(["./module"], function (module) {
                     var currentItemsTimer;
 
                     $scope.$on('drivebyDetailsbestehende', function (event, args) {
-
-                        console.log(2);
-
                         currentItemsTimer = $timeout(function () {
                             $scope.loadItems(args);
                         }, 500);
-
                     });
 
                     $scope.driveByDetail = {
@@ -480,8 +486,8 @@ define(["./module"], function (module) {
                         $scope.street = $scope.sendData.street;
                         $scope.plz = $scope.sendData.plz;
                         $scope.city = $scope.sendData.city;
-                        angular.element(document.querySelector('#u722')).css('opacity', '0.4');
-                        angular.element(document.querySelectorAll('.ax_dynamic_panel')).removeClass('active');
+                        angular.element(document.querySelector('.driveby-bestehende-detail #u722')).css('opacity', '0.4');
+                        angular.element(document.querySelectorAll('.driveby-bestehende-detail .ax_dynamic_panel')).removeClass('active');
                         $mapServiceBestehende.unhighlightAllItems();
                         $mapServiceBestehende.createDrivebyMarker($scope.sendData.location);
                         $scope.sendData.mappedImmoObject = null;
@@ -498,6 +504,7 @@ define(["./module"], function (module) {
                     };
 
                     $scope.Lightbox = Lightbox;
+
 
                     $scope.accept = function($event, index, type) {
                         var event = $event.currentTarget,

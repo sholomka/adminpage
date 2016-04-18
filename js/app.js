@@ -28,44 +28,54 @@ define(["angular", "angular-sanitize",  "angular-animate", "angular-touch", "loc
             var event = $event.currentTarget,
                 accept = angular.element(event),
                 complaint = accept.next(),
-                index = $scope.Lightbox.index;
+                index = $scope.Lightbox.index,
+                tab = $scope.Lightbox.image.tab,
+                storageImgName = 'base64Images',
+                storageVideoName = 'base64Video',
+                storageFormchangesName = 'formchanges',
+                broadcastName = 'accept';
 
             if (complaint.hasClass('active')) {
                 return;
+            }
+
+            if (tab == 'bestehende') {
+                storageImgName += tab;
+                storageVideoName += tab;
+                storageFormchangesName += tab;
+                broadcastName += tab;
             }
 
             if (!accept.hasClass('active')) {
                 $scope.Lightbox.image.accept = true;
 
                 if (isVideo) {
-                    $sessionStorage.base64Video = $scope.Lightbox.image.base64Video;
-
-                    $sessionStorage.formchanges.push('videoaccept'+index);
+                    $sessionStorage[storageVideoName] = $scope.Lightbox.image.base64Video;
+                    $sessionStorage[storageFormchangesName].push('videoaccept'+index);
                 } else {
-                    $sessionStorage.base64Images[index] = {};
-                    $sessionStorage.base64Images[index].index = $scope.Lightbox.image.index;
-                    $sessionStorage.base64Images[index].base64 = $scope.Lightbox.image.base64;
+                    $sessionStorage[storageImgName][index] = {};
+                    $sessionStorage[storageImgName][index].index = $scope.Lightbox.image.index;
+                    $sessionStorage[storageImgName][index].base64 = $scope.Lightbox.image.base64;
 
-                    $sessionStorage.formchanges.push('imagesaccept'+index);
+                    $sessionStorage[storageFormchangesName].push('imagesaccept'+index);
                 }
             } else {
                 $scope.Lightbox.image.accept = false;
 
                 if (isVideo) {
-                    delete $sessionStorage.base64Video;
-                    $scope.undoForm('videoaccept'+index);
+                    delete $sessionStorage[storageVideoName];
+                    $scope.undoForm('videoaccept'+index, storageFormchangesName);
                 }  else {
-                    delete $sessionStorage.base64Images[index];
-                    $scope.undoForm('imagesaccept'+index);
+                    delete $sessionStorage[storageImgName][index];
+                    $scope.undoForm('imagesaccept'+index, storageFormchangesName);
                 }
             }
 
-            $rootScope.$broadcast('accept', {
+            $rootScope.$broadcast(broadcastName, {
                 index: index,
                 accept:  $scope.Lightbox.image.accept,
                 isVideo: isVideo
             });
-
         };
 
         $scope.complaint = function($event, isVideo) {
@@ -163,10 +173,10 @@ define(["angular", "angular-sanitize",  "angular-animate", "angular-touch", "loc
             }
         };
 
-        $scope.undoForm = function(key) {
-            for (var i in $sessionStorage.formchanges) {
-                if ($sessionStorage.formchanges[i] == key)
-                    delete $sessionStorage.formchanges[i];
+        $scope.undoForm = function(key, storageFormchangesName) {
+            for (var i in $sessionStorage[storageFormchangesName]) {
+                if ($sessionStorage[storageFormchangesName][i] == key)
+                    delete $sessionStorage[storageFormchangesName][i];
             }
         };
     });
