@@ -174,7 +174,7 @@ define(["./module"], function (module) {
                             
                             $mapService.disableZoomListener(true);
 
-                            $sucheService.loadItems(suchProfil, type).then(function (data) {
+                            $sucheService.loadItems(suchProfil).then(function (data) {
                                 $listenerService.triggerChange("detailItem"+type, "dgoDrivebys", data);
                                 // $listenerService.triggerChange("detailItem", "dgoDrivebys", data);
                             });

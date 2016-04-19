@@ -358,7 +358,7 @@ define(["./module"], function (module) {
                         if (angular.isObject(item)) {
                             $scope.mapObjectList = [];
                             angular.forEach(item.objektImBauVorschau, function(data) {
-                                $sucheService.loadItem(data.id,'neue').then(function (data) {
+                                $sucheService.loadItem(data.id).then(function (data) {
                                     $scope.mapObjectList.push(data);
                                 });
                             });
