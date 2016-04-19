@@ -97,7 +97,6 @@ define(["./module"], function (module) {
                     };
 
                     $scope.$on('accept', function (event, args) {
-                        console.log('accept');
                         if (args.isVideo) {
                             $scope.video[args.index].accept = args.accept;
                         } else {
@@ -123,7 +122,6 @@ define(["./module"], function (module) {
                             $scope.images[args.index].complaint = args.complaint;
                         }
                     });
-
 
                     $scope.loadItems = function(args) {
                         $scope.sendData = {};
@@ -373,8 +371,8 @@ define(["./module"], function (module) {
                             "objectId": item.id
                         };
 
-                        angular.element(document.querySelectorAll('.ax_dynamic_panel')).removeClass('active');
-                        angular.element(document.querySelector('#u722')).css('opacity', '1');
+                        angular.element(document.querySelectorAll('.driveby-detail .ax_dynamic_panel')).removeClass('active');
+                        angular.element(document.querySelector('.driveby-detail #u722')).css('opacity', '1');
                         angular.element($event.currentTarget).toggleClass('active');
                         // $mapService.removeDrivebyMarker();
                         $mapService.highlightItem(item);
@@ -479,10 +477,10 @@ define(["./module"], function (module) {
                         $scope.street = $scope.sendData.street;
                         $scope.plz = $scope.sendData.plz;
                         $scope.city = $scope.sendData.city;
-                        angular.element(document.querySelector('#u722')).css('opacity', '0.4');
-                        angular.element(document.querySelectorAll('.ax_dynamic_panel')).removeClass('active');
+                        angular.element(document.querySelector('.driveby-detail #u722')).css('opacity', '0.4');
+                        angular.element(document.querySelectorAll('.driveby-detail .ax_dynamic_panel')).removeClass('active');
                         $mapService.unhighlightAllItems();
-                        $mapService.createDrivebyMarker($scope.sendData.location);
+                        $mapService.resetDrivebyMarker($scope.sendData.location);
                         $scope.sendData.mappedImmoObject = null;
 
                         $scope.undoForm('highlightMarker');
@@ -843,7 +841,7 @@ define(["./module"], function (module) {
                             $scope.preloader = true;
                             $scope.showForm = false;
 
-                            $drivebysService.storeEdited($scope.sendData).then(function () {
+                            $drivebysService.storeEdited($scope.sendData, 'neue').then(function () {
                                 $scope.sendData = {};
                                 $sessionStorage.formchanges = [];
                                 $rootScope.$broadcast('updateDriveBy');
@@ -866,7 +864,7 @@ define(["./module"], function (module) {
                         });
 
                         $scope.yes = function() {
-                            $drivebysService.deleteDriveBy($scope.sendData.transactionHash).then(function () {
+                            $drivebysService.deleteDriveBy($scope.sendData.transactionHash, 'neue').then(function () {
                                 currentModal.dismiss();
                                 $scope.sendData = {};
                                 $scope.showForm = false;

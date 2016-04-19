@@ -604,7 +604,7 @@ define(["./module", "googlemaps"], function (module) {
                          });
                          */
 
-                        $listenerService.addChangeListener("drivebyDetailsneue", "mapService", function (driveby) {
+                        $listenerService.addChangeListener("drivebyDetailsbestehende", "mapService", function (driveby) {
                             updateDrivebyMarker(map, driveby);
                         });
 
@@ -803,8 +803,6 @@ define(["./module", "googlemaps"], function (module) {
             };
 
             var unhighlightAllItems = function() {
-                console.log('unhighlightAllItems');
-                console.log(markerMap);
                 angular.forEach(markerMap, function(marker) {
                     var icon = marker.getIcon();
                     if (marker.dgoIsGroup) {
@@ -996,12 +994,13 @@ define(["./module", "googlemaps"], function (module) {
                     objektMarker.setMap(null);
                 });
             };
+            
+            var resetDrivebyMarker = function(driveby) {
+                var drivebyLatlon = new google.maps.LatLng(driveby.lon, driveby.lat);
 
-            var createDrivebyMarker = function(driveby) {
-                updateDrivebyMarker(map, driveby);
-                /*$listenerService.addChangeListener("drivebyDetails", "mapService", function (driveby) {
-                 updateDrivebyMarker(map, driveby);
-                 });*/
+                if (angular.isObject(map)) {
+                    map.setCenter(drivebyLatlon);
+                }
             };
 
             var updateDrivebyMarker = function(map, driveby) {
@@ -1011,7 +1010,7 @@ define(["./module", "googlemaps"], function (module) {
 
                 if (angular.isObject(map)) {
 
-                    console.log("updateDrivebyMarker");
+                    // console.log(drivebyLatlon);
 
                     map.setZoom(12);
                     map.setCenter(drivebyLatlon);
@@ -1494,7 +1493,7 @@ define(["./module", "googlemaps"], function (module) {
                 disableZoomListener: disableZoomListener,
                 unhighlightAllItems: unhighlightAllItems,
                 removeDrivebyMarker: removeDrivebyMarker,
-                createDrivebyMarker: createDrivebyMarker
+                resetDrivebyMarker: resetDrivebyMarker
             };
 
         }]);

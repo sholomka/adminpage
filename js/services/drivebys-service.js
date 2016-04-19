@@ -42,9 +42,9 @@ define(["./module"], function (module) {
                 return deferred.promise
             };
 
-            var storeEdited=function(data){
+            var storeEdited=function(data, type){
                 var deferred=$q.defer();
-                $restService.storeEdited(data).run().then(function(data){
+                $restService.storeEdited(data, type).run().then(function(data){
                     deferred.resolve(data);
                 },function(error) {
                     deferred.reject(error);
@@ -53,9 +53,9 @@ define(["./module"], function (module) {
             };
 
 
-            var deleteDriveBy=function(data){
+            var deleteDriveBy=function(data, type){
                 var deferred=$q.defer();
-                $restService.deleteDriveBy(data).run().then(function(data){
+                $restService.deleteDriveBy(data, type).run().then(function(data){
                     deferred.resolve(data);
                 },function(error) {
                     deferred.reject(error);

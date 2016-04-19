@@ -83,13 +83,28 @@ define(["angular", "angular-sanitize",  "angular-animate", "angular-touch", "loc
                 $scope.disabled = complaintText == '';
             };
 
-            var index = $scope.Lightbox.index;
-            $scope.currentImg =   $scope.Lightbox.image.thumbUrl;
+            var index = $scope.Lightbox.index,
+                tab = $scope.Lightbox.image.tab,
+                storageImgName = 'base64Images',
+                storageVideoName = 'base64Video',
+                storageVideoComplaints = 'videoComplaints',
+                storageComplaints = 'complaints',
+                broadcastName = 'complaint';
+            
+            if (tab == 'bestehende') {
+                storageImgName += tab;
+                storageVideoName += tab;
+                storageVideoComplaints += tab;
+                storageComplaints += tab;
+                broadcastName += tab;
+            }
+            
+            $scope.currentImg = $scope.Lightbox.image.thumbUrl;
 
             if (isVideo) {
-                $scope.complaintText = angular.isObject($sessionStorage.videoComplaints) && !angular.equals({}, $sessionStorage.videoComplaints) ? $sessionStorage.videoComplaints.complaintText : '';
+                $scope.complaintText = angular.isObject($sessionStorage[storageVideoComplaints]) && !angular.equals({}, $sessionStorage[storageVideoComplaints]) ? $sessionStorage[storageVideoComplaints].complaintText : '';
             } else {
-                $scope.complaintText = angular.isObject($sessionStorage.complaints[index]) ? $sessionStorage.complaints[index].complaintText : '';
+                $scope.complaintText = angular.isObject($sessionStorage[storageComplaints][index]) ? $sessionStorage[storageComplaints][index].complaintText : '';
             }
 
             $scope.check($scope.complaintText);
@@ -112,20 +127,20 @@ define(["angular", "angular-sanitize",  "angular-animate", "angular-touch", "loc
                 }
 
                 if (isVideo) {
-                    $sessionStorage.videoComplaints = {};
-                    $sessionStorage.videoComplaints.complaintText = complaintText;
-                    $sessionStorage.videoComplaints.element = 'VIDEO';
+                    $sessionStorage[storageVideoComplaints] = {};
+                    $sessionStorage[storageVideoComplaints].complaintText = complaintText;
+                    $sessionStorage[storageVideoComplaints].element = 'VIDEO';
 
-                    delete  $sessionStorage.base64Video;
+                    delete $sessionStorage[storageVideoName];
                 } else {
-                    $sessionStorage.complaints[index] = {};
-                    $sessionStorage.complaints[index].complaintText = complaintText;
-                    $sessionStorage.complaints[index].element = 'IMAGE' + $scope.Lightbox.image.index;
+                    $sessionStorage[storageComplaints][index] = {};
+                    $sessionStorage[storageComplaints][index].complaintText = complaintText;
+                    $sessionStorage[storageComplaints][index].element = 'IMAGE' + $scope.Lightbox.image.index;
 
-                    delete $sessionStorage.base64Images[index];
+                    delete $sessionStorage[storageImgName][index];
                 }
 
-                $rootScope.$broadcast('complaint', {
+                $rootScope.$broadcast(broadcastName, {
                     index: index,
                     complaint:  $scope.Lightbox.image.complaint,
                     isVideo: isVideo
@@ -144,25 +159,38 @@ define(["angular", "angular-sanitize",  "angular-animate", "angular-touch", "loc
         };
 
         $scope.acceptDblClick = function($event, isVideo) {
-            var index = $scope.Lightbox.index;
+            var index = $scope.Lightbox.index,
+                tab = $scope.Lightbox.image.tab,
+                storageImgName = 'base64Images',
+                storageVideoName = 'base64Video',
+                storageVideoComplaints = 'videoComplaints',
+                storageComplaints = 'complaints',
+                broadcastName = 'acceptDblClick';
+
+            if (tab == 'bestehende') {
+                storageImgName += tab;
+                storageVideoName += tab;
+                storageVideoComplaints += tab;
+                storageComplaints += tab;
+                broadcastName += tab;
+            }
 
             if ($scope.Lightbox.image.complaint) {
                 if (isVideo) {
-                    delete $sessionStorage.videoComplaints;
-                    $sessionStorage.base64Video = $scope.Lightbox.image.base64Video;
+                    delete $sessionStorage[storageVideoComplaints];
+                    $sessionStorage[storageVideoName] = $scope.Lightbox.image.base64Video;
                 } else {
-                    delete $sessionStorage.complaints[index];
+                    delete $sessionStorage[storageComplaints][index];
 
-                    $sessionStorage.base64Images[index] = {};
-                    $sessionStorage.base64Images[index].index = $scope.Lightbox.image.index;
-                    $sessionStorage.base64Images[index].base64 = $scope.Lightbox.image.base64;
+                    $sessionStorage[storageImgName][index] = {};
+                    $sessionStorage[storageImgName][index].index = $scope.Lightbox.image.index;
+                    $sessionStorage[storageImgName][index].base64 = $scope.Lightbox.image.base64;
                 }
-
-
+                
                 $scope.Lightbox.image.complaint = false;
                 $scope.Lightbox.image.accept = true;
 
-                $rootScope.$broadcast('acceptDblClick', {
+                $rootScope.$broadcast(broadcastName, {
                     index: index,
                     complaint:  $scope.Lightbox.image.complaint,
                     accept:  $scope.Lightbox.image.accept,

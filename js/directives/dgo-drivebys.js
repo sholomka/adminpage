@@ -1,7 +1,7 @@
 define(["./module"], function (module) {
     "use strict";
-    module.directive("dgoDrivebys", ["$rootScope", "$urlService", "$constantsService", "$filter", "$restService", "$drivebysService", "$sucheService", "$listenerService", "$mapService",
-        function ($rootScope, $urlService, $constantsService, $filter, $restService, $drivebysService, $sucheService, $listenerService, $mapService) {
+    module.directive("dgoDrivebys", ["$rootScope", "$urlService", "$constantsService", "$filter", "$restService", "$drivebysService", "$sucheService", "$listenerService", "$mapService", "$mapServiceBestehende",
+        function ($rootScope, $urlService, $constantsService, $filter, $restService, $drivebysService, $sucheService, $listenerService, $mapService, $mapServiceBestehende) {
             return {
                 restrict: "E",
                 replace: true,
@@ -24,6 +24,17 @@ define(["./module"], function (module) {
                         if ($scope.driveBys.length > 1) {
                             var id = $scope.driveBys[1].transactionHash;
                             
+                            $scope.showDrivebysDetailsRest(id);
+                        }
+                    });
+
+
+                    $scope.$on('updateDriveByBestehende', function (event, args) {
+                        $scope.refreshWindow('bestehende');
+
+                        if ($scope.driveBys.length > 1) {
+                            var id = $scope.driveBys[1].transactionHash;
+
                             $scope.showDrivebysDetailsRest(id);
                         }
                     });
@@ -110,45 +121,33 @@ define(["./module"], function (module) {
                         $sessionStorage.driveById = id;
 
                         var event = $event.currentTarget,
-                            accept = angular.element(event).children().eq(0);
+                            accept = angular.element(event).children().eq(0),
+                            storageFormchangesName = 'formchanges';
 
-
-                        if ($scope.type == 'neue') {
-                            if(angular.isArray($sessionStorage.formchanges) && !angular.equals($sessionStorage.formchanges, [])) {
-                                $sessionStorage.formchanges = $sessionStorage.formchanges.filter(function(x) {
-                                    return x !== undefined &&  x !== null;
-                                });
-                            }
-
-                            if (!accept.hasClass('active') && (!$sessionStorage.formchanges || $sessionStorage.formchanges.length == 0) ) {
-                                $sessionStorage.formchanges = [];
-                                $scope.showDrivebysDetailsRest(id);
-                            } else {
-                                if (accept.hasClass('active')) {
-                                    $scope.showDrivebysDetailsRest(id);
-                                }
-
-                                accept.toggleClass('active');
-                            }
-                        } else {
-                            if(angular.isArray($sessionStorage.formchangesbestehende) && !angular.equals($sessionStorage.formchangesbestehende, [])) {
-                                $sessionStorage.formchangesbestehende = $sessionStorage.formchanges.filter(function(x) {
-                                    return x !== undefined &&  x !== null;
-                                });
-                            }
-
-                            if (!accept.hasClass('active') && (!$sessionStorage.formchangesbestehende || $sessionStorage.formchangesbestehende.length == 0) ) {
-                                $sessionStorage.formchangesbestehende = [];
-                                $scope.showDrivebysDetailsRest(id);
-                            } else {
-                                if (accept.hasClass('active')) {
-                                    $scope.showDrivebysDetailsRest(id);
-                                }
-
-                                accept.toggleClass('active');
-                            }
+                        if ($scope.type == 'bestehende') {
+                            storageFormchangesName += $scope.type;
                         }
 
+                        if(angular.isArray($sessionStorage[storageFormchangesName]) && !angular.equals($sessionStorage[storageFormchangesName], [])) {
+                            $sessionStorage[storageFormchangesName] = $sessionStorage[storageFormchangesName].filter(function(x) {
+                                return x !== undefined &&  x !== null;
+                            });
+                        }
+
+                        if (!accept.hasClass('active') && (!$sessionStorage[storageFormchangesName] || $sessionStorage[storageFormchangesName].length == 0) ) {
+                            $sessionStorage[storageFormchangesName] = [];
+                            $scope.showDrivebysDetailsRest(id);
+                        } else {
+                            if (accept.hasClass('active')) {
+                                $scope.showDrivebysDetailsRest(id);
+                            }
+
+                            accept.toggleClass('active');
+                        }
+
+
+                        console.log(storageFormchangesName);
+                        console.log($sessionStorage[storageFormchangesName]);
 
                     };
 
@@ -171,8 +170,11 @@ define(["./module"], function (module) {
                             $listenerService.triggerChange("drivebyDetails"+type, "dgoDrivebys", data.location);
 
                             var suchProfil = {"suchoptionen":{},"sortOrder":{"sortField":"bauende","order":"asc"},"offset":0,"geo":{},"view":{"viewport":viewport,"zoomlevel":12},"type":"objekteimbau"};
-                            
-                            $mapService.disableZoomListener(true);
+
+                            if (type == 'neue')
+                                $mapService.disableZoomListener(true);
+                            else
+                                $mapServiceBestehende.disableZoomListener(true);
 
                             $sucheService.loadItems(suchProfil).then(function (data) {
                                 $listenerService.triggerChange("detailItem"+type, "dgoDrivebys", data);
@@ -206,7 +208,7 @@ define(["./module"], function (module) {
                     };
 
                     $scope.refreshWindow = function(type) {
-                        if ($attrs.className == 'neue' && type == 'neue') {
+                       /* if ($attrs.className == 'neue' && type == 'neue') {
                             var data = {
                                 "pageNumber": $scope.currentPage
                             };
@@ -232,7 +234,23 @@ define(["./module"], function (module) {
                                 };
 
                             $scope.searchEdit(data, type);
-                        }
+                        }*/
+
+
+
+                        var data = {
+                            "pageNumber": $scope.currentPage
+                        };
+
+                        $scope.countEdit(type);
+
+                        data = $scope.sendData || {
+                                "pageNumber": $scope.currentPage,
+                                "numberOfResults": $scope.numberOfResults
+                            };
+
+                        $scope.searchEdit(data, type);
+                        
                     };
 
                     $scope.driveBysListStyleObj = {

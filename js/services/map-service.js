@@ -997,11 +997,12 @@ define(["./module", "googlemaps"], function (module) {
                 });
             };
 
-            var createDrivebyMarker = function(driveby) {
-                updateDrivebyMarker(map, driveby);
-                /*$listenerService.addChangeListener("drivebyDetails", "mapService", function (driveby) {
-                    updateDrivebyMarker(map, driveby);
-                });*/
+            var resetDrivebyMarker = function(driveby) {
+                var drivebyLatlon = new google.maps.LatLng(driveby.lon, driveby.lat);
+
+                if (angular.isObject(map)) {
+                    map.setCenter(drivebyLatlon);
+                }
             };
 
             var updateDrivebyMarker = function(map, driveby) {
@@ -1494,7 +1495,7 @@ define(["./module", "googlemaps"], function (module) {
                 disableZoomListener: disableZoomListener,
                 unhighlightAllItems: unhighlightAllItems,
                 removeDrivebyMarker: removeDrivebyMarker,
-                createDrivebyMarker: createDrivebyMarker
+                resetDrivebyMarker: resetDrivebyMarker
             };
 
         }]);
