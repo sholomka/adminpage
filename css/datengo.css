@@ -1803,3 +1803,17 @@ span.dropdown  {
     background: url('../img/preloader.gif') no-repeat 50% 50% transparent;
 }
 
+label.status, span.status {
+    font-size: 13px;
+    font-weight: normal !important;
+}
+
+span.status {
+    display: inline-block;
+    margin-bottom: 25px;
+}
+
+input[type="text"].status {
+    margin-bottom: 10px;
+}
+

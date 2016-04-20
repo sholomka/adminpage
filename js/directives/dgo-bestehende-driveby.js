@@ -16,7 +16,7 @@ define(["./module"], function (module) {
                         ["driveBys", "col-sm-4", "left-5", "column-30", "top-1", "panel", "panel-default"] :
                         ["col-sm-4", "column-30", "left-5", "top-1", "panel", "panel-default"];
 
-                    $scope.classNamesDeatails = ["driveby-bestehende-detail", "col-sm-4", "column-35", "col-sm-offset-4", "top-1", "panel panel-default"];
+                    $scope.classNamesDeatails = ["driveby-bestehende-detail", "col-sm-4", "left-5", "column-35", "top-1", "panel panel-default"];
 
                     $scope.constantHeight = 25;
                     $scope.constantDriveBysListHeight = 45;

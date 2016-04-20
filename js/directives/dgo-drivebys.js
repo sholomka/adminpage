@@ -11,6 +11,17 @@ define(["./module"], function (module) {
 
                     $scope.type = $attrs.className == 'neue' ? 'neue' : 'bestehende';
 
+
+
+                    $scope.$on('findDriveBy', function (event, args) {
+                        // if ($attrs.className == 'bestehende') {                        }
+
+                        console.log('1');
+
+                        $scope.driveBys = args.data;
+                    });
+
+
                     $constantsService.getStates().then(function(constants){
                         $scope.statesFront = {};
                         for (var key in constants) {

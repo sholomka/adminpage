@@ -1,0 +1,119 @@
+<div class="col-sm-4 column-30 left-2 top-1 panel panel-default ">
+    <div class="modal-header">
+        <h4 class="modal-title">DriveBys finden</h4>
+    </div>
+    <div class="modal-body">
+        <form class="top-25 bottom-25 form-horizontal news-finden" name="newsFinden" novalidate>
+
+            <div class="form-group">
+                <label class="col-sm-2">Status</label>
+                <div class="col-sm-3">
+                    <label class="status">
+                        <input type="checkbox">
+                        Abgeschlossen
+                    </label>
+
+                    <label class="status">
+                        <input type="checkbox">
+                        Neu
+                    </label>
+                </div>
+
+                <div class="col-sm-3">
+                    <label class="status">
+                        <input type="checkbox">
+                        Abgelehnt
+                    </label>
+
+                    <label class="status">
+                        <input type="checkbox">
+                        Unvollständig
+                    </label>
+                </div>
+
+                <div class="col-sm-4">
+
+                    <label class="status">
+                        <input type="checkbox">
+                        Unbekannt
+                    </label>
+
+                    <!--<input type="text" name="lokalisierungsHierarchie" required placeholder="Deutschland" ng-model="sendData.lokalisierungsHierarchie" ng-change="getCount()" class="form-control">-->
+                    <div class="error" ng-show="newsFinden.lokalisierungsHierarchie.$dirty">
+                        {{showError(newsFinden.lokalisierungsHierarchie.$error)}}
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-sm-2">Benutzer</label>
+
+                <div class="col-sm-3">
+                    <span class="status">Name</span>
+                    <span class="status">Emailadresse</span>
+                    <span class="status">Telefonnummer</span>
+                </div>
+
+                <div class="col-sm-6">
+                    <input type="text" name="lokalisierungsHierarchie" required ng-model="sendData.lokalisierungsHierarchie" ng-change="getCount()" class="form-control status">
+                    <input type="text" name="lokalisierungsHierarchie" required ng-model="sendData.lokalisierungsHierarchie" ng-change="getCount()" class="form-control status">
+                    <input type="text" name="lokalisierungsHierarchie" required ng-model="sendData.lokalisierungsHierarchie" ng-change="getCount()" class="form-control status">
+                    <div class="error" ng-show="newsFinden.lokalisierungsHierarchie.$dirty">
+                        {{showError(newsFinden.lokalisierungsHierarchie.$error)}}
+                    </div>
+                </div>
+
+                <div class="col-sm-1">
+                    <span class="status">oder</span>
+                    <span class="status">oder</span>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2">Erstellt</label>
+                <div class="col-sm-5">
+                    <p class="input-group">
+                        <input type="text" uib-datepicker-popup="{{settings.format}}" ng-change="getCount()" class="form-control"  ng-model="sendData.createDateFrom" is-open="settings.status.openedFrom" max-date="settings.maxDate" datepicker-options="settings.dateOptions"  ng-required="true" close-text="Schließen" current-text="Heute" clear-text="Löschen"/>
+                            <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="settings.openFrom($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                    </p>
+                    <div class="error" ng-show="newsFinden.createDateFrom.$dirty">
+                        {{showError(newsFinden.createDateFrom.$error)}}
+                    </div>
+                </div>
+
+                <label class="col-sm-1 control-label">Bis</label>
+                <div class="col-sm-5">
+                    <p class="input-group">
+                        <input type="text" uib-datepicker-popup="{{settings.format}}" ng-change="getCount()" class="form-control" ng-model="sendData.createDateUntil" is-open="settings.status.openedUntil" max-date="settings.maxDate" datepicker-options="settings.dateOptions" ng-required="true"  close-text="Schließen" current-text="Heute" clear-text="Löschen" />
+                            <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="settings.openUntil($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                    </p>
+                    <div class="error" ng-show="newsFinden.createDateUntil.$dirty">
+                        {{showError(newsFinden.createDateUntil.$error)}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2">Gebiet</label>
+                <div class="col-sm-10">
+                    <input type="text" name="lokalisierungsHierarchie" required ng-model="sendData.lokalisierungsHierarchie" ng-change="getCount()" class="form-control">
+                    <div class="error" ng-show="newsFinden.lokalisierungsHierarchie.$dirty">
+                        {{showError(newsFinden.lokalisierungsHierarchie.$error)}}
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer text-center">
+        <span>{{count}} DriveBys</span>
+        <!--ng-disabled="newsFinden.$invalid"-->
+        <button class="btn btn-primary center-block" ng-click="sucheDriveBy()">Anzeigen</button>
+    </div>
+</div>
+

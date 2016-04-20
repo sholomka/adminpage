@@ -2,6 +2,7 @@ define([
     "./dgo-nav",
     "./dgo-erstellen",
     "./dgo-finden",
+    "./dgo-driveby-finden",
     "./dgo-bearbeiten",
     "./dgo-news",
     "./dgo-neue",
