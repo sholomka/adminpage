@@ -3,48 +3,42 @@
         <h4 class="modal-title">DriveBys finden</h4>
     </div>
     <div class="modal-body">
-        <form class="top-25 bottom-25 form-horizontal news-finden" name="newsFinden" novalidate>
+        <form class="top-25 bottom-25 form-horizontal news-finden" name="drivebyFinden" novalidate>
 
             <div class="form-group">
                 <label class="col-sm-2">Status</label>
                 <div class="col-sm-3">
                     <label class="status">
-                        <input type="checkbox">
+                        <input type="checkbox" ng-model="status.Abgeschlossen" ng-change="getCount()">
                         Abgeschlossen
                     </label>
-
                     <label class="status">
-                        <input type="checkbox">
+                        <input type="checkbox" ng-model="status.Neu" ng-change="getCount()">
                         Neu
                     </label>
                 </div>
-
                 <div class="col-sm-3">
                     <label class="status">
-                        <input type="checkbox">
+                        <input type="checkbox" ng-model="status.Abgelehnt" ng-change="getCount()">
                         Abgelehnt
                     </label>
 
                     <label class="status">
-                        <input type="checkbox">
+                        <input type="checkbox" ng-model="status.Unvollstandig" ng-change="getCount()">
                         Unvollständig
                     </label>
                 </div>
-
                 <div class="col-sm-4">
-
                     <label class="status">
-                        <input type="checkbox">
+                        <input type="checkbox" ng-model="status.Unbekannt" ng-change="getCount()">
                         Unbekannt
                     </label>
-
                     <!--<input type="text" name="lokalisierungsHierarchie" required placeholder="Deutschland" ng-model="sendData.lokalisierungsHierarchie" ng-change="getCount()" class="form-control">-->
-                    <div class="error" ng-show="newsFinden.lokalisierungsHierarchie.$dirty">
-                        {{showError(newsFinden.lokalisierungsHierarchie.$error)}}
-                    </div>
+                   <!-- <div class="error" ng-show="drivebyFinden.lokalisierungsHierarchie.$dirty">
+                        {{showError(drivebyFinden.lokalisierungsHierarchie.$error)}}
+                    </div>-->
                 </div>
             </div>
-
 
             <div class="form-group">
                 <label class="col-sm-2">Benutzer</label>
@@ -56,21 +50,25 @@
                 </div>
 
                 <div class="col-sm-6">
-                    <input type="text" name="lokalisierungsHierarchie" required ng-model="sendData.lokalisierungsHierarchie" ng-change="getCount()" class="form-control status">
-                    <input type="text" name="lokalisierungsHierarchie" required ng-model="sendData.lokalisierungsHierarchie" ng-change="getCount()" class="form-control status">
-                    <input type="text" name="lokalisierungsHierarchie" required ng-model="sendData.lokalisierungsHierarchie" ng-change="getCount()" class="form-control status">
-                    <div class="error" ng-show="newsFinden.lokalisierungsHierarchie.$dirty">
-                        {{showError(newsFinden.lokalisierungsHierarchie.$error)}}
-                    </div>
+                    <input type="text" name="mame" required ng-model="sendData.mame" ng-change="getCount()" class="form-control status">
+                   <!-- <div class="error" ng-show="drivebyFinden.mame.$dirty">
+                        {{showError(drivebyFinden.mame.$error)}}
+                    </div>-->
+                    <input type="text" name="userName" required ng-model="sendData.user.userName" ng-change="getCount()" class="form-control status">
+                   <!-- <div class="error" ng-show="drivebyFinden.userName.$dirty">
+                        {{showError(drivebyFinden.userName.$error)}}
+                    </div>-->
+                    <input type="text" name="telefonnummer" required ng-model="sendData.telefonnummer" ng-change="getCount()" class="form-control status">
+                   <!-- <div class="error" ng-show="drivebyFinden.telefonnummer.$dirty">
+                        {{showError(drivebyFinden.telefonnummer.$error)}}
+                    </div>-->
                 </div>
 
                 <div class="col-sm-1">
                     <span class="status">oder</span>
                     <span class="status">oder</span>
                 </div>
-
             </div>
-
             <div class="form-group">
                 <label class="col-sm-2">Erstellt</label>
                 <div class="col-sm-5">
@@ -80,9 +78,9 @@
                             <button type="button" class="btn btn-default" ng-click="settings.openFrom($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                             </span>
                     </p>
-                    <div class="error" ng-show="newsFinden.createDateFrom.$dirty">
-                        {{showError(newsFinden.createDateFrom.$error)}}
-                    </div>
+                   <!-- <div class="error" ng-show="drivebyFinden.createDateFrom.$dirty">
+                        {{showError(drivebyFinden.createDateFrom.$error)}}
+                    </div>-->
                 </div>
 
                 <label class="col-sm-1 control-label">Bis</label>
@@ -93,26 +91,26 @@
                             <button type="button" class="btn btn-default" ng-click="settings.openUntil($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                             </span>
                     </p>
-                    <div class="error" ng-show="newsFinden.createDateUntil.$dirty">
-                        {{showError(newsFinden.createDateUntil.$error)}}
-                    </div>
+                   <!-- <div class="error" ng-show="drivebyFinden.createDateUntil.$dirty">
+                        {{showError(drivebyFinden.createDateUntil.$error)}}
+                    </div>-->
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="col-sm-2">Gebiet</label>
                 <div class="col-sm-10">
-                    <input type="text" name="lokalisierungsHierarchie" required ng-model="sendData.lokalisierungsHierarchie" ng-change="getCount()" class="form-control">
-                    <div class="error" ng-show="newsFinden.lokalisierungsHierarchie.$dirty">
-                        {{showError(newsFinden.lokalisierungsHierarchie.$error)}}
-                    </div>
+                    <input type="text" name="city" required ng-model="sendData.city" ng-change="getCount()" class="form-control">
+                   <!-- <div class="error" ng-show="drivebyFinden.city.$dirty">
+                        {{showError(drivebyFinden.city.$error)}}
+                    </div>-->
                 </div>
             </div>
         </form>
     </div>
     <div class="modal-footer text-center">
         <span>{{count}} DriveBys</span>
-        <!--ng-disabled="newsFinden.$invalid"-->
+        <!--ng-disabled="drivebyFinden.$invalid"-->
         <button class="btn btn-primary center-block" ng-click="sucheDriveBy()">Anzeigen</button>
     </div>
 </div>
