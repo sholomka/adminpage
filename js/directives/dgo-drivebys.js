@@ -8,19 +8,15 @@ define(["./module"], function (module) {
                 scope: true,
                 templateUrl: "templates/dgo-drivebys.html",
                 controller: function ($scope, $attrs, $sessionStorage) {
-
                     $scope.type = $attrs.className == 'neue' ? 'neue' : 'bestehende';
 
-
-
                     $scope.$on('findDriveBy', function (event, args) {
-                        // if ($attrs.className == 'bestehende') {                        }
-
-                        console.log('1');
-
-                        $scope.driveBys = args.data;
+                        if ($scope.type == 'bestehende') {
+                            $scope.driveBys = args.data;
+                            $scope.totalItems = args.count;
+                            $scope.sendData = args.sendData;
+                        }
                     });
-
 
                     $constantsService.getStates().then(function(constants){
                         $scope.statesFront = {};
@@ -57,21 +53,22 @@ define(["./module"], function (module) {
                     $scope.currentPage = 1;
                     $scope.numberOfResults = 30;
 
+                    $scope.sendData =
+                    {
+                        "searchedStates": [
+                            "FINISHED",
+                            "INCOMPLETE",
+                            "NEW",
+                            "REJECTED",
+                            "UNKNOWN"
+                        ]
+                    };
+
                     $scope.pageChanged = function() {
-                        $scope.sendData =
-                        {
-                            "pageNumber": $scope.currentPage,
-                            "numberOfResults": $scope.numberOfResults,
-                            "sortCriterium": $scope.sortFields.criterium,
-                            "sortOrder": $scope.sortFields.order,
-                            "searchedStates": [
-                                "FINISHED",
-                                "INCOMPLETE",
-                                "NEW",
-                                "REJECTED",
-                                "UNKNOWN"
-                            ]
-                        };
+                        $scope.sendData.pageNumber = $scope.currentPage;
+                        $scope.sendData.numberOfResults = $scope.numberOfResults;
+                        $scope.sendData.sortCriterium = $scope.sortFields.criterium;
+                        $scope.sendData.sortOrder = $scope.sortFields.order;
 
                         $drivebysService.searchTodayDriveBys($scope.sendData, $scope.type).then(function(data){
                             $scope.driveBys = data;
@@ -96,21 +93,11 @@ define(["./module"], function (module) {
                                 order: sortCriterium == 'TIME' ? 'DESC' : 'ASC'
                             };
                         }
-
-                        $scope.sendData =
-                        {
-                            "pageNumber": $scope.currentPage,
-                            "numberOfResults": $scope.numberOfResults,
-                            "sortCriterium": $scope.sortFields.criterium,
-                            "sortOrder": $scope.sortFields.order,
-                            "searchedStates": [
-                                "FINISHED",
-                                "INCOMPLETE",
-                                "NEW",
-                                "REJECTED",
-                                "UNKNOWN"
-                            ]
-                        };
+                        
+                        $scope.sendData.pageNumber = $scope.currentPage;
+                        $scope.sendData.numberOfResults = $scope.numberOfResults;
+                        $scope.sendData.sortCriterium = $scope.sortFields.criterium;
+                        $scope.sendData.sortOrder = $scope.sortFields.order;
 
                         $scope.searchEdit($scope.sendData, $scope.type);
                     };
@@ -155,11 +142,6 @@ define(["./module"], function (module) {
 
                             accept.toggleClass('active');
                         }
-
-
-                        console.log(storageFormchangesName);
-                        console.log($sessionStorage[storageFormchangesName]);
-
                     };
 
 
@@ -210,8 +192,8 @@ define(["./module"], function (module) {
                         });
                     };
 
-                    $scope.countEdit = function(type) {
-                        $drivebysService.countEditDriveBy(type).then(function (count) {
+                    $scope.countEdit = function(data, type) {
+                        $drivebysService.countEditDriveBy(data, type).then(function (count) {
                             $scope.totalItems = count;
                         }, function (error) {
                             $scope.driveBys = undefined;
@@ -253,7 +235,7 @@ define(["./module"], function (module) {
                             "pageNumber": $scope.currentPage
                         };
 
-                        $scope.countEdit(type);
+                        $scope.countEdit(data, type);
 
                         data = $scope.sendData || {
                                 "pageNumber": $scope.currentPage,

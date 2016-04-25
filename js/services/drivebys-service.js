@@ -22,26 +22,16 @@ define(["./module"], function (module) {
                 return deferred.promise
             };
 
-            var countEditDriveBy=function(type){
+            var countEditDriveBy=function(data, type){
                 var deferred=$q.defer();
-                $restService.countEditDriveBy(type).run().then(function(data){
+                $restService.countEditDriveBy(data, type).run().then(function(data){
                     deferred.resolve(data);
                 },function(error) {
                     deferred.reject(error);
                 });
                 return deferred.promise
             };
-
-            var countEditDriveByAll=function(type){
-                var deferred=$q.defer();
-                $restService.countEditDriveByAll(type).run().then(function(data){
-                    deferred.resolve(data);
-                },function(error) {
-                    deferred.reject(error);
-                });
-                return deferred.promise
-            };
-
+            
             var getUserInfo=function(data){
                 var deferred=$q.defer();
                 $restService.getUserInfo(data).run().then(function(data){
@@ -95,7 +85,6 @@ define(["./module"], function (module) {
                 searchTodayDriveBys:searchTodayDriveBys,
                 showDrivebysDetails:showDrivebysDetails,
                 countEditDriveBy:countEditDriveBy,
-                countEditDriveByAll:countEditDriveByAll,
                 getUserInfo:getUserInfo,
                 storeEdited:storeEdited,
                 getMapped:getMapped,

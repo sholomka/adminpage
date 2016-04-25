@@ -58,15 +58,15 @@ define(["./module"], function (module) {
 
                         if ($scope.sendData.searchedStates.length == 0)
                             delete $scope.sendData.searchedStates;
-
-                        console.log($scope.sendData);
-
+                        
                         $scope.currentPage = 1;
                         $scope.numberOfResults = 30;
 
                         $drivebysService.searchTodayDriveBys($scope.sendData, $scope.type).then(function(data){
                             $rootScope.$broadcast('findDriveBy', {
-                                data: data
+                                data: data,
+                                count: $scope.count,
+                                sendData: $scope.sendData
                             });
                         }, function(error){
                             $scope.driveBys = undefined;
@@ -103,14 +103,12 @@ define(["./module"], function (module) {
                                 $scope.getCountData[key] = $filter('date')(value, 'yyyy-MM-dd');
                         });
 
-                        $drivebysService.countEditDriveByAll($scope.getCountData).then(function (count) {
+                        $drivebysService.countEditDriveBy($scope.getCountData, 'bestehende').then(function (count) {
                             $scope.count = count;
                         }, function (error) {
                             $scope.driveBys = undefined;
                         });
                     };
-
-
                 }
             };
 

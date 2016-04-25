@@ -154,29 +154,29 @@ define(["./module"], function (module) {
 			});
 		};
 
-		var countEditDriveBy = function (type) {
-			var url = type == 'neue' ? "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/countEdit" :
-				"http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/all/countEdit";
-			// var url = type == 'neue' ? "countEditDriveBy.txt" :
-			// 	"countEditDriveByBestehende.txt";
+		var countEditDriveBy = function (data, type) {
+			var url = '';
 
-			return getRequest({
-				method: "GET",
-				url: url
-			});
+			if (type == 'neue') {
+				url = "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/countEdit";
+				// url = "countEditDriveBy.txt"
+
+				return getRequest({
+				 method: "GET",
+				 url: url
+				 });
+			} else {
+				url = "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/all/countEdit";
+				// url = "countEditDriveByBestehende.txt";
+
+				return getRequest({
+					method: "POST",
+					url: url,
+					data: data
+				});
+			}
 		};
 
-
-		var countEditDriveByAll = function (data) {
-			var url = "http://geomap-intern.test1.evermind.de/service/adminbackend/driveBy/all/countEdit";
-
-			return getRequest({
-				method: "POST",
-				url: url,
-				data: data
-			});
-		};
-		
 		var getUserInfo = function (userName) {
 			return getRequest({
 				method: "POST",
@@ -335,7 +335,6 @@ define(["./module"], function (module) {
 			searchTodayDriveBys: searchTodayDriveBys,
 			showDrivebysDetails: showDrivebysDetails,
 			countEditDriveBy: countEditDriveBy,
-			countEditDriveByAll: countEditDriveByAll,
 			getUserInfo: getUserInfo,
 			getObjektRequest: getObjektRequest,
 			getObjektRequestDetail: getObjektRequestDetail,
