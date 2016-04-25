@@ -37,12 +37,14 @@ define(["./module"], function (module) {
 
 
                     $scope.$on('updateDriveByBestehende', function (event, args) {
-                        $scope.refreshWindow('bestehende');
+                        if ($scope.type == 'bestehende') {
+                            console.log($scope.type);
 
-                        if ($scope.driveBys.length > 1) {
-                            var id = $scope.driveBys[1].transactionHash;
-
-                            $scope.showDrivebysDetailsRest(id);
+                            $scope.refreshWindow('bestehende');
+                            if ($scope.driveBys.length > 1) {
+                                var id = $scope.driveBys[1].transactionHash;
+                                $scope.showDrivebysDetailsRest(id);
+                            }
                         }
                     });
 
@@ -93,7 +95,7 @@ define(["./module"], function (module) {
                                 order: sortCriterium == 'TIME' ? 'DESC' : 'ASC'
                             };
                         }
-                        
+
                         $scope.sendData.pageNumber = $scope.currentPage;
                         $scope.sendData.numberOfResults = $scope.numberOfResults;
                         $scope.sendData.sortCriterium = $scope.sortFields.criterium;
@@ -144,7 +146,6 @@ define(["./module"], function (module) {
                         }
                     };
 
-
                     $scope.showDrivebysDetailsRest = function(id) {
                         $scope.retriggerMap(id, $scope.type);
                     };
@@ -152,33 +153,33 @@ define(["./module"], function (module) {
                     $scope.retriggerMap = function(id, type) {
                         $rootScope.$broadcast('preloader'+type, {data: true});
                         $drivebysService.showDrivebysDetails(id, type).then(function (data) {
+                            if (angular.isObject(data) && !angular.equals(data, {})) {
+                                var viewport =  $listenerService.getDefaultViewport();
+                                
+                                $rootScope.$broadcast('drivebyDetails'+type, {
+                                    data: data,
+                                    type: $scope.type
+                                });
 
-                            var viewport =  $listenerService.getDefaultViewport();
+                                $listenerService.triggerChange("drivebyDetails"+type, "dgoDrivebys", data.location);
 
-                            $rootScope.$broadcast('drivebyDetails'+type, {
-                                data: data,
-                                type: $scope.type
-                            });
-                            
-                            $listenerService.triggerChange("drivebyDetails"+type, "dgoDrivebys", data.location);
+                                var suchProfil = {"suchoptionen":{},"sortOrder":{"sortField":"bauende","order":"asc"},"offset":0,"geo":{},"view":{"viewport":viewport,"zoomlevel":12},"type":"objekteimbau"};
 
-                            var suchProfil = {"suchoptionen":{},"sortOrder":{"sortField":"bauende","order":"asc"},"offset":0,"geo":{},"view":{"viewport":viewport,"zoomlevel":12},"type":"objekteimbau"};
+                                if (type == 'neue')
+                                    $mapService.disableZoomListener(true);
+                                else
+                                    $mapServiceBestehende.disableZoomListener(true);
 
-                            if (type == 'neue')
-                                $mapService.disableZoomListener(true);
-                            else
-                                $mapServiceBestehende.disableZoomListener(true);
-
-                            $sucheService.loadItems(suchProfil).then(function (data) {
-                                $listenerService.triggerChange("detailItem"+type, "dgoDrivebys", data);
-                                // $listenerService.triggerChange("detailItem", "dgoDrivebys", data);
-                            });
-
+                                $sucheService.loadItems(suchProfil).then(function (data) {
+                                    $listenerService.triggerChange("detailItem"+type, "dgoDrivebys", data);
+                                    // $listenerService.triggerChange("detailItem", "dgoDrivebys", data);
+                                });
+                            } else {
+                                $rootScope.$broadcast('preloader'+type, {data: false});
+                            }
                         }, function (error) {})
                     };
-
                     
-
                     $scope.searchEdit = function(data, type) {
                         $drivebysService.searchTodayDriveBys(data, type).then(function (data) {
                             $scope.driveBys = data;

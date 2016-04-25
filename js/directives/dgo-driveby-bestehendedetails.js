@@ -90,10 +90,12 @@ define(["./module"], function (module) {
                     });
 
                     $scope.sortByKey = function(array, key) {
-                        return array.sort(function(a, b) {
-                            var x = a[key]; var y = b[key];
-                            return ((x < y) ? -1 : ((x > y) ? 1 : 0));
-                        });
+                        if(angular.isArray(array) && !angular.equals(array, [])) {
+                            return array.sort(function(a, b) {
+                                var x = a[key]; var y = b[key];
+                                return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+                            });
+                        }
                     };
 
                     $scope.$on('acceptbestehende', function (event, args) {
@@ -146,12 +148,12 @@ define(["./module"], function (module) {
                         $scope.driveByStatusWidth = statusWidth + "%";
                         $scope.driveByStatusTotalWidth = (statusWidth * (countProgresses)) + "%";
                         $scope.driveByMap = {};
-
+                        
                         angular.forEach(args.data, function(value, key, obj) {
-                            if (key == 'base64Images') {
-                                $scope.sendData.base64Images = [];
+                            $scope.sendData.base64Images = [];
 
-                                angular.forEach(args.data.base64Images, function(value, key, obj) {
+                            if (key == 'base64Images' || key == 'images') {
+                                angular.forEach(args.data[key], function(value, key, obj) {
                                     $scope.sendData.base64Images[key] = {};
                                     $scope.sendData.base64Images[key].base64 = obj[key].base64;
                                     $scope.sendData.base64Images[key].index = obj[key].index;
@@ -208,8 +210,11 @@ define(["./module"], function (module) {
 
                         $scope.reset();
 
-                        $scope.images = args.data.base64Images;
-
+                        if (angular.isArray(args.data.base64Images) && !angular.equals(args.data.base64Images, [])) {
+                            $scope.images = args.data.base64Images;
+                        } else if (angular.isArray(args.data.images) && !angular.equals(args.data.images, [])) {
+                            $scope.images = args.data.images;
+                        }
 
                         $scope.videoUrl = "data:video/mp4;base64," + args.data.base64Video;
                         $scope.base64Video = args.data.base64Video;
@@ -267,8 +272,8 @@ define(["./module"], function (module) {
                         var slides = $scope.slides = [];
 
                         angular.forEach($scope.images, function(value, key, obj) {
-                            obj[key].url = 'data:image/png;base64,' + obj[key].base64;
-                            obj[key].thumbUrl = 'data:image/png;base64,' + obj[key].base64;
+                            obj[key].url = obj[key].base64 ? 'data:image/png;base64,' + obj[key].base64 : obj[key].uri;
+                            obj[key].thumbUrl = obj[key].base64 ? 'data:image/png;base64,' + obj[key].base64 : obj[key].uri;
                             obj[key].caption = $scope.titlesImage[key];
                             obj[key].accept = false;
                             obj[key].complaint = false;
@@ -844,6 +849,9 @@ define(["./module"], function (module) {
 
                             $scope.preloader = true;
                             $scope.showForm = false;
+
+
+                            console.log($scope.sendData);
 
                             $drivebysService.storeEdited($scope.sendData, 'bestehende').then(function () {
                                 $scope.sendData = {};
