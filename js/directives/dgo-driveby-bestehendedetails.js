@@ -148,7 +148,7 @@ define(["./module"], function (module) {
                         $scope.driveByStatusWidth = statusWidth + "%";
                         $scope.driveByStatusTotalWidth = (statusWidth * (countProgresses)) + "%";
                         $scope.driveByMap = {};
-                        
+
                         angular.forEach(args.data, function(value, key, obj) {
                             $scope.sendData.base64Images = [];
 
@@ -267,7 +267,11 @@ define(["./module"], function (module) {
                             "Objektumgebung 2"
                         ];
 
+                        console.log($scope.images);
+
                         $scope.sortByKey($scope.images, 'index');
+
+                        console.log($scope.images);
 
                         var slides = $scope.slides = [];
 
@@ -279,14 +283,20 @@ define(["./module"], function (module) {
                             obj[key].complaint = false;
                             obj[key].tab = 'bestehende';
 
-
                             slides.push({
-                                image: 'data:image/png;base64,' + obj[key].base64,
+                                image: obj[key].base64 ? 'data:image/png;base64,' + obj[key].base64 : obj[key].uri,
                                 text: $scope.titlesImage[key],
                                 id: key
                             });
                         });
 
+                        angular.forEach($scope.sendData.complaints, function(value, key, obj) {
+                            var index = parseInt(obj[key].element.substr(-1)) - 1;
+                            $scope.images[index].complaintText = obj[key].complaintText;
+                        });
+
+                        console.log($scope.images);
+                        
                         $scope.rateText = [
                             "Bitte bewerten Sie diesen Upload!",
                             "Der Upload war unzureichend",
@@ -298,8 +308,6 @@ define(["./module"], function (module) {
 
                         $scope.preloader = false;
                         $scope.showForm = true;
-
-
                     };
 
                     $scope.preloader = false;
@@ -357,7 +365,6 @@ define(["./module"], function (module) {
                             });
                         }
                     };
-
 
                     $listenerService.addChangeListener("detailItembestehende", "dgoDrivebyDetails", function (item) {
                         if (angular.isObject(item)) {
@@ -592,6 +599,17 @@ define(["./module"], function (module) {
                                     $scope.undoForm('imagecomplaints'+index);
                             }
                         }
+                    };
+
+                    $scope.complaints = function($event, index, type) {
+                        var currentModal = $uibModal.open({
+                            templateUrl: 'templates/modal-complaint-text.html',
+                            backdrop: true,
+                            windowClass: 'modal-popup-complaint',
+                            scope: $scope
+                        });
+
+                        $scope.complaintTextBestehende = $scope.images[index].complaintText;
                     };
 
                     $scope.complaint = function($event, index, type) {
