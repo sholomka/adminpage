@@ -38,7 +38,7 @@
                 <img src="img/redoinakttiv_u701.png" class="img" id="u701_img">
             </div>
 
-            <div style="width: 496px; margin: 0 0 0 40px;" id="mappedImmoObject">
+            <div style="width: 496px; margin: 0 0 0 40px;" id="mappedImmoObjectbestehende">
                 <span style="color:#333333; font-size: 11px;">DriveBy-Objekt-Adresse: </span>
                 <span style="color:#699E25; font-size: 10px;">{{street}}, {{plz}} {{city}}</span>
                 <dgo-map-bestehende type="object" id="object" style="width: 280px; height:285px;"></dgo-map-bestehende>
@@ -73,7 +73,7 @@
             <div class="foto-container">
                 <div ng-repeat="image in images" class="fotos" ng-style="{margin:  ($index + 1) % 3 == 0 ? '0' : '0 25px 20px 0'}" >
                     <span>{{image.caption}}</span>
-                    <img id="image_{{image.index}}" ng-src="{{image.thumbUrl}}" ng-click="Lightbox.openModal(images, $index)" class="img-thumbnail">
+                    <img id="imagebestehende_{{image.index}}" ng-src="{{image.thumbUrl}}" ng-click="Lightbox.openModal(images, $index)" class="img-thumbnail">
                     <div class="nav-list">
                         <a class="accept" ng-class="image.accept ? 'active' : ''" ng-click="accept($event, $index)" ng-dblclick="acceptDblClick($event, $index)"></a>
                         <a class="complaint" ng-class="image.complaint ? 'active' : ''" ng-click="complaint($event, $index)"></a>
@@ -88,7 +88,7 @@
             <h4 class="top-50" style="text-decoration: underline; font-size: 11px; font-weight: bold;">Video</h4>
             <div class="foto-container">
                 <div ng-repeat="videoItem in video" class="video" >
-                    <img id="video" ng-src="{{videoItem.thumbUrl}}" ng-click="Lightbox.openModal(video, $index)" class="img-thumbnail">
+                    <img id="videobestehende" ng-src="{{videoItem.thumbUrl}}" ng-click="Lightbox.openModal(video, $index)" class="img-thumbnail">
                     <div class="nav-list">
                         <a class="accept" ng-class="videoItem.accept ? 'active' : ''" ng-click="accept($event, $index, 'video')" ng-dblclick="acceptDblClick($event, $index, 'video')"></a>
                         <a class="complaint" ng-class="videoItem.complaint ? 'active' : ''" ng-click="complaint($event, $index, 'video')"></a>
@@ -184,7 +184,7 @@
                     </tr>
                 </table>
 
-                <div class="nav-list" id="daten">
+                <div class="nav-list" id="datenbestehende">
                     <a class="accept" ng-class="daten.accept ? 'active' : ''" ng-click="accept($event, $index, 'daten')" ng-dblclick="acceptDblClick($event, $index, 'daten')"></a>
                     <a class="info" ng-class="daten.complaint ? 'active' : ''" ng-click="info($event, $index, 'daten')"></a>
                     <a class="complaint" ng-class="daten.complaint ? 'active' : ''" ng-click="complaint($event, $index, 'daten')"></a>
@@ -226,7 +226,7 @@
                             </uib-tab>
                             <uib-tab heading="Video">
                                 <div class="top-10" ng-if="!config.sources">
-                                    <img src="../img/video_dummy.png"/>
+                                    <img src="img/video_dummy.png"/>
                                 </div>
                                 <div class="videogular-container" ng-if="config.sources">
                                     <videogular>
@@ -378,7 +378,7 @@
                             </uib-tab>
                             <uib-tab heading="Video">
                                 <div class="top-10" ng-if="!config.sources">
-                                    <img src="../img/video_dummy.png"/>
+                                    <img src="img/video_dummy.png"/>
                                 </div>
                                 <div class="videogular-container" ng-if="config.sources">
                                     <videogular>
@@ -513,7 +513,7 @@
                 <uib-rating ng-click="getRate()" ng-model="uploadingObject.driveByRate" max="max" read-only="isReadonly" on-hover="hoveringOver(value)" on-leave="overStar = null" titles="['one','two','three']" aria-labelledby="default-rating"></uib-rating>
                 <span class="label" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}" ng-show="overStar && !isReadonly">{{percent}}%</span>
 
-                <p id="driveByRate" ng-style="rateTextStyle">{{driveByRate.error ? 'Element noch nicht bewertet!' : rateText[uploadingObject.driveByRate]}}</p>
+                <p id="driveByRatebestehende" ng-style="rateTextStyle">{{driveByRate.error ? 'Element noch nicht bewertet!' : rateText[uploadingObject.driveByRate]}}</p>
 
                 <div class="modal-footer">
                     <button class="btn btn-primary" ng-click="storeEdited()">Speichern & zum Nächsten</button>

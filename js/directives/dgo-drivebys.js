@@ -26,24 +26,26 @@ define(["./module"], function (module) {
                     });
 
                     $scope.$on('updateDriveBy', function (event, args) {
-                        $scope.refreshWindow('neue');
+                        if ($scope.type == 'neue') {
+                            $scope.refreshWindow('neue');
 
-                        if ($scope.driveBys.length > 1) {
-                            var id = $scope.driveBys[1].transactionHash;
-                            
-                            $scope.showDrivebysDetailsRest(id);
+                            if ($scope.driveBys.length > 1) {
+                                var id = $scope.driveBys[1].transactionHash;
+                                $scope.showDrivebysDetailsRest(id);
+                            } else {
+                                $rootScope.$broadcast('preloader'+$scope.type, {data: false});
+                            }
                         }
                     });
 
-
                     $scope.$on('updateDriveByBestehende', function (event, args) {
                         if ($scope.type == 'bestehende') {
-                            console.log($scope.type);
-
                             $scope.refreshWindow('bestehende');
                             if ($scope.driveBys.length > 1) {
                                 var id = $scope.driveBys[1].transactionHash;
                                 $scope.showDrivebysDetailsRest(id);
+                            } else {
+                                $rootScope.$broadcast('preloader'+$scope.type, {data: false});
                             }
                         }
                     });

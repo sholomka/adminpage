@@ -198,6 +198,7 @@ define(["./module"], function (module) {
                         $scope.infoData.nearbyRecreation = args.data.nearbyRecreation;
 
                         $sessionStorage.base64Images = [];
+                        $sessionStorage.base64Video = [];
                         $sessionStorage.videoComplaints = {};
                         $sessionStorage.datenComplaints = {};
                         $sessionStorage.complaints = [];
@@ -260,6 +261,8 @@ define(["./module"], function (module) {
 
                         var slides = $scope.slides = [];
 
+                        console.log($scope.images);
+
                         angular.forEach($scope.images, function(value, key, obj) {
                             obj[key].url = 'data:image/png;base64,' + obj[key].base64;
                             obj[key].thumbUrl = 'data:image/png;base64,' + obj[key].base64;
@@ -273,6 +276,8 @@ define(["./module"], function (module) {
                                 id: key
                             });
                         });
+
+                        console.log(slides);
 
                         $scope.rateText = [
                             "Bitte bewerten Sie diesen Upload!",
@@ -302,12 +307,9 @@ define(["./module"], function (module) {
                     var currentItemsTimer;
 
                     $scope.$on('drivebyDetailsneue', function (event, args) {
-                        console.log(1);
-                        
                         currentItemsTimer = $timeout(function () {
                             $scope.loadItems(args);
                         }, 500);
-                       
                     });
 
                     $scope.driveByDetail = {
@@ -508,11 +510,11 @@ define(["./module"], function (module) {
                         switch (type) {
                             case 'video':
                                 if (!accept.hasClass('active')) {
-                                    $sessionStorage.base64Video = $scope.base64Video;
+                                    // $sessionStorage.base64Video = $scope.base64Video;
                                     $scope.video[index].accept = true;
                                     $sessionStorage.formchanges.push('videoaccept'+index);
                                 } else {
-                                    delete $sessionStorage.base64Video;
+                                    // delete $sessionStorage.base64Video;
                                     $scope.video[index].accept = false;
                                     $scope.undoForm('videoaccept'+index);
                                 }
@@ -539,12 +541,12 @@ define(["./module"], function (module) {
                                     $scope.images[index].accept = false;
                                     $scope.undoForm('imagesaccept'+index);
                                 }
-                        }
 
-                        $rootScope.$broadcast('accept2', {
-                            index: index,
-                            accept:  $scope.images[index].accept
-                        });
+                                $rootScope.$broadcast('accept2', {
+                                    index: index,
+                                    accept:  $scope.images[index].accept
+                                });
+                        }
                     };
 
                     $scope.acceptDblClick = function($event, index, type) {
@@ -806,6 +808,7 @@ define(["./module"], function (module) {
                     };
 
                     $scope.storeEdited = function () {
+                        $scope.sendData.state = $scope.states.Abgeschlossen;
                         $scope.showError();
 
                         if (!$scope.error) {
@@ -830,13 +833,9 @@ define(["./module"], function (module) {
                             }
 
                             $scope.sendData.rating = $scope.uploadingObject.driveByRate;
-
-                            if ($scope.sendData.state != $scope.states.Abgelehnt) {
-                                if ($scope.uploadingObject.unbekannt)
-                                    $scope.sendData.state =  $scope.states.Unbekannt;
-                                else
-                                    $scope.sendData.state = $scope.states.Abgeschlossen;
-                            }
+                            
+                            if ($scope.uploadingObject.unbekannt)
+                                $scope.sendData.state =  $scope.states.Unbekannt;
 
                             $scope.preloader = true;
                             $scope.showForm = false;

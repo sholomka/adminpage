@@ -49,41 +49,41 @@ define(["./module"], function (module) {
         var getNewsThemen = function () {
             return getRequest({
                 method: "GET",
-                url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/themen"
-                // url: "themen.json"
+                // url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/themen"
+                url: "themen.json"
             });
         };
 
 		var getNewsTypen = function () {
 			return getRequest({
 				method: "GET",
-				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/typen"
-				// url: "typen.json"
+				// url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/typen"
+				url: "typen.json"
 			});
 		};
 
 		var getNewsModi = function () {
 			return getRequest({
 				method: "GET",
-				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/modus"
-				// url: "modus.json"
+				// url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/modus"
+				url: "modus.json"
 			});
 		};
 
 		var sucheNews = function (data) {
 			return getRequest({
 				method: "POST",
-				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/suche",
-				// url: "suchenews.json",
-				data: data
+				// url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/suche",
+				url: "suchenews.json",
+				// data: data
 			});
 		};
 
 		var getNewsSpeichernRequest = function (data) {
 			return getRequest({
 				method: "POST",
-				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/erstelle",
-				// url: "erstellen.txt",
+				// url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/erstelle",
+				url: "erstellen.txt",
 				data: data
 			});
 		};
@@ -91,8 +91,8 @@ define(["./module"], function (module) {
 		var countEditNews = function (data) {
 			return getRequest({
 				method: "POST",
-				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/countEdit",
-				// url: "countEdit.txt",
+				// url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/countEdit",
+				url: "countEdit.txt",
 				data: data
 			});
 		};
@@ -100,8 +100,8 @@ define(["./module"], function (module) {
 		var sucheEditNews = function (data) {
 			return getRequest({
 				method: "POST",
-				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/sucheEdit",
-				// url: "sucheEdit.json",
+				// url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/sucheEdit",
+				url: "sucheEdit.json",
 				data: data
 			});
 		};
@@ -109,8 +109,8 @@ define(["./module"], function (module) {
 		var searchTodayNews = function (data) {
 			return getRequest({
 				method: "POST",
-				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/searchToday",
-				// url: "sucheEdit.json",
+				// url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/searchToday",
+				url: "sucheEdit.json",
 				data: data
 			});
 		};
@@ -118,8 +118,8 @@ define(["./module"], function (module) {
 		var deleteNews = function (id) {
 			return getRequest({
 				method: "DELETE",
-				url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/loesche/" + id
-				//url: "service/news/loesche/" + id
+				// url: "http://geomap-intern.test1.evermind.de/service/adminbackend/news/loesche/" + id
+				url: "service/news/loesche/" + id
 			});
 		};
 

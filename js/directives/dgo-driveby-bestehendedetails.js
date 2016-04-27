@@ -107,7 +107,6 @@ define(["./module"], function (module) {
                     });
 
                     $scope.$on('acceptDblClickbestehende', function (event, args) {
-                        console.log('acceptDblClickbestehende');
                         if (args.isVideo) {
                             $scope.video[args.index].accept = args.accept;
                             $scope.video[args.index].complaint = args.complaint;
@@ -150,14 +149,23 @@ define(["./module"], function (module) {
                         $scope.driveByMap = {};
 
                         angular.forEach(args.data, function(value, key, obj) {
-                            $scope.sendData.base64Images = [];
+                            if (key == 'base64Images' && args.data[key]) {
+                                $scope.sendData.base64Images = [];
 
-                            if (key == 'base64Images' || key == 'images') {
                                 angular.forEach(args.data[key], function(value, key, obj) {
                                     $scope.sendData.base64Images[key] = {};
                                     $scope.sendData.base64Images[key].base64 = obj[key].base64;
                                     $scope.sendData.base64Images[key].index = obj[key].index;
                                     $scope.sendData.base64Images[key].uri = obj[key].uri;
+                                });
+                            } else if (key == 'images' && args.data[key]) {
+                                $scope.sendData.images = [];
+
+                                angular.forEach(args.data[key], function(value, key, obj) {
+                                    $scope.sendData.images[key] = {};
+                                    $scope.sendData.images[key].base64 = obj[key].base64;
+                                    $scope.sendData.images[key].index = obj[key].index;
+                                    $scope.sendData.images[key].uri = obj[key].uri;
                                 });
                             } else {
                                 $scope.sendData[key] = value;
@@ -202,6 +210,7 @@ define(["./module"], function (module) {
 
                        
                         $sessionStorage.base64Imagesbestehende = [];
+                        $sessionStorage.base64Videobestehende = [];
                         $sessionStorage.formchangesbestehende = [];
                         $sessionStorage.videoComplaintsbestehende = {};
                         $sessionStorage.datenComplaintsbestehende = {};
@@ -216,7 +225,12 @@ define(["./module"], function (module) {
                             $scope.images = args.data.images;
                         }
 
-                        $scope.videoUrl = "data:video/mp4;base64," + args.data.base64Video;
+                        if (args.data.base64Video) {
+                            $scope.videoUrl = "data:video/mp4;base64," + args.data.base64Video;
+                        } else if (args.data.videoUri) {
+                            $scope.videoUrl = args.data.videoUri;
+                        }
+                        
                         $scope.base64Video = args.data.base64Video;
                         $scope.daten = {
                             accept: false,
@@ -267,12 +281,7 @@ define(["./module"], function (module) {
                             "Objektumgebung 2"
                         ];
 
-                        console.log($scope.images);
-
                         $scope.sortByKey($scope.images, 'index');
-
-                        console.log($scope.images);
-
                         var slides = $scope.slides = [];
 
                         angular.forEach($scope.images, function(value, key, obj) {
@@ -295,8 +304,6 @@ define(["./module"], function (module) {
                             $scope.images[index].complaintText = obj[key].complaintText;
                         });
 
-                        console.log($scope.images);
-                        
                         $scope.rateText = [
                             "Bitte bewerten Sie diesen Upload!",
                             "Der Upload war unzureichend",
@@ -511,7 +518,6 @@ define(["./module"], function (module) {
 
                     $scope.Lightbox = Lightbox;
 
-
                     $scope.accept = function($event, index, type) {
                         var event = $event.currentTarget,
                             accept = angular.element(event),
@@ -524,11 +530,11 @@ define(["./module"], function (module) {
                         switch (type) {
                             case 'video':
                                 if (!accept.hasClass('active')) {
-                                    $sessionStorage.base64Videobestehende = $scope.base64Video;
+                                    // $sessionStorage.base64Videobestehende = $scope.base64Video;
                                     $scope.video[index].accept = true;
                                     $sessionStorage.formchangesbestehende.push('videoaccept'+index);
                                 } else {
-                                    delete $sessionStorage.base64Videobestehende;
+                                    // delete $sessionStorage.base64Videobestehende;
                                     $scope.video[index].accept = false;
                                     $scope.undoForm('videoaccept'+index);
                                 }
@@ -555,12 +561,12 @@ define(["./module"], function (module) {
                                     $scope.images[index].accept = false;
                                     $scope.undoForm('imagesaccept'+index);
                                 }
-                        }
 
-                        $rootScope.$broadcast('accept2', {
-                            index: index,
-                            accept:  $scope.images[index].accept
-                        });
+                                $rootScope.$broadcast('accept2', {
+                                    index: index,
+                                    accept:  $scope.images[index].accept
+                                });
+                        }
                     };
 
                     $scope.acceptDblClick = function($event, index, type) {
@@ -765,7 +771,7 @@ define(["./module"], function (module) {
                         $scope.error = false;
 
                         if ($scope.sendData.mappedImmoObject == null) {
-                            index.push('mappedImmoObject');
+                            index.push('mappedImmoObjectbestehende');
                             $scope.error = true;
                             $scope.mapped.error = true;
                         } else {
@@ -774,7 +780,7 @@ define(["./module"], function (module) {
 
                         angular.forEach($scope.images, function(value, key, obj) {
                             if (!(value.accept || value.complaint)) {
-                                index.push('image_' + value.index);
+                                index.push('imagebestehende_' + value.index);
                                 obj[key].error = true;
                                 $scope.error = true;
                             } else {
@@ -787,7 +793,7 @@ define(["./module"], function (module) {
 
                         angular.forEach($scope.video, function(value, key, obj) {
                             if (!(value.accept || value.complaint)) {
-                                index.push('video');
+                                index.push('videobestehende');
                                 obj[key].error = true;
                                 $scope.error = true;
                             } else {
@@ -799,7 +805,7 @@ define(["./module"], function (module) {
                         });
 
                         if (!($scope.daten.accept || $scope.daten.complaint)) {
-                            index.push('daten');
+                            index.push('datenbestehende');
                             $scope.daten.error = true;
                             $scope.error = true;
                         } else {
@@ -807,7 +813,7 @@ define(["./module"], function (module) {
                         }
 
                         if ($scope.uploadingObject.driveByRate == 0) {
-                            index.push('driveByRate');
+                            index.push('driveByRatebestehende');
                             $scope.error = true;
                             $scope.driveByRate.error = true;
 
@@ -833,6 +839,8 @@ define(["./module"], function (module) {
                     };
 
                     $scope.storeEdited = function () {
+                        $scope.sendData.state = $scope.states.Abgeschlossen;
+                        
                         $scope.showError();
 
                         if (!$scope.error) {
@@ -857,18 +865,13 @@ define(["./module"], function (module) {
                             }
 
                             $scope.sendData.rating = $scope.uploadingObject.driveByRate;
-
-                            if ($scope.sendData.state != $scope.states.Abgelehnt) {
-                                if ($scope.uploadingObject.unbekannt)
-                                    $scope.sendData.state =  $scope.states.Unbekannt;
-                                else
-                                    $scope.sendData.state = $scope.states.Abgeschlossen;
-                            }
-
+                            
+                            if ($scope.uploadingObject.unbekannt)
+                                $scope.sendData.state =  $scope.states.Unbekannt;
+                            
                             $scope.preloader = true;
                             $scope.showForm = false;
-
-
+                            
                             console.log($scope.sendData);
 
                             $drivebysService.storeEdited($scope.sendData, 'bestehende').then(function () {
@@ -900,7 +903,7 @@ define(["./module"], function (module) {
                                 $scope.showForm = false;
                                 $sessionStorage.formchangesbestehende = [];
 
-                                $rootScope.$broadcast('updateDriveBy');
+                                $rootScope.$broadcast('updateDriveByBestehende');
                             }, function (error) {});
                         };
 
