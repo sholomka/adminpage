@@ -28,6 +28,7 @@ define(["./module"], function (module) {
                     $scope.$on('updateDriveBy', function (event, args) {
                         if ($scope.type == 'neue') {
                             $scope.refreshWindow('neue');
+                            $scope.refreshWindow('bestehende');
 
                             if ($scope.driveBys.length > 1) {
                                 var id = $scope.driveBys[1].transactionHash;

@@ -9,6 +9,7 @@ define(["./module"], function (module) {
                 templateUrl: "templates/dgo-driveby-finden.html",
                 controller: function ($scope, $element) {
                     $scope.status = {};
+                    $scope.count = 0;
                     
                     $constantsService.getStates().then(function(constants){
                         $scope.states = constants;
@@ -44,29 +45,36 @@ define(["./module"], function (module) {
                         //     "createDateUntil": "04.10.2015",
                         //     "city": "city_3"
                         // }
-                        
-                        $scope.sendData.createDateFrom = $filter('date')($scope.sendData.createDateFrom, 'yyyy-MM-dd');
-                        $scope.sendData.createDateUntil = $filter('date')($scope.sendData.createDateUntil, 'yyyy-MM-dd');
-                        $scope.sendData.searchedStates = [];
+
+                        var sendData = {};
+
+                        angular.forEach($scope.sendData, function(value, key, obj) {
+                            sendData[key] = value;
+                        });
+
+                        sendData.createDateFrom = $filter('date')(sendData.createDateFrom, 'yyyy-MM-dd');
+                        sendData.createDateUntil = $filter('date')(sendData.createDateUntil, 'yyyy-MM-dd');
+
+                        sendData.searchedStates = [];
                         angular.forEach($scope.status, function(value, key) {
                             if (value) {
                                 if (key == 'Unvollstandig')
                                     key = 'Unvollständig';
-                                $scope.sendData.searchedStates.push($scope.states[key]);
+                                sendData.searchedStates.push($scope.states[key]);
                             }
                         });
 
-                        if ($scope.sendData.searchedStates.length == 0)
-                            delete $scope.sendData.searchedStates;
+                        if (sendData.searchedStates.length == 0)
+                            delete sendData.searchedStates;
                         
                         $scope.currentPage = 1;
                         $scope.numberOfResults = 30;
 
-                        $drivebysService.searchTodayDriveBys($scope.sendData, $scope.type).then(function(data){
+                        $drivebysService.searchTodayDriveBys(sendData, $scope.type).then(function(data){
                             $rootScope.$broadcast('findDriveBy', {
                                 data: data,
                                 count: $scope.count,
-                                sendData: $scope.sendData
+                                sendData: sendData
                             });
                         }, function(error){
                             $scope.driveBys = undefined;
@@ -109,6 +117,8 @@ define(["./module"], function (module) {
                             $scope.driveBys = undefined;
                         });
                     };
+
+                    $scope.getCount();
                 }
             };
 

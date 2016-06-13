@@ -1000,6 +1000,7 @@ define(["./module", "googlemaps"], function (module) {
 
                 if (angular.isObject(map)) {
                     map.setCenter(drivebyLatlon);
+                    updateViewport(map);
                 }
             };
 

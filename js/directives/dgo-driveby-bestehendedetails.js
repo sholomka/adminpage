@@ -207,18 +207,16 @@ define(["./module"], function (module) {
                         $scope.infoData.publicTransport = args.data.publicTransport;
                         $scope.infoData.nearbySupply = args.data.nearbySupply;
                         $scope.infoData.nearbyRecreation = args.data.nearbyRecreation;
-
-                       
+                        
                         $sessionStorage.base64Imagesbestehende = [];
                         $sessionStorage.base64Videobestehende = [];
                         $sessionStorage.formchangesbestehende = [];
                         $sessionStorage.videoComplaintsbestehende = {};
                         $sessionStorage.datenComplaintsbestehende = {};
                         $sessionStorage.complaintsbestehende = [];
-                       
-
+                        
                         $scope.reset();
-
+                        $scope.images = [];
                         if (angular.isArray(args.data.base64Images) && !angular.equals(args.data.base64Images, [])) {
                             $scope.images = args.data.base64Images;
                         } else if (angular.isArray(args.data.images) && !angular.equals(args.data.images, [])) {
@@ -504,7 +502,7 @@ define(["./module"], function (module) {
                         $mapServiceBestehende.unhighlightAllItems();
                         $mapServiceBestehende.resetDrivebyMarker($scope.sendData.location);
                         $scope.sendData.mappedImmoObject = null;
-
+                        
                         $scope.undoForm('highlightMarker');
                         //$listenerService.triggerChange("drivebyDetails", "dgoDrivebys", $scope.sendData.location);
                     };

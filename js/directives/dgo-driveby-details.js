@@ -205,7 +205,7 @@ define(["./module"], function (module) {
                         $sessionStorage.formchanges = [];
 
                         $scope.reset();
-
+                        $scope.images = [];
                         $scope.images = args.data.base64Images;
                         $scope.videoUrl = "data:video/mp4;base64," + args.data.base64Video;
                         $scope.base64Video = args.data.base64Video;
@@ -484,7 +484,7 @@ define(["./module"], function (module) {
                         $mapService.unhighlightAllItems();
                         $mapService.resetDrivebyMarker($scope.sendData.location);
                         $scope.sendData.mappedImmoObject = null;
-
+                        
                         $scope.undoForm('highlightMarker');
                         //$listenerService.triggerChange("drivebyDetails", "dgoDrivebys", $scope.sendData.location);
                     };
