@@ -540,7 +540,7 @@ define(["./module", "googlemaps"], function (module) {
                     });
                 } else if (mapType == "object") {
                     map = new google.maps.Map(mapRootElement, {
-                        mapTypeId: google.maps.MapTypeId.SATELLITE,
+                        mapTypeId: google.maps.MapTypeId.ROADMAP,
                         zoom: 15
                     });
 
@@ -1013,7 +1013,7 @@ define(["./module", "googlemaps"], function (module) {
 
                     // console.log(drivebyLatlon);
 
-                    map.setZoom(12);
+                    // map.setZoom(12);
                     map.setCenter(drivebyLatlon);
 
                     var objektMarker = new google.maps.Marker({

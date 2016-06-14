@@ -148,6 +148,12 @@ define(["./module"], function (module) {
                         $scope.driveByStatusTotalWidth = (statusWidth * (countProgresses)) + "%";
                         $scope.driveByMap = {};
 
+                        if (angular.isObject(args.data.mappedImmoObject)) {
+                            $sucheService.loadItem(args.data.mappedImmoObject.objectId).then(function (data) {
+                                $scope.highlightMarker(data);
+                            });
+                        }
+
                         angular.forEach(args.data, function(value, key, obj) {
                             if (key == 'base64Images' && args.data[key]) {
                                 $scope.sendData.base64Images = [];
@@ -285,14 +291,14 @@ define(["./module"], function (module) {
                         angular.forEach($scope.images, function(value, key, obj) {
                             obj[key].url = obj[key].base64 ? 'data:image/png;base64,' + obj[key].base64 : obj[key].uri;
                             obj[key].thumbUrl = obj[key].base64 ? 'data:image/png;base64,' + obj[key].base64 : obj[key].uri;
-                            obj[key].caption = $scope.titlesImage[key];
+                            obj[key].caption = $scope.titlesImage[obj[key].index-1];
                             obj[key].accept = false;
                             obj[key].complaint = false;
                             obj[key].tab = 'bestehende';
 
                             slides.push({
                                 image: obj[key].base64 ? 'data:image/png;base64,' + obj[key].base64 : obj[key].uri,
-                                text: $scope.titlesImage[key],
+                                text:$scope.titlesImage[obj[key].index-1],
                                 id: key
                             });
                         });
@@ -379,12 +385,17 @@ define(["./module"], function (module) {
                                     $scope.mapObjectList.push(data);
                                 });
                             });
+                            if ($sessionStorage.highlightItem != '') {
+                                $timeout(function () {
+                                    angular.element(document.querySelector('#'+$sessionStorage.highlightItem)).addClass('active');
+                                }, 100);
+                            }
                         }
                     });
 
                     $scope.highlightMarker = function (item, $event) {
-                       
                         $sessionStorage.formchangesbestehende.push('highlightMarker');
+                        $sessionStorage.highlightItem = 'data' + item.id.split('.')[0];
 
                         $scope.sendData.mappedImmoObject = {
                             "objectType": item.angebotsart,
@@ -393,7 +404,13 @@ define(["./module"], function (module) {
 
                         angular.element(document.querySelectorAll('.driveby-bestehende-detail .ax_dynamic_panel')).removeClass('active');
                         angular.element(document.querySelector('.driveby-bestehende-detail #u722')).css('opacity', '1');
-                        angular.element($event.currentTarget).toggleClass('active');
+
+                        if ($event) {
+                            angular.element($event.currentTarget).toggleClass('active');
+                        } else {
+                            angular.element(document.querySelector('#'+$sessionStorage.highlightItem)).addClass('active');
+                        }
+
                         // $mapServiceBestehende.removeDrivebyMarker();
                         $mapServiceBestehende.highlightItem(item);
 

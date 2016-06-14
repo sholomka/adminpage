@@ -203,6 +203,7 @@ define(["./module"], function (module) {
                         $sessionStorage.datenComplaints = {};
                         $sessionStorage.complaints = [];
                         $sessionStorage.formchanges = [];
+                        $sessionStorage.highlightItem = '';
 
                         $scope.reset();
                         $scope.images = [];
@@ -261,23 +262,21 @@ define(["./module"], function (module) {
 
                         var slides = $scope.slides = [];
 
-                        console.log($scope.images);
-
                         angular.forEach($scope.images, function(value, key, obj) {
                             obj[key].url = 'data:image/png;base64,' + obj[key].base64;
                             obj[key].thumbUrl = 'data:image/png;base64,' + obj[key].base64;
-                            obj[key].caption = $scope.titlesImage[key];
+                            obj[key].caption = $scope.titlesImage[obj[key].index-1];
                             obj[key].accept = false;
                             obj[key].complaint = false;
 
                             slides.push({
                                 image: 'data:image/png;base64,' + obj[key].base64,
-                                text: $scope.titlesImage[key],
+                                text: $scope.titlesImage[obj[key].index-1],
                                 id: key
                             });
                         });
 
-                        console.log(slides);
+                        // console.log(slides);
 
                         $scope.rateText = [
                             "Bitte bewerten Sie diesen Upload!",
@@ -334,9 +333,6 @@ define(["./module"], function (module) {
                     };
 
                     $scope.getUserInfo = function(userName, open) {
-
-
-
                         if (open) {
                             $drivebysService.getUserInfo(userName).then(function (data) {
                                 $scope.userInfo = data;
@@ -353,30 +349,41 @@ define(["./module"], function (module) {
                         }
                     };
 
-
                     $listenerService.addChangeListener("detailItemneue", "dgoDrivebyDetails", function (item) {
+
                         if (angular.isObject(item)) {
                             $scope.mapObjectList = [];
-                            angular.forEach(item.objektImBauVorschau, function(data) {
+
+                            angular.forEach(item.objektImBauVorschau, function(data, key, obj) {
                                 $sucheService.loadItem(data.id).then(function (data) {
                                     $scope.mapObjectList.push(data);
+                                    
                                 });
                             });
+                            
+                            if ($sessionStorage.highlightItem != '') {
+                                $timeout(function () {
+                                    angular.element(document.querySelector('#'+$sessionStorage.highlightItem)).addClass('active');
+                                }, 100);
+                            }
                         }
                     });
 
                     $scope.highlightMarker = function (item, $event) {
                         $sessionStorage.formchanges.push('highlightMarker');
+                        $sessionStorage.highlightItem = 'data' + item.id.split('.')[0];
 
                         $scope.sendData.mappedImmoObject = {
                             "objectType": item.angebotsart,
                             "objectId": item.id
                         };
-
+                        
                         angular.element(document.querySelectorAll('.driveby-detail .ax_dynamic_panel')).removeClass('active');
                         angular.element(document.querySelector('.driveby-detail #u722')).css('opacity', '1');
                         angular.element($event.currentTarget).toggleClass('active');
+
                         // $mapService.removeDrivebyMarker();
+                        
                         $mapService.highlightItem(item);
 
                         $scope.street = item.adresse.strasse;
@@ -484,7 +491,8 @@ define(["./module"], function (module) {
                         $mapService.unhighlightAllItems();
                         $mapService.resetDrivebyMarker($scope.sendData.location);
                         $scope.sendData.mappedImmoObject = null;
-                        
+                        $sessionStorage.highlightItem = '';
+
                         $scope.undoForm('highlightMarker');
                         //$listenerService.triggerChange("drivebyDetails", "dgoDrivebys", $scope.sendData.location);
                     };
@@ -840,12 +848,13 @@ define(["./module"], function (module) {
                             $scope.preloader = true;
                             $scope.showForm = false;
                             
-                            console.log($scope.sendData);
+                            // console.log($scope.sendData);
 
                             $drivebysService.storeEdited($scope.sendData, 'neue').then(function () {
                                 $scope.sendData = {};
                                 $sessionStorage.formchanges = [];
                                 $rootScope.$broadcast('updateDriveBy');
+                                $rootScope.$broadcast('updateBestehendeList');
 
                             }, function (error) {});
                         }

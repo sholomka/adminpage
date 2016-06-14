@@ -1,14 +1,22 @@
 define(["./module"], function (module) {
     "use strict";
-    module.directive("dgoDrivebys", ["$rootScope", "$urlService", "$constantsService", "$filter", "$restService", "$drivebysService", "$sucheService", "$listenerService", "$mapService", "$mapServiceBestehende",
+    module.directive("dgoDrivebysBestehende", ["$rootScope", "$urlService", "$constantsService", "$filter", "$restService", "$drivebysService", "$sucheService", "$listenerService", "$mapService", "$mapServiceBestehende",
         function ($rootScope, $urlService, $constantsService, $filter, $restService, $drivebysService, $sucheService, $listenerService, $mapService, $mapServiceBestehende) {
             return {
                 restrict: "E",
                 replace: true,
                 scope: true,
-                templateUrl: "templates/dgo-drivebys.html",
+                templateUrl: "templates/dgo-drivebys-bestehende.html",
                 controller: function ($scope, $attrs, $sessionStorage) {
                     $scope.type = $attrs.className == 'neue' ? 'neue' : 'bestehende';
+
+                    $scope.$on('findDriveBy', function (event, args) {
+                        if ($scope.type == 'bestehende') {
+                            $scope.driveBys = args.data;
+                            $scope.totalItems = args.count;
+                            $scope.sendData = args.sendData;
+                        }
+                    });
 
                     $constantsService.getStates().then(function(constants){
                         $scope.statesFront = {};
@@ -17,10 +25,18 @@ define(["./module"], function (module) {
                         }
                     });
 
-                    $scope.$on('updateDriveBy', function (event, args) {
-                        if ($scope.type == 'neue') {
-                            $scope.refreshWindow('neue');
+                    $scope.$on('updateBestehendeList', function (event, args) {
 
+                        console.log('here');
+
+                        if ($scope.type == 'bestehende') {
+                            $scope.refreshWindow('bestehende');
+                        }
+                    });
+
+                    $scope.$on('updateDriveByBestehende', function (event, args) {
+                        if ($scope.type == 'bestehende') {
+                            $scope.refreshWindow('bestehende');
                             if ($scope.driveBys.length > 1) {
                                 var id = $scope.driveBys[1].transactionHash;
                                 $scope.showDrivebysDetailsRest(id);
@@ -29,7 +45,7 @@ define(["./module"], function (module) {
                             }
                         }
                     });
-                    
+
                     $scope.sortFields = {
                         criterium: 'TIME',
                         order: 'ASC'
@@ -137,7 +153,7 @@ define(["./module"], function (module) {
                         $drivebysService.showDrivebysDetails(id, type).then(function (data) {
                             if (angular.isObject(data) && !angular.equals(data, {})) {
                                 var viewport =  $listenerService.getDefaultViewport();
-                                
+
                                 $rootScope.$broadcast('drivebyDetails'+type, {
                                     data: data,
                                     type: $scope.type
@@ -161,7 +177,7 @@ define(["./module"], function (module) {
                             }
                         }, function (error) {})
                     };
-                    
+
                     $scope.searchEdit = function(data, type) {
                         $drivebysService.searchTodayDriveBys(data, type).then(function (data) {
                             $scope.driveBys = data;
@@ -184,36 +200,6 @@ define(["./module"], function (module) {
                     };
 
                     $scope.refreshWindow = function(type) {
-                       /* if ($attrs.className == 'neue' && type == 'neue') {
-                            var data = {
-                                "pageNumber": $scope.currentPage
-                            };
-
-                            $scope.countEdit(type);
-
-                            data = $scope.sendData || {
-                                "pageNumber": $scope.currentPage,
-                                "numberOfResults": $scope.numberOfResults
-                            };
-
-                             $scope.searchEdit(data, type);
-                        } else if($attrs.className == 'bestehende' && type == 'bestehende') {
-                            var data = {
-                                "pageNumber": $scope.currentPage
-                            };
-
-                            $scope.countEdit(type);
-
-                            data = $scope.sendData || {
-                                    "pageNumber": $scope.currentPage,
-                                    "numberOfResults": $scope.numberOfResults
-                                };
-
-                            $scope.searchEdit(data, type);
-                        }*/
-
-
-
                         var data = {
                             "pageNumber": $scope.currentPage
                         };
@@ -226,7 +212,6 @@ define(["./module"], function (module) {
                             };
 
                         $scope.searchEdit(data, type);
-                        
                     };
 
                     $scope.driveBysListStyleObj = {
@@ -240,16 +225,9 @@ define(["./module"], function (module) {
 
                     if ($attrs.className == 'neue') {
                         $scope.title = 'Offene DriveBys';
-
-
-                        console.log('neue');
-
                         $scope.refreshWindow('neue');
                     } else {
                         $scope.title = 'Gesuchte DriveBys';
-
-                        console.log('bestehende');
-
                         $scope.refreshWindow('bestehende');
                     }
                 }
