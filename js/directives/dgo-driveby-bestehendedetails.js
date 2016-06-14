@@ -148,8 +148,14 @@ define(["./module"], function (module) {
                         $scope.driveByStatusTotalWidth = (statusWidth * (countProgresses)) + "%";
                         $scope.driveByMap = {};
 
+
+
                         if (angular.isObject(args.data.mappedImmoObject)) {
+
                             $sucheService.loadItem(args.data.mappedImmoObject.objectId).then(function (data) {
+
+
+
                                 $scope.highlightMarker(data);
                             });
                         }
@@ -385,10 +391,11 @@ define(["./module"], function (module) {
                                     $scope.mapObjectList.push(data);
                                 });
                             });
+                            console.log($sessionStorage.highlightItem);
                             if ($sessionStorage.highlightItem != '') {
                                 $timeout(function () {
                                     angular.element(document.querySelector('#'+$sessionStorage.highlightItem)).addClass('active');
-                                }, 100);
+                                }, 500);
                             }
                         }
                     });
