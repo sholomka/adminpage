@@ -57,7 +57,7 @@
             </div>
 
             <div class="ax_shape">
-                <div class="ax_dynamic_panel" id="{{ 'data' + item.id.split('.')[0] }}" ng-repeat="item in mapObjectList" ng-click="highlightMarker(item, $event)">
+                <div class="ax_dynamic_panel" id="{{ 'data' + item.id.split('.')[0] }}" ng-repeat="item in mapObjectList" ng-click="highlightMarker(true, item, $event)">
                     <p><span>{{item.titel}}</span></p>
                     <p>
                         <span>{{item.adresse.strasse}},</span>

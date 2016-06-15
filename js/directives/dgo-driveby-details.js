@@ -350,28 +350,28 @@ define(["./module"], function (module) {
                     };
 
                     $listenerService.addChangeListener("detailItemneue", "dgoDrivebyDetails", function (item) {
-
                         if (angular.isObject(item)) {
                             $scope.mapObjectList = [];
+                            $mapService.unhighlightAllItems();
 
                             angular.forEach(item.objektImBauVorschau, function(data, key, obj) {
                                 $sucheService.loadItem(data.id).then(function (data) {
                                     $scope.mapObjectList.push(data);
-                                    
                                 });
                             });
                             
-                            if ($sessionStorage.highlightItem != '') {
-                                $timeout(function () {
-                                    angular.element(document.querySelector('#'+$sessionStorage.highlightItem)).addClass('active');
-                                }, 100);
+                            if ($sessionStorage.highlightItem != '' && angular.isObject($scope.sendData)) {
+                                $sucheService.loadItem($sessionStorage.highlightItemID).then(function (data) {
+                                    $scope.highlightMarker(false, data);
+                                });
                             }
                         }
                     });
 
-                    $scope.highlightMarker = function (item, $event) {
+                    $scope.highlightMarker = function (isCenter, item, $event) {
                         $sessionStorage.formchanges.push('highlightMarker');
                         $sessionStorage.highlightItem = 'data' + item.id.split('.')[0];
+                        $sessionStorage.highlightItemID = item.id;
 
                         $scope.sendData.mappedImmoObject = {
                             "objectType": item.angebotsart,
@@ -380,11 +380,19 @@ define(["./module"], function (module) {
                         
                         angular.element(document.querySelectorAll('.driveby-detail .ax_dynamic_panel')).removeClass('active');
                         angular.element(document.querySelector('.driveby-detail #u722')).css('opacity', '1');
-                        angular.element($event.currentTarget).toggleClass('active');
 
+
+                        if ($event) {
+                            angular.element($event.currentTarget).toggleClass('active');
+                        } else {
+                            $timeout(function () {
+                                angular.element(document.querySelector('#'+$sessionStorage.highlightItem)).addClass('active');
+                            }, 500);
+                        }
+                        
                         // $mapService.removeDrivebyMarker();
                         
-                        $mapService.highlightItem(item);
+                        $mapService.highlightItem(item, isCenter);
 
                         $scope.street = item.adresse.strasse;
                         $scope.plz = item.adresse.plz;

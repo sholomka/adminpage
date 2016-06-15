@@ -780,9 +780,7 @@ define(["./module", "googlemaps"], function (module) {
                 }
             };
 
-            var highlightItem = function (item) {
-                console.log('highlightItembestehende');
-
+            var highlightItem = function (item, isCenter) {
                 unhighlightAllItems();
 
                 var marker = findMarker(item);
@@ -797,9 +795,9 @@ define(["./module", "googlemaps"], function (module) {
                 marker.setAnimation(google.maps.Animation.BOUNCE);
                 marker.setZIndex(google.maps.Marker.MAX_ZINDEX + 1);
 
-                map.setCenter(marker.getPosition());
-
-
+                if (isCenter) {
+                    map.setCenter(marker.getPosition());
+                }
             };
 
             var unhighlightAllItems = function() {

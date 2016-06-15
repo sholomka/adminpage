@@ -780,8 +780,6 @@ define(["./module", "googlemaps"], function (module) {
             };
 
             var highlightItem = function (item) {
-                console.log('highlightItem');
-
                 unhighlightAllItems();
 
                 var marker = findMarker(item);
@@ -795,10 +793,10 @@ define(["./module", "googlemaps"], function (module) {
                 marker.setIcon(icon);
                 marker.setAnimation(google.maps.Animation.BOUNCE);
                 marker.setZIndex(google.maps.Marker.MAX_ZINDEX + 1);
-
-                map.setCenter(marker.getPosition());
-
-
+                
+                if (isCenter) {
+                    map.setCenter(marker.getPosition());
+                }
             };
 
             var unhighlightAllItems = function() {
@@ -823,7 +821,7 @@ define(["./module", "googlemaps"], function (module) {
                 });
             };
 
-            var unhighlightItem = function (item) {
+            var unhighlightItem = function (item, isCenter) {
                 var marker = findMarker(item);
                 if (marker == null) return;
                 var icon = marker.getIcon();

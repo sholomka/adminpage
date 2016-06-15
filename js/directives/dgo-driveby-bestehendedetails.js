@@ -148,15 +148,9 @@ define(["./module"], function (module) {
                         $scope.driveByStatusTotalWidth = (statusWidth * (countProgresses)) + "%";
                         $scope.driveByMap = {};
 
-
-
                         if (angular.isObject(args.data.mappedImmoObject)) {
-
                             $sucheService.loadItem(args.data.mappedImmoObject.objectId).then(function (data) {
-
-
-
-                                $scope.highlightMarker(data);
+                                $scope.highlightMarker(true, data);
                             });
                         }
 
@@ -386,23 +380,26 @@ define(["./module"], function (module) {
                     $listenerService.addChangeListener("detailItembestehende", "dgoDrivebyDetails", function (item) {
                         if (angular.isObject(item)) {
                             $scope.mapObjectList = [];
+                            $mapServiceBestehende.unhighlightAllItems();
+                            
                             angular.forEach(item.objektImBauVorschau, function(data) {
                                 $sucheService.loadItem(data.id).then(function (data) {
                                     $scope.mapObjectList.push(data);
                                 });
                             });
-                            console.log($sessionStorage.highlightItem);
-                            if ($sessionStorage.highlightItem != '') {
-                                $timeout(function () {
-                                    angular.element(document.querySelector('#'+$sessionStorage.highlightItem)).addClass('active');
-                                }, 500);
+
+                            if ($sessionStorage.highlightItem != '' && angular.isObject($scope.sendData)) {
+                                $sucheService.loadItem($sessionStorage.highlightItemID).then(function (data) {
+                                    $scope.highlightMarker(false, data);
+                                });
                             }
                         }
                     });
 
-                    $scope.highlightMarker = function (item, $event) {
+                    $scope.highlightMarker = function (isCenter, item, $event) {
                         $sessionStorage.formchangesbestehende.push('highlightMarker');
                         $sessionStorage.highlightItem = 'data' + item.id.split('.')[0];
+                        $sessionStorage.highlightItemID = item.id;
 
                         $scope.sendData.mappedImmoObject = {
                             "objectType": item.angebotsart,
@@ -415,11 +412,13 @@ define(["./module"], function (module) {
                         if ($event) {
                             angular.element($event.currentTarget).toggleClass('active');
                         } else {
-                            angular.element(document.querySelector('#'+$sessionStorage.highlightItem)).addClass('active');
+                             $timeout(function () {
+                                 angular.element(document.querySelector('#'+$sessionStorage.highlightItem)).addClass('active');
+                             }, 500);
                         }
 
                         // $mapServiceBestehende.removeDrivebyMarker();
-                        $mapServiceBestehende.highlightItem(item);
+                        $mapServiceBestehende.highlightItem(item, isCenter);
 
                         $scope.street = item.adresse.strasse;
                         $scope.plz = item.adresse.plz;
@@ -526,6 +525,7 @@ define(["./module"], function (module) {
                         $mapServiceBestehende.unhighlightAllItems();
                         $mapServiceBestehende.resetDrivebyMarker($scope.sendData.location);
                         $scope.sendData.mappedImmoObject = null;
+                        $sessionStorage.highlightItem = '';
                         
                         $scope.undoForm('highlightMarker');
                         //$listenerService.triggerChange("drivebyDetails", "dgoDrivebys", $scope.sendData.location);
