@@ -26,9 +26,6 @@ define(["./module"], function (module) {
                     });
 
                     $scope.$on('updateBestehendeList', function (event, args) {
-
-                        console.log('here');
-
                         if ($scope.type == 'bestehende') {
                             $scope.refreshWindow('bestehende');
                         }

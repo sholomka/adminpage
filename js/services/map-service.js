@@ -779,7 +779,7 @@ define(["./module", "googlemaps"], function (module) {
                 }
             };
 
-            var highlightItem = function (item) {
+            var highlightItem = function (item, isCenter) {
                 unhighlightAllItems();
 
                 var marker = findMarker(item);
@@ -800,13 +800,7 @@ define(["./module", "googlemaps"], function (module) {
             };
 
             var unhighlightAllItems = function() {
-
                 angular.forEach(markerMap, function(marker) {
-
-
-                    console.log('unhighlightAllItems');
-                    console.log(marker);
-
                     var icon = marker.getIcon();
                     if (marker.dgoIsGroup) {
                         icon = createWolkeMarkerIcon(marker.dgoWidth, marker.dgoLabel, marker.dgoColor);
@@ -817,7 +811,6 @@ define(["./module", "googlemaps"], function (module) {
                     marker.setIcon(icon);
                     marker.setAnimation(null);
                     marker.setZIndex(1);
-
                 });
             };
 

@@ -17,8 +17,11 @@ define(["./module"], function (module) {
 
                     $scope.settings = $constantsService.datepickerSettings().settings;
                     $scope.sendData = $constantsService.datepickerSettings('finden').sendData;
-
-
+                    
+                    $scope.$on('updateBestehendeListCount', function (event, args) {
+                        $scope.getCount();
+                    });
+                    
                     $scope.showError =function(error) {
                         if (angular.isDefined(error)) {
                             if (error.required) {

@@ -856,13 +856,14 @@ define(["./module"], function (module) {
                             $scope.preloader = true;
                             $scope.showForm = false;
                             
-                            // console.log($scope.sendData);
+                            console.log($scope.sendData);
 
                             $drivebysService.storeEdited($scope.sendData, 'neue').then(function () {
                                 $scope.sendData = {};
                                 $sessionStorage.formchanges = [];
                                 $rootScope.$broadcast('updateDriveBy');
                                 $rootScope.$broadcast('updateBestehendeList');
+                                $rootScope.$broadcast('updateBestehendeListCount');
 
                             }, function (error) {});
                         }
@@ -889,6 +890,8 @@ define(["./module"], function (module) {
                                 $sessionStorage.formchanges = [];
 
                                 $rootScope.$broadcast('updateDriveBy');
+                                $rootScope.$broadcast('updateBestehendeList');
+                                $rootScope.$broadcast('updateBestehendeListCount');
                             }, function (error) {});
                         };
 

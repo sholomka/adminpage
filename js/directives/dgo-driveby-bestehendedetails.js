@@ -1,7 +1,7 @@
 define(["./module"], function (module) {
     "use strict";
-    module.directive("dgoDrivebyBestehendedetails", ["$urlService", "$constantsService", "$filter", "$restService", "$newsService", "$drivebysService", "$listenerService", "$mapServiceBestehende", "$sucheService", "$uibModal", "$rootScope", "$sce",
-        function ($urlService, $constantsService, $filter, $restService, $newsService, $drivebysService, $listenerService, $mapServiceBestehende, $sucheService, $uibModal, $rootScope, $sce) {
+    module.directive("dgoDrivebyBestehendedetails", ["$urlService", "$constantsService", "$filter", "$restService", "$newsService", "$drivebysService", "$listenerService", "$mapServiceBestehende", "$sucheService", "$uibModal", "$rootScope", "$sce", "$messageService",
+        function ($urlService, $constantsService, $filter, $restService, $newsService, $drivebysService, $listenerService, $mapServiceBestehende, $sucheService, $uibModal, $rootScope, $sce, $messageService) {
             return {
                 restrict: "E",
                 replace: true,
@@ -901,7 +901,11 @@ define(["./module"], function (module) {
                                 $sessionStorage.formchangesbestehende = [];
                                 $rootScope.$broadcast('updateDriveByBestehende');
 
-                            }, function (error) {});
+                            }, function (error) {
+                                $messageService.showError(error.message);
+                                $scope.preloader = false;
+                                $scope.showForm = true;
+                            });
                         }
                     };
 
