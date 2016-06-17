@@ -73,7 +73,7 @@
                 <label class="col-sm-2">Erstellt</label>
                 <div class="col-sm-5">
                     <p class="input-group">
-                        <input type="text" uib-datepicker-popup="{{settings.format}}" ng-change="getCount()" class="form-control"  ng-model="sendData.createDateFrom" is-open="settings.status.openedFrom" max-date="settings.maxDate" datepicker-options="settings.dateOptions"  ng-required="true" close-text="Schließen" current-text="Heute" clear-text="Löschen"/>
+                        <input type="text" uib-datepicker-popup="{{settings.format}}" ng-change="getCount()" class="form-control"  ng-model="sendData.createDateFrom" is-open="settings.status.openedFrom" max-date="settings.maxDate" datepicker-options="settings.dateOptions"  ng-required="false" close-text="Schließen" current-text="Heute" clear-text="Löschen"/>
                             <span class="input-group-btn">
                             <button type="button" class="btn btn-default" ng-click="settings.openFrom($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                             </span>
@@ -86,7 +86,7 @@
                 <label class="col-sm-1 control-label">Bis</label>
                 <div class="col-sm-5">
                     <p class="input-group">
-                        <input type="text" uib-datepicker-popup="{{settings.format}}" ng-change="getCount()" class="form-control" ng-model="sendData.createDateUntil" is-open="settings.status.openedUntil" max-date="settings.maxDate" datepicker-options="settings.dateOptions" ng-required="true"  close-text="Schließen" current-text="Heute" clear-text="Löschen" />
+                        <input type="text" uib-datepicker-popup="{{settings.format}}" ng-change="getCount()" class="form-control" ng-model="sendData.createDateUntil" is-open="settings.status.openedUntil" max-date="settings.maxDate" datepicker-options="settings.dateOptions" ng-required="false"  close-text="Schließen" current-text="Heute" clear-text="Löschen" />
                             <span class="input-group-btn">
                             <button type="button" class="btn btn-default" ng-click="settings.openUntil($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                             </span>

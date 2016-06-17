@@ -930,6 +930,7 @@ define(["./module"], function (module) {
                                 $sessionStorage.formchangesbestehende = [];
 
                                 $rootScope.$broadcast('updateDriveByBestehende');
+                                $rootScope.$broadcast('updateBestehendeListCount');
                             }, function (error) {});
                         };
 
