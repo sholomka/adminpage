@@ -169,6 +169,7 @@ define(["./module"], function (module) {
                                     $listenerService.triggerChange("detailItem"+type, "dgoDrivebys", data);
                                     // $listenerService.triggerChange("detailItem", "dgoDrivebys", data);
                                 });
+                                console.log('map', $mapServiceBestehende.getMap('object'));
                             } else {
                                 $rootScope.$broadcast('preloader'+type, {data: false});
                             }

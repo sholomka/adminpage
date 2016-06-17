@@ -781,6 +781,7 @@ define(["./module", "googlemaps"], function (module) {
             };
 
             var highlightItem = function (item, isCenter) {
+                console.log('highlightItem');
                 unhighlightAllItems();
 
                 var marker = findMarker(item);
@@ -1297,6 +1298,14 @@ define(["./module", "googlemaps"], function (module) {
                         map.setCenter(center);
                     }
                     updateViewport(map);
+                }, 100);
+            };
+
+
+            var retriggerMap = function (map) {
+                var center = map.getCenter();
+                $timeout(function () {
+                    map.setCenter(map.getCenter());
                 }, 100);
             };
 

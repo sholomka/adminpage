@@ -397,6 +397,7 @@ define(["./module"], function (module) {
                     });
 
                     $scope.highlightMarker = function (isCenter, item, $event) {
+                        console.log('hereius');
                         $sessionStorage.formchangesbestehende.push('highlightMarker');
                         $sessionStorage.highlightItem = 'data' + item.id.split('.')[0];
                         $sessionStorage.highlightItemID = item.id;
