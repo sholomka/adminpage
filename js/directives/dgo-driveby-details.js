@@ -289,7 +289,7 @@ define(["./module"], function (module) {
 
                         $scope.preloader = false;
                         $scope.showForm = true;
-
+                        console.log('loadItems', $sessionStorage.highlightItem);
                        
                     };
 
@@ -359,7 +359,11 @@ define(["./module"], function (module) {
                                     $scope.mapObjectList.push(data);
                                 });
                             });
-                            
+
+                            console.log('detailItemneue', $sessionStorage.highlightItem);
+
+
+
                             if ($sessionStorage.highlightItem != '' && angular.isObject($scope.sendData)) {
                                 $sucheService.loadItem($sessionStorage.highlightItemID).then(function (data) {
                                     $scope.highlightMarker(false, data);

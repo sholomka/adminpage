@@ -33,6 +33,9 @@ define(["./module", "googlemaps"], function (module) {
             };
 
             var boundsToCoords = function (bounds) {
+                console.log('boundsToCoords:', bounds);
+
+
                 var sw = bounds.getSouthWest();
                 var ne = bounds.getNorthEast();
 

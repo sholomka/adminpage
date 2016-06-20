@@ -158,7 +158,7 @@ define(["./module"], function (module) {
 
                                 $listenerService.triggerChange("drivebyDetails"+type, "dgoDrivebys", data.location);
 
-                                var suchProfil = {"suchoptionen":{},"sortOrder":{"sortField":"bauende","order":"asc"},"offset":0,"geo":{},"view":{"viewport":viewport,"zoomlevel":12},"type":"objekteimbau"};
+                                var suchProfil = {"suchoptionen":{},"sortOrder":{"sortField":"bauende","order":"asc"},"offset":0,"geo":{},"view":{"viewport":viewport,"zoomlevel":15},"type":"objekteimbau"};
 
                                 if (type == 'neue')
                                     $mapService.disableZoomListener(true);
@@ -169,7 +169,7 @@ define(["./module"], function (module) {
                                     $listenerService.triggerChange("detailItem"+type, "dgoDrivebys", data);
                                     // $listenerService.triggerChange("detailItem", "dgoDrivebys", data);
                                 });
-                                console.log('map', $mapServiceBestehende.getMap('object'));
+                               
                             } else {
                                 $rootScope.$broadcast('preloader'+type, {data: false});
                             }
