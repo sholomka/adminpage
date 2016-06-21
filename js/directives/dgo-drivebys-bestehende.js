@@ -158,7 +158,7 @@ define(["./module"], function (module) {
 
                                 $listenerService.triggerChange("drivebyDetails"+type, "dgoDrivebys", data.location);
 
-                                var suchProfil = {"suchoptionen":{},"sortOrder":{"sortField":"bauende","order":"asc"},"offset":0,"geo":{},"view":{"viewport":viewport,"zoomlevel":15},"type":"objekteimbau"};
+                                var suchProfil = {"suchoptionen":{},"sortOrder":{"sortField":"bauende","order":"asc"},"offset":0,"geo":{},"view":{"viewport":viewport,"zoomlevel":12},"type":"objekteimbau"};
 
                                 if (type == 'neue')
                                     $mapService.disableZoomListener(true);

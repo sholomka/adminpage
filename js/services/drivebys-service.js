@@ -74,10 +74,7 @@ define(["./module"], function (module) {
             };
             
             var retriggerMap = function(type, viewport) {
-                console.log('viewport:', viewport);
-
-
-                var suchProfil = {"suchoptionen":{},"sortOrder":{"sortField":"bauende","order":"asc"},"offset":0,"geo":{},"view":{"viewport":viewport,"zoomlevel":12},"type":"objekteimbau"};
+                var suchProfil = {"suchoptionen":{},"sortOrder":{"sortField":"bauende","order":"asc"},"offset":0,"geo":{},"view":{"viewport":viewport,"zoomlevel":15},"type":"objekteimbau"};
 
                 $sucheService.loadItems(suchProfil).then(function (data) {
                     $listenerService.triggerChange("detailItem"+type, "dgoDrivebys", data);

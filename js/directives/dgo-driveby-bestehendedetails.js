@@ -150,7 +150,9 @@ define(["./module"], function (module) {
 
                         if (angular.isObject(args.data.mappedImmoObject)) {
                             $sucheService.loadItem(args.data.mappedImmoObject.objectId).then(function (data) {
-                                $scope.highlightMarker(true, data);
+                                $timeout(function () {
+                                    $scope.highlightMarker(true, data);
+                                }, 500);
                             });
                         }
 
@@ -388,8 +390,10 @@ define(["./module"], function (module) {
                                 });
                             });
 
-                            if ($sessionStorage.highlightItem != '' && angular.isObject($scope.sendData)) {
-                                $sucheService.loadItem($sessionStorage.highlightItemID).then(function (data) {
+                            console.log('detailItemneue', $sessionStorage.highlightItemBestehende);
+
+                            if ($sessionStorage.highlightItemBestehende != '' && angular.isObject($scope.sendData)) {
+                                $sucheService.loadItem($sessionStorage.highlightItemBestehendeID).then(function (data) {
                                     $scope.highlightMarker(false, data);
                                 });
                             }
@@ -399,8 +403,8 @@ define(["./module"], function (module) {
                     $scope.highlightMarker = function (isCenter, item, $event) {
                         console.log('hereius');
                         $sessionStorage.formchangesbestehende.push('highlightMarker');
-                        $sessionStorage.highlightItem = 'data' + item.id.split('.')[0];
-                        $sessionStorage.highlightItemID = item.id;
+                        $sessionStorage.highlightItemBestehende = 'data' + item.id.split('.')[0];
+                        $sessionStorage.highlightItemBestehendeID = item.id;
 
                         $scope.sendData.mappedImmoObject = {
                             "objectType": item.angebotsart,
@@ -414,7 +418,7 @@ define(["./module"], function (module) {
                             angular.element($event.currentTarget).toggleClass('active');
                         } else {
                              $timeout(function () {
-                                 angular.element(document.querySelector('#'+$sessionStorage.highlightItem)).addClass('active');
+                                 angular.element(document.querySelector('.driveby-bestehende-detail #'+$sessionStorage.highlightItemBestehende)).addClass('active');
                              }, 500);
                         }
 
@@ -526,7 +530,7 @@ define(["./module"], function (module) {
                         $mapServiceBestehende.unhighlightAllItems();
                         $mapServiceBestehende.resetDrivebyMarker($scope.sendData.location);
                         $scope.sendData.mappedImmoObject = null;
-                        $sessionStorage.highlightItem = '';
+                        $sessionStorage.highlightItemBestehende = '';
                         
                         $scope.undoForm('highlightMarker');
                         //$listenerService.triggerChange("drivebyDetails", "dgoDrivebys", $scope.sendData.location);

@@ -541,7 +541,7 @@ define(["./module", "googlemaps"], function (module) {
                 } else if (mapType == "object") {
                     map = new google.maps.Map(mapRootElement, {
                         mapTypeId: google.maps.MapTypeId.ROADMAP,
-                        zoom: 15
+                        zoom: 12
                     });
 
                     //unsere eigenen listener registrieren (aber erst, nachdem die map sich selbst intialisiert hat)
@@ -1011,6 +1011,8 @@ define(["./module", "googlemaps"], function (module) {
                 if (angular.isObject(map)) {
 
                     // console.log(drivebyLatlon);
+
+                    console.log("updateDrivebyMarker");
 
                     // map.setZoom(12);
                     map.setCenter(drivebyLatlon);

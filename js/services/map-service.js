@@ -543,7 +543,7 @@ define(["./module", "googlemaps"], function (module) {
                 } else if (mapType == "object") {
                     map = new google.maps.Map(mapRootElement, {
                         mapTypeId: google.maps.MapTypeId.ROADMAP,
-                        zoom: 15
+                        zoom: 12
                     });
 
                     //unsere eigenen listener registrieren (aber erst, nachdem die map sich selbst intialisiert hat)
@@ -681,9 +681,12 @@ define(["./module", "googlemaps"], function (module) {
                     });
                 }
 
+
+
                 if (angular.isDefined(map)) {
                     map.mapId = mapId;
                     maps[mapId] = map;
+
 
                     //cleanup after destroying
                     angular.element(mapRootElement).on("$destroy", function () {
@@ -783,6 +786,7 @@ define(["./module", "googlemaps"], function (module) {
             };
 
             var highlightItem = function (item, isCenter) {
+                console.log('highlightItem');
                 unhighlightAllItems();
 
                 var marker = findMarker(item);

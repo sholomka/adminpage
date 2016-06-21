@@ -1,7 +1,7 @@
 define(["./module"], function (module) {
     "use strict";
-    module.directive("dgoDrivebys", ["$rootScope", "$urlService", "$constantsService", "$filter", "$restService", "$drivebysService", "$sucheService", "$listenerService", "$mapService", "$mapServiceBestehende",
-        function ($rootScope, $urlService, $constantsService, $filter, $restService, $drivebysService, $sucheService, $listenerService, $mapService, $mapServiceBestehende) {
+    module.directive("dgoDrivebys", ["$rootScope", "$urlService", "$constantsService", "$filter", "$restService", "$drivebysService", "$sucheService", "$listenerService", "$mapService", "$mapServiceBestehende", "$timeout",
+        function ($rootScope, $urlService, $constantsService, $filter, $restService, $drivebysService, $sucheService, $listenerService, $mapService, $mapServiceBestehende, $timeout) {
             return {
                 restrict: "E",
                 replace: true,
@@ -144,8 +144,7 @@ define(["./module"], function (module) {
                                 });
 
                                 $listenerService.triggerChange("drivebyDetails"+type, "dgoDrivebys", data.location);
-                                
-                                var suchProfil = {"suchoptionen":{},"sortOrder":{"sortField":"bauende","order":"asc"},"offset":0,"geo":{},"view":{"viewport":viewport,"zoomlevel":15},"type":"objekteimbau"};
+                                var suchProfil = {"suchoptionen":{},"sortOrder":{"sortField":"bauende","order":"asc"},"offset":0,"geo":{},"view":{"viewport":viewport,"zoomlevel":12},"type":"objekteimbau"};
 
                                 if (type == 'neue')
                                     $mapService.disableZoomListener(true);

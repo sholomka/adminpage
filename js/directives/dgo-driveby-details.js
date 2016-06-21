@@ -289,8 +289,6 @@ define(["./module"], function (module) {
 
                         $scope.preloader = false;
                         $scope.showForm = true;
-                        console.log('loadItems', $sessionStorage.highlightItem);
-                       
                     };
 
                     $scope.preloader = false;
@@ -362,8 +360,6 @@ define(["./module"], function (module) {
 
                             console.log('detailItemneue', $sessionStorage.highlightItem);
 
-
-
                             if ($sessionStorage.highlightItem != '' && angular.isObject($scope.sendData)) {
                                 $sucheService.loadItem($sessionStorage.highlightItemID).then(function (data) {
                                     $scope.highlightMarker(false, data);
@@ -373,6 +369,7 @@ define(["./module"], function (module) {
                     });
 
                     $scope.highlightMarker = function (isCenter, item, $event) {
+                        console.log('hereius');
                         $sessionStorage.formchanges.push('highlightMarker');
                         $sessionStorage.highlightItem = 'data' + item.id.split('.')[0];
                         $sessionStorage.highlightItemID = item.id;
@@ -385,12 +382,11 @@ define(["./module"], function (module) {
                         angular.element(document.querySelectorAll('.driveby-detail .ax_dynamic_panel')).removeClass('active');
                         angular.element(document.querySelector('.driveby-detail #u722')).css('opacity', '1');
 
-
                         if ($event) {
                             angular.element($event.currentTarget).toggleClass('active');
                         } else {
                             $timeout(function () {
-                                angular.element(document.querySelector('#'+$sessionStorage.highlightItem)).addClass('active');
+                                angular.element(document.querySelector('.driveby-detail #'+$sessionStorage.highlightItem)).addClass('active');
                             }, 500);
                         }
                         
