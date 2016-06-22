@@ -74,6 +74,8 @@ define(["./module"], function (module) {
             };
             
             var retriggerMap = function(type, viewport) {
+                console.log('retriggerMap');
+
                 var suchProfil = {"suchoptionen":{},"sortOrder":{"sortField":"bauende","order":"asc"},"offset":0,"geo":{},"view":{"viewport":viewport,"zoomlevel":15},"type":"objekteimbau"};
 
                 $sucheService.loadItems(suchProfil).then(function (data) {

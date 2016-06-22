@@ -117,7 +117,7 @@ define(["./module", "googlemaps"], function (module) {
 
             var createMap = function (mapRootElement, mapType, mapId) {
                 
-                console.log(2);
+                console.log('createMap');
                 
                 
                 $scope.placesMap = {};
@@ -148,6 +148,7 @@ define(["./module", "googlemaps"], function (module) {
                         //wenn man die map verschiebt, wird der viewport aktualisiert
                         google.maps.event.addListener(map, "dragend", function () {
                             keepExistingMarkers = true;
+                            console.log('updateViewport1');
                             updateViewport(map);
                             loadSpezialgebieteWithTimeout(map);
 
@@ -182,6 +183,7 @@ define(["./module", "googlemaps"], function (module) {
 
                             //wir warten bis der zoom fertig ist
                             google.maps.event.addListenerOnce(map, "idle", function () {
+                                console.log('updateViewport2');
                                 updateViewport(map);
                                 loadSpezialgebieteWithTimeout(map);
                                 $listenerService.triggerChange("zoomlevel", "mapService", map.getZoom());
@@ -502,7 +504,7 @@ define(["./module", "googlemaps"], function (module) {
 
                     $listenerService.addChangeListener("spezialgebiete", "mapService", function (spezialgebiete) {
                         currentSpezialgebiete = spezialgebiete;
-                        console.log(currentSpezialgebiete);
+                        
                         loadSpezialgebieteImmediately(map);
                     });
 
@@ -546,10 +548,10 @@ define(["./module", "googlemaps"], function (module) {
 
                     //unsere eigenen listener registrieren (aber erst, nachdem die map sich selbst intialisiert hat)
                     google.maps.event.addListenerOnce(map, 'idle', function () {
-                        console.log(1);
+                        console.log('idle1');
 
                         google.maps.event.addListener(map, "zoom_changed", function () {
-                            console.log(2);
+                            console.log("zoom_changed");
                             if (zoomListenerIsDisabled) return;
 
                             //alle markierungen entfernen (werden eh neu geladen, nach dem zoom)
@@ -566,8 +568,9 @@ define(["./module", "googlemaps"], function (module) {
 
                             //wir warten bis der zoom fertig ist
                             google.maps.event.addListenerOnce(map, "idle", function () {
-                                console.log(3);
+                                console.log("idle2");
                                 // $listenerService.triggerChange("viewport", "mapService", boundsToCoords(map.getBounds()));
+                                console.log('updateViewport3');
                                 updateViewport(map);
 
                                 // $drivebysService.retriggerMap($sessionStorage.driveById, boundsToCoords(map.getBounds()));
@@ -579,10 +582,11 @@ define(["./module", "googlemaps"], function (module) {
 
                         //wenn man die map verschiebt, wird der viewport aktualisiert
                         google.maps.event.addListener(map, "dragend", function () {
-                            console.log(4);
+                            console.log("dragend");
                             keepExistingMarkers = true;
 
                             // $drivebysService.retriggerMap($sessionStorage.driveById, boundsToCoords(map.getBounds()));
+                            console.log('updateViewport4');
                             updateViewport(map);
                             // loadSpezialgebieteWithTimeout(map);
                         });
@@ -610,7 +614,7 @@ define(["./module", "googlemaps"], function (module) {
 
                         //kartenausschnitt entsprechend anpassen, wenn object sich geändert ändert
                         $listenerService.addChangeListener("detailItembestehende", "mapService", function (item) {
-                            console.log("detailItembestehende");
+                            console.log("detailItembestehende", "mapService");
                             if (angular.isObject(item)) {
 
                                 item = item.objektImBauVorschau;
@@ -781,7 +785,7 @@ define(["./module", "googlemaps"], function (module) {
             };
 
             var highlightItem = function (item, isCenter) {
-                console.log('highlightItem');
+              
                 unhighlightAllItems();
 
                 var marker = findMarker(item);
@@ -999,7 +1003,8 @@ define(["./module", "googlemaps"], function (module) {
 
                 if (angular.isObject(map)) {
                     map.setCenter(drivebyLatlon);
-                    updateViewport(map);
+                    console.log('updateViewport5');
+                    // updateViewport(map);
                 }
             };
 
@@ -1009,11 +1014,6 @@ define(["./module", "googlemaps"], function (module) {
                 var drivebyLatlon = new google.maps.LatLng(driveby.lon, driveby.lat);
 
                 if (angular.isObject(map)) {
-
-                    // console.log(drivebyLatlon);
-
-                    console.log("updateDrivebyMarker");
-
                     // map.setZoom(12);
                     map.setCenter(drivebyLatlon);
 
@@ -1299,6 +1299,7 @@ define(["./module", "googlemaps"], function (module) {
                     if (keepCenter) {
                         map.setCenter(center);
                     }
+                    console.log('updateViewport6');
                     updateViewport(map);
                 }, 100);
             };

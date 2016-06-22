@@ -216,9 +216,7 @@ define(["./module"], function (module) {
                         $sessionStorage.complaintsbestehende = [];
                         
                         $scope.reset();
-
-                        console.log('highlightItemBestehende', $sessionStorage.highlightItemBestehende);
-
+                        
                         if (angular.isObject(args.data.mappedImmoObject) && $sessionStorage.highlightItemBestehende == '') {
                             $sucheService.loadItem(args.data.mappedImmoObject.objectId).then(function (data) {
                                 $timeout(function () {
@@ -396,8 +394,6 @@ define(["./module"], function (module) {
                                 });
                             });
 
-                            console.log('addChangeListener', $sessionStorage.highlightItemBestehende);
-
                             if ($sessionStorage.highlightItemBestehende != '' && angular.isObject($scope.sendData)) {
                                 $sucheService.loadItem($sessionStorage.highlightItemBestehendeID).then(function (data) {
                                     $scope.highlightMarker(false, data);
@@ -407,7 +403,6 @@ define(["./module"], function (module) {
                     });
 
                     $scope.highlightMarker = function (isCenter, item, $event) {
-                        console.log('hereius');
                         $sessionStorage.formchangesbestehende.push('highlightMarker');
                         $sessionStorage.highlightItemBestehende = 'data' + item.id.split('.')[0];
                         $sessionStorage.highlightItemBestehendeID = item.id;
@@ -904,8 +899,6 @@ define(["./module"], function (module) {
                             
                             $scope.preloader = true;
                             $scope.showForm = false;
-                            
-                            console.log($scope.sendData);
 
                             $drivebysService.storeEdited($scope.sendData, 'bestehende').then(function () {
                                 $scope.sendData = {};
