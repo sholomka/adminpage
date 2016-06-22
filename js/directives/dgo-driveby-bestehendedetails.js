@@ -148,14 +148,6 @@ define(["./module"], function (module) {
                         $scope.driveByStatusTotalWidth = (statusWidth * (countProgresses)) + "%";
                         $scope.driveByMap = {};
 
-                        if (angular.isObject(args.data.mappedImmoObject)) {
-                            $sucheService.loadItem(args.data.mappedImmoObject.objectId).then(function (data) {
-                                $timeout(function () {
-                                    $scope.highlightMarker(true, data);
-                                }, 500);
-                            });
-                        }
-
                         angular.forEach(args.data, function(value, key, obj) {
                             if (key == 'base64Images' && args.data[key]) {
                                 $scope.sendData.base64Images = [];
@@ -224,6 +216,18 @@ define(["./module"], function (module) {
                         $sessionStorage.complaintsbestehende = [];
                         
                         $scope.reset();
+
+                        console.log('highlightItemBestehende', $sessionStorage.highlightItemBestehende);
+
+                        if (angular.isObject(args.data.mappedImmoObject) && $sessionStorage.highlightItemBestehende == '') {
+                            $sucheService.loadItem(args.data.mappedImmoObject.objectId).then(function (data) {
+                                $timeout(function () {
+                                    $scope.highlightMarker(true, data);
+                                }, 500);
+                            });
+                        }
+
+
                         $scope.images = [];
                         if (angular.isArray(args.data.base64Images) && !angular.equals(args.data.base64Images, [])) {
                             $scope.images = args.data.base64Images;
@@ -336,9 +340,11 @@ define(["./module"], function (module) {
                     var currentItemsTimer;
 
                     $scope.$on('drivebyDetailsbestehende', function (event, args) {
-                        currentItemsTimer = $timeout(function () {
+                        $scope.loadItems(args);
+
+                        /*currentItemsTimer = $timeout(function () {
                             $scope.loadItems(args);
-                        }, 500);
+                        }, 500);*/
                     });
 
                     $scope.driveByDetail = {
@@ -390,7 +396,7 @@ define(["./module"], function (module) {
                                 });
                             });
 
-                            console.log('detailItemneue', $sessionStorage.highlightItemBestehende);
+                            console.log('addChangeListener', $sessionStorage.highlightItemBestehende);
 
                             if ($sessionStorage.highlightItemBestehende != '' && angular.isObject($scope.sendData)) {
                                 $sucheService.loadItem($sessionStorage.highlightItemBestehendeID).then(function (data) {
