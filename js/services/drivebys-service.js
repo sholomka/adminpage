@@ -79,7 +79,8 @@ define(["./module"], function (module) {
                 var suchProfil = {"suchoptionen":{},"sortOrder":{"sortField":"bauende","order":"asc"},"offset":0,"geo":{},"view":{"viewport":viewport,"zoomlevel":15},"type":"objekteimbau"};
 
                 $sucheService.loadItems(suchProfil).then(function (data) {
-                    $listenerService.triggerChange("detailItem"+type, "dgoDrivebys", data);
+                    console.log('forceEvent');
+                    $listenerService.triggerChange("detailItem"+type, "dgoDrivebys", data, true);
                 });
             };
 

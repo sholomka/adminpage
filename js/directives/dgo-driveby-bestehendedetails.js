@@ -307,6 +307,9 @@ define(["./module"], function (module) {
                             });
                         });
 
+
+                        console.log('slides1:', slides);
+
                         angular.forEach($scope.sendData.complaints, function(value, key, obj) {
                             var index = parseInt(obj[key].element.substr(-1)) - 1;
                             $scope.images[index].complaintText = obj[key].complaintText;
@@ -463,17 +466,20 @@ define(["./module"], function (module) {
                                     }
                                 }
 
-                                $scope.driveBy = data;
-                                $scope.selectedDriveBy = $scope.driveBy[0];
+                                /*if ($event) {
+                                    $scope.driveBy = data;
+                                    $scope.selectedDriveBy = $scope.driveBy[0];
 
-                                var slides = $scope.slides = [];
+                                    var slides = $scope.slides = [];
 
-                                angular.forEach($scope.selectedDriveBy.images, function(value, key, obj) {
-                                    slides.push({
-                                        image: obj[key].uri,
-                                        id: key
+                                    angular.forEach($scope.selectedDriveBy.images, function(value, key, obj) {
+                                        slides.push({
+                                            image: obj[key].uri,
+                                            id: key
+                                        });
                                     });
-                                });
+                                    console.log('slides2:', slides);
+                                }*/
 
                                 $scope.drivebyLoading = false;
 
@@ -510,6 +516,8 @@ define(["./module"], function (module) {
                                 id: key
                             });
                         });
+
+                        console.log('slides3:', slides);
 
                         $scope.videoUrl = $scope.selectedDriveBy.videoUri;
 
