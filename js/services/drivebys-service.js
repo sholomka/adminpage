@@ -1,7 +1,7 @@
 define(["./module"], function (module) {
     "use strict";
-    module.factory("$drivebysService", ["$q","$rootScope", "$restService", "$listenerService", "$sucheService",
-        function($q,$rootScope,$restService, $listenerService, $sucheService) {
+    module.factory("$drivebysService", ["$q","$rootScope", "$restService", "$listenerService", "$sucheService", "$sessionStorage",
+        function($q,$rootScope,$restService, $listenerService, $sucheService, $sessionStorage) {
             var searchTodayDriveBys=function(data, type){
                 var deferred=$q.defer();
                 $restService.searchTodayDriveBys(data, type).run().then(function(data){
@@ -74,12 +74,23 @@ define(["./module"], function (module) {
             };
             
             var retriggerMap = function(type, viewport) {
-                console.log('retriggerMap');
+                // console.log('retriggerMap');
 
-                var suchProfil = {"suchoptionen":{},"sortOrder":{"sortField":"bauende","order":"asc"},"offset":0,"geo":{},"view":{"viewport":viewport,"zoomlevel":15},"type":"objekteimbau"};
+                var suchProfil = {"suchoptionen":{},"sortOrder":{"sortField":"bauende","order":"asc"},"offset":0,"geo":{},"view":{"viewport":viewport,"zoomlevel":12},"type":"objekteimbau"};
 
                 $sucheService.loadItems(suchProfil).then(function (data) {
-                    console.log('forceEvent');
+                    if (!angular.equals($sessionStorage.mapObjectList, {})) {
+                        var addObject = {};
+                        addObject.angebotsart = $sessionStorage.mapObjectList.angebotsart;
+                        addObject.location = $sessionStorage.mapObjectList.location;
+                        addObject.id = $sessionStorage.mapObjectList.id;
+
+                        data.objektImBauVorschau.unshift(addObject);
+
+                        // console.log('id', $sessionStorage.mapObjectList.id);
+                    }
+
+                    // console.log('forceEvent');
                     $listenerService.triggerChange("detailItem"+type, "dgoDrivebys", data, true);
                 });
             };

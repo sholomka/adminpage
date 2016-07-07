@@ -220,10 +220,17 @@ define(["./module"], function (module) {
                         
                         if (angular.isObject(args.data.mappedImmoObject) && $sessionStorage.highlightItemBestehende == '') {
                             $sucheService.loadItem(args.data.mappedImmoObject.objectId).then(function (data) {
+                                var add = true;
+                                for (var i in  $scope.mapObjectList) {
+                                    if ( $scope.mapObjectList.hasOwnProperty(i) && $scope.mapObjectList[i].id == data.id) {
+                                        add = false;
+                                    }
+                                }
 
-                                console.log('data:',  data);
+                                if (add) {
+                                    $scope.mapObjectList.unshift(data);
+                                }
 
-                                $scope.mapObjectList.unshift(data);
                                 $sessionStorage.mapObjectList = data;
 
                                 $timeout(function () {
@@ -315,7 +322,7 @@ define(["./module"], function (module) {
                         });
 
 
-                        console.log('slides1:', slides);
+                        // console.log('slides1:', slides);
 
                         angular.forEach($scope.sendData.complaints, function(value, key, obj) {
                             var index = parseInt(obj[key].element.substr(-1)) - 1;
@@ -397,12 +404,53 @@ define(["./module"], function (module) {
                         if (angular.isObject(item)) {
                             $scope.mapObjectList = [];
                             $mapServiceBestehende.unhighlightAllItems();
-                            
+
+
+                            if (!angular.equals($sessionStorage.mapObjectList, {})) {
+                                var addObject = {};
+                                addObject.angebotsart = $sessionStorage.mapObjectList.angebotsart;
+                                addObject.location = $sessionStorage.mapObjectList.location;
+                                addObject.id = $sessionStorage.mapObjectList.id;
+
+
+
+                                console.log('addObject.id',  addObject.id);
+                                console.log('item.objektImBauVorschau[i].id',  item.objektImBauVorschau[0].id);
+
+
+
+                                var add = true;
+                                for (var i in  item.objektImBauVorschau) {
+                                    if ( item.objektImBauVorschau.hasOwnProperty(i) && item.objektImBauVorschau[i].id == addObject.id) {
+                                        add = false;
+
+                                        var deleted = item.objektImBauVorschau.splice(i, 1)
+
+                                    }
+                                }
+
+                                if (add) {
+                                    item.objektImBauVorschau.unshift(addObject);
+                                }
+
+                                console.log('deleted', deleted);
+
+                                if (deleted) {
+                                    item.objektImBauVorschau.unshift(deleted[0]);
+                                }
+
+
+
+                            }
+
+
                             angular.forEach(item.objektImBauVorschau, function(data) {
                                 $sucheService.loadItem(data.id).then(function (data) {
                                     $scope.mapObjectList.push(data);
                                 });
                             });
+
+
 
                             if ($sessionStorage.highlightItemBestehende != '' && angular.isObject($scope.sendData)) {
                                 $sucheService.loadItem($sessionStorage.highlightItemBestehendeID).then(function (data) {
@@ -524,7 +572,7 @@ define(["./module"], function (module) {
                             });
                         });
 
-                        console.log('slides3:', slides);
+                        // console.log('slides3:', slides);
 
                         $scope.videoUrl = $scope.selectedDriveBy.videoUri;
 
