@@ -166,6 +166,17 @@ define(["./module"], function (module) {
                                     $mapServiceBestehende.disableZoomListener(true);
 
                                 $sucheService.loadItems(suchProfil).then(function (data) {
+                                    if (!angular.equals($sessionStorage.mapObjectList, {})) {
+                                        var addObject = {};
+                                        addObject.angebotsart = $sessionStorage.mapObjectList.angebotsart;
+                                        addObject.location = $sessionStorage.mapObjectList.location;
+                                        addObject.id = $sessionStorage.mapObjectList.id;
+
+                                        data.objektImBauVorschau.unshift(addObject);
+
+                                        console.log('id', $sessionStorage.mapObjectList.id);
+                                    }
+
                                     $listenerService.triggerChange("detailItem"+type, "dgoDrivebys", data);
                                     // $listenerService.triggerChange("detailItem", "dgoDrivebys", data);
                                 });

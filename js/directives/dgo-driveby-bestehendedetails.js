@@ -214,11 +214,18 @@ define(["./module"], function (module) {
                         $sessionStorage.videoComplaintsbestehende = {};
                         $sessionStorage.datenComplaintsbestehende = {};
                         $sessionStorage.complaintsbestehende = [];
-                        
+                        $sessionStorage.mapObjectList = {};
+
                         $scope.reset();
                         
                         if (angular.isObject(args.data.mappedImmoObject) && $sessionStorage.highlightItemBestehende == '') {
                             $sucheService.loadItem(args.data.mappedImmoObject.objectId).then(function (data) {
+
+                                console.log('data:',  data);
+
+                                $scope.mapObjectList.unshift(data);
+                                $sessionStorage.mapObjectList = data;
+
                                 $timeout(function () {
                                     $scope.highlightMarker(true, data);
                                 }, 500);
