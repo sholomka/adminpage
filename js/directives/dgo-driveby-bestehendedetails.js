@@ -412,12 +412,9 @@ define(["./module"], function (module) {
                                 addObject.location = $sessionStorage.mapObjectList.location;
                                 addObject.id = $sessionStorage.mapObjectList.id;
 
-
-
-                                console.log('addObject.id',  addObject.id);
-                                console.log('item.objektImBauVorschau[i].id',  item.objektImBauVorschau[0].id);
-
-
+                                //
+                                // console.log('addObject.id',  addObject.id);
+                                // console.log('item.objektImBauVorschau[i].id',  item.objektImBauVorschau[0].id);
 
                                 var add = true;
                                 for (var i in  item.objektImBauVorschau) {
@@ -430,18 +427,20 @@ define(["./module"], function (module) {
                                 }
 
                                 if (add) {
+                                    console.log('addObject',  addObject);
                                     item.objektImBauVorschau.unshift(addObject);
                                 }
 
-                                console.log('deleted', deleted);
-
                                 if (deleted) {
+                                    console.log('deleted4', deleted);
+                                    console.log('deleted5', deleted[0]);
+                                    console.log('deleteddddd');
                                     item.objektImBauVorschau.unshift(deleted[0]);
                                 }
-
-
-
                             }
+
+
+                            console.log('item.objektImBauVorschau[i].id',  item.objektImBauVorschau);
 
 
                             angular.forEach(item.objektImBauVorschau, function(data) {
