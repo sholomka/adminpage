@@ -233,6 +233,11 @@ define(["./module"], function (module) {
 
                                 $sessionStorage.mapObjectList = data;
 
+
+
+                                console.log('her2');
+                                console.log('her3');
+
                                 $timeout(function () {
                                     $scope.highlightMarker(true, data);
                                 }, 500);
@@ -400,6 +405,10 @@ define(["./module"], function (module) {
                         }
                     };
 
+                    $scope.customOrder = function(item) {
+                        return item.id == $sessionStorage.mapObjectList.id ? -1 : 1;
+                    };
+
                     $listenerService.addChangeListener("detailItembestehende", "dgoDrivebyDetails", function (item) {
                         if (angular.isObject(item)) {
                             $scope.mapObjectList = [];
@@ -432,20 +441,27 @@ define(["./module"], function (module) {
                                 }
 
                                 if (deleted) {
-                                    console.log('deleted4', deleted);
-                                    console.log('deleted5', deleted[0]);
-                                    console.log('deleteddddd');
+
+                                    console.log('deleted', deleted[0]);
+
                                     item.objektImBauVorschau.unshift(deleted[0]);
                                 }
                             }
 
 
-                            console.log('item.objektImBauVorschau[i].id',  item.objektImBauVorschau);
+                            // console.log('item.objektImBauVorschau[i].id',  item.objektImBauVorschau);
+
+
+
 
 
                             angular.forEach(item.objektImBauVorschau, function(data) {
                                 $sucheService.loadItem(data.id).then(function (data) {
+
                                     $scope.mapObjectList.push(data);
+
+
+                                    // console.log('mapObjectList', $scope.mapObjectList);
                                 });
                             });
 
