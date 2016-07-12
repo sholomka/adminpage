@@ -29,8 +29,10 @@ define(["./module"], function (module) {
                         $scope.sendData.externalLink = data.externalLink;
                         $scope.sendData.locationHierarchy = data.locationHierarchy;
                         $scope.sendData.keywords = data.keywords;
-                        $scope.sendData.publishFromDate = $filter('date')(data.publishFromDate, 'yyyy-MM-dd');
-                        $scope.sendData.publishUntilDate = $filter('date')(data.publishUntilDate, 'yyyy-MM-dd');
+
+                        $scope.sendData.publishFromDate = data.publishFromDate;
+                        $scope.sendData.publishUntilDate = data.publishUntilDate;
+
                         $scope.sendData.topic = data.topic;
                         $scope.sendData.newsType = data.newsType;
 
@@ -49,6 +51,9 @@ define(["./module"], function (module) {
                     };
 
                     $scope.saveNews=function() {
+                        $scope.sendData.publishFromDate = $filter('date')($scope.sendData.publishFromDate, 'yyyy-MM-dd');
+                        $scope.sendData.publishUntilDate = $filter('date')($scope.sendData.publishUntilDate, 'yyyy-MM-dd');
+
                         if ($scope.sendData.keywords != null && !angular.isArray($scope.sendData.keywords)) {
                             $scope.sendData.keywords = $scope.sendData.keywords.split(',').map(function(x) {
                                 return x.trim();

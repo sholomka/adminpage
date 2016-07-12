@@ -42,19 +42,27 @@ define(["./module"], function (module) {
                     };
 
                     $scope.sucheNews = function() {
-                        $scope.sendData.size = 10;
-                        $scope.sendData.from = 0;
-                        $scope.sendData.createDateFrom = $filter('date')($scope.sendData.createDateFrom, 'yyyy-MM-dd');
-                        $scope.sendData.createDateUntil = $filter('date')($scope.sendData.createDateUntil, 'yyyy-MM-dd');
+                        var sendData = {};
+
+                        angular.forEach($scope.sendData, function(value, key, obj) {
+                            sendData[key] = value;
+                        });
+
+
+                        sendData.size = 10;
+                        sendData.from = 0;
+                        sendData.createDateFrom = $filter('date')(sendData.createDateFrom, 'yyyy-MM-dd');
+                        sendData.createDateUntil = $filter('date')(sendData.createDateUntil, 'yyyy-MM-dd');
+
 
                         var deferred=$q.defer();
-                        $restService.sucheEditNews($scope.sendData).run().then(function(data){
+                        $restService.sucheEditNews(sendData).run().then(function(data){
                             $rootScope.$broadcast('findNews', {
                                 data: data
                             });
 
                             $rootScope.$broadcast('paginationData', {
-                                data: $scope.sendData,
+                                data: sendData,
                                 count: $scope.count
                             });
 
