@@ -588,6 +588,9 @@ define(["./module", "googlemaps"], function (module) {
                             // loadSpezialgebieteWithTimeout(map);
                         });
 
+
+
+
                         /*$listenerService.addChangeListener("viewport", "mapService", function (viewport) {
                             keepExistingMarkers = false;
                             if (angular.isArray(viewport) && viewport.length == 4) {
@@ -663,6 +666,13 @@ define(["./module", "googlemaps"], function (module) {
 
 
                                         markerMap[items.location.geohash] = objektMarker;
+
+
+                                        google.maps.event.addListener(objektMarker, 'click', function () {
+                                            console.log('hereerererer');
+                                        });
+
+
 
                                     } else {
                                         if (angular.isObject(objektMarker)) {
