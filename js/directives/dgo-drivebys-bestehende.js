@@ -135,9 +135,11 @@ define(["./module"], function (module) {
                         } else {
                             if (accept.hasClass('active')) {
                                 $scope.showDrivebysDetailsRest(id);
+                                angular.element(document.querySelectorAll('.driveby-items.bestehende .active')).removeClass('active');
+                            } else {
+                                angular.element(document.querySelectorAll('.driveby-items.bestehende .active')).removeClass('active');
+                                accept.addClass('active');
                             }
-
-                            accept.toggleClass('active');
                         }
                     };
 
