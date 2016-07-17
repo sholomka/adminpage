@@ -669,7 +669,9 @@ define(["./module", "googlemaps"], function (module) {
 
 
                                         google.maps.event.addListener(objektMarker, 'click', function () {
-                                            console.log('hereerererer');
+                                            $scope.$broadcast('pinclick', {
+                                                items: items
+                                            });
                                         });
 
 

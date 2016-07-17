@@ -98,6 +98,12 @@ define(["./module"], function (module) {
                         }
                     };
 
+                    $scope.$on('pinclickbestehende', function (event, args) {
+                        $sucheService.loadItem(args.items.id).then(function (data) {
+                            $scope.highlightMarker(false, data);
+                        });
+                    });
+
                     $scope.$on('acceptbestehende', function (event, args) {
                         if (args.isVideo) {
                             $scope.video[args.index].accept = args.accept;

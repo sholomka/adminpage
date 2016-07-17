@@ -96,6 +96,12 @@ define(["./module"], function (module) {
                         });
                     };
 
+                    $scope.$on('pinclick', function (event, args) {
+                        $sucheService.loadItem(args.items.id).then(function (data) {
+                            $scope.highlightMarker(false, data);
+                        });
+                    });
+
                     $scope.$on('accept', function (event, args) {
                         if (args.isVideo) {
                             $scope.video[args.index].accept = args.accept;
@@ -369,7 +375,7 @@ define(["./module"], function (module) {
                     });
 
                     $scope.highlightMarker = function (isCenter, item, $event) {
-                        console.log('hereius');
+                        console.log('highlightMarker', item);
                         $sessionStorage.formchanges.push('highlightMarker');
                         $sessionStorage.highlightItem = 'data' + item.id.split('.')[0];
                         $sessionStorage.highlightItemID = item.id;

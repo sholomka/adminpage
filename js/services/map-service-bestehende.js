@@ -666,6 +666,13 @@ define(["./module", "googlemaps"], function (module) {
 
                                         markerMap[items.location.geohash] = objektMarker;
 
+
+                                        google.maps.event.addListener(objektMarker, 'click', function () {
+                                            $scope.$broadcast('pinclickbestehende', {
+                                                items: items
+                                            });
+                                        });
+
                                     } else {
                                         if (angular.isObject(objektMarker)) {
                                             objektMarker.setMap(null);
