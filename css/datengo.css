@@ -1476,7 +1476,7 @@ span.dropdown  {
 
 .modal-complaint {
     padding: 8px;
-    height: 330px;
+    height: 355px;
     width: 480px;
 }
 
@@ -1600,8 +1600,8 @@ span.dropdown  {
 
 
 .modal-complaint img {
-    height: 130px;
-    width: 220px;
+    height: 170px;
+    width: 170px;
 }
 
 .modal-complaint .email {
