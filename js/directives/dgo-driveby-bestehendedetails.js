@@ -135,6 +135,7 @@ define(["./module"], function (module) {
                         $scope.sendData = {};
                         $scope.uploadingObject = {};
                         $scope.uploadingObject.unbekannt = false;
+                        $scope.uploadingObject.weitere = false;
                         $scope.showForm = true;
                         $scope.max = 5;
                         $scope.isReadonly = false;
@@ -732,7 +733,7 @@ define(["./module"], function (module) {
 
                     $scope.complaint = function($event, index, type) {
                         $scope.check = function(complaintText) {
-                            $scope.disabled = complaintText == '';
+                            $scope.disabled = complaintText == '' && $scope.uploadingObject.weitere;
                         };
 
                         $scope.currentImg = $scope.images[index].thumbUrl;

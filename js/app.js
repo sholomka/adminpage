@@ -11,6 +11,9 @@ define(["angular", "angular-sanitize",  "angular-animate", "angular-touch", "loc
 
         $scope.disabled = true;
 
+        $scope.uploadingObject = {};
+        $scope.uploadingObject.weitere = false;
+
         $scope.$on('accept2', function (event, args) {
             $scope.Lightbox.image.accept = args.accept;
         });
@@ -80,7 +83,7 @@ define(["angular", "angular-sanitize",  "angular-animate", "angular-touch", "loc
 
         $scope.complaint = function($event, isVideo) {
             $scope.check = function(complaintText) {
-                $scope.disabled = complaintText == '';
+                $scope.disabled = complaintText == '' && $scope.uploadingObject.weitere;
             };
 
             var index = $scope.Lightbox.index,
