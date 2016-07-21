@@ -425,30 +425,28 @@ define(["./module"], function (module) {
                                 addObject.location = $sessionStorage.mapObjectList.location;
                                 addObject.id = $sessionStorage.mapObjectList.id;
 
-                                //
-                                // console.log('addObject.id',  addObject.id);
-                                // console.log('item.objektImBauVorschau[i].id',  item.objektImBauVorschau[0].id);
 
                                 var add = true;
-                                for (var i in  item.objektImBauVorschau) {
-                                    if ( item.objektImBauVorschau.hasOwnProperty(i) && item.objektImBauVorschau[i].id == addObject.id) {
-                                        add = false;
 
-                                        var deleted = item.objektImBauVorschau.splice(i, 1)
+                                console.log('44444:', item.objektImBauVorschau);
 
+                                if (!angular.equals(item.objektImBauVorschau, [])) {
+                                    for (var i in  item.objektImBauVorschau) {
+                                        if (item.objektImBauVorschau.hasOwnProperty(i) && item.objektImBauVorschau[i].id == addObject.id) {
+                                            add = false;
+
+                                            var deleted = item.objektImBauVorschau.splice(i, 1)
+
+                                        }
                                     }
-                                }
 
-                                if (add) {
-                                    console.log('addObject',  addObject);
-                                    item.objektImBauVorschau.unshift(addObject);
-                                }
+                                    if (add) {
+                                        item.objektImBauVorschau.unshift(addObject);
+                                    }
 
-                                if (deleted) {
-
-                                    console.log('deleted', deleted[0]);
-
-                                    item.objektImBauVorschau.unshift(deleted[0]);
+                                    if (deleted) {
+                                        item.objektImBauVorschau.unshift(deleted[0]);
+                                    }
                                 }
                             }
 

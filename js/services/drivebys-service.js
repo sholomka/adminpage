@@ -79,18 +79,36 @@ define(["./module"], function (module) {
                 var suchProfil = {"suchoptionen":{},"sortOrder":{"sortField":"bauende","order":"asc"},"offset":0,"geo":{},"view":{"viewport":viewport,"zoomlevel":12},"type":"objekteimbau"};
 
                 $sucheService.loadItems(suchProfil).then(function (data) {
-                    if (!angular.equals($sessionStorage.mapObjectList, {})) {
-                        var addObject = {};
-                        addObject.angebotsart = $sessionStorage.mapObjectList.angebotsart;
-                        addObject.location = $sessionStorage.mapObjectList.location;
-                        addObject.id = $sessionStorage.mapObjectList.id;
 
-                        data.objektImBauVorschau.unshift(addObject);
+                    if (type == 'bestehende') {
+                        if (!angular.equals($sessionStorage.mapObjectList, {})) {
 
-                        // console.log('id', $sessionStorage.mapObjectList.id);
+                            var addObject = {};
+                            addObject.angebotsart = $sessionStorage.mapObjectList.angebotsart;
+                            addObject.location = $sessionStorage.mapObjectList.location;
+                            addObject.id = $sessionStorage.mapObjectList.id;
+
+                            var add = true;
+
+                            if (!angular.equals(data.objektImBauVorschau, [])) {
+                                for (var i in  data.objektImBauVorschau) {
+                                    if ( data.objektImBauVorschau.hasOwnProperty(i) && data.objektImBauVorschau[i].id == addObject.id) {
+                                        add = false;
+                                        var deleted = data.objektImBauVorschau.splice(i, 1)
+                                    }
+                                }
+
+                                if (add) {
+                                    data.objektImBauVorschau.unshift(addObject);
+                                }
+
+                                if (deleted) {
+                                    data.objektImBauVorschau.unshift(deleted[0]);
+                                }
+                            }
+                        }
                     }
 
-                    // console.log('forceEvent');
                     $listenerService.triggerChange("detailItem"+type, "dgoDrivebys", data, true);
                 });
             };
