@@ -91,23 +91,27 @@ define(["angular", "angular-sanitize",  "angular-animate", "angular-touch", "loc
                 storageImgName = 'base64Images',
                 storageVideoName = 'base64Video',
                 storageVideoComplaints = 'videoComplaints',
+                storageVideoComplaintsText = 'videoComplaintsText',
                 storageComplaints = 'complaints',
+                storageComplaintsText = 'complaintsText',
                 broadcastName = 'complaint';
             
             if (tab == 'bestehende') {
                 storageImgName += tab;
                 storageVideoName += tab;
                 storageVideoComplaints += tab;
+                storageVideoComplaintsText += tab;
                 storageComplaints += tab;
+                storageComplaintsText += tab;
                 broadcastName += tab;
             }
             
             $scope.currentImg = $scope.Lightbox.image.thumbUrl;
 
             if (isVideo) {
-                $scope.complaintText = angular.isObject($sessionStorage[storageVideoComplaints]) && !angular.equals({}, $sessionStorage[storageVideoComplaints]) ? $sessionStorage[storageVideoComplaints].complaintText : '';
+                $scope.complaintText = angular.isObject($sessionStorage[storageVideoComplaintsText]) && !angular.equals({}, $sessionStorage[storageVideoComplaintsText]) ?  $sessionStorage[storageVideoComplaintsText].complaintText : '';
             } else {
-                $scope.complaintText = angular.isObject($sessionStorage[storageComplaints][index]) ? $sessionStorage[storageComplaints][index].complaintText : '';
+                $scope.complaintText = angular.isObject($sessionStorage[storageComplaintsText][index]) ? $sessionStorage[storageComplaintsText][index].complaintText : '';
             }
 
             $scope.check($scope.complaintText);
@@ -120,6 +124,15 @@ define(["angular", "angular-sanitize",  "angular-animate", "angular-touch", "loc
             });
 
             $scope.save = function(complaintText) {
+                var arr = angular.element(document.querySelectorAll('.ax_checkbox :checked')).next().children();
+
+                var checkBoxLabel = [];
+                angular.forEach(arr, function(value, key, obj) {
+                    checkBoxLabel.push(obj[key].innerText)
+                });
+                var checkBoxLabelValue = ' ' + checkBoxLabel.join(' ');
+
+
                 if (!$scope.Lightbox.image.complaint) {
                     $scope.Lightbox.image.complaint = true;
                 }
@@ -131,17 +144,26 @@ define(["angular", "angular-sanitize",  "angular-animate", "angular-touch", "loc
 
                 if (isVideo) {
                     $sessionStorage[storageVideoComplaints] = {};
-                    $sessionStorage[storageVideoComplaints].complaintText = complaintText;
+                    $sessionStorage[storageVideoComplaints].complaintText = (complaintText + checkBoxLabelValue).trim();
                     $sessionStorage[storageVideoComplaints].element = 'VIDEO';
+
+                    $sessionStorage[storageVideoComplaintsText] = {};
+                    $sessionStorage[storageVideoComplaintsText].complaintText = complaintText;
 
                     delete $sessionStorage[storageVideoName];
                 } else {
                     $sessionStorage[storageComplaints][index] = {};
-                    $sessionStorage[storageComplaints][index].complaintText = complaintText;
+                    $sessionStorage[storageComplaints][index].complaintText = (complaintText + checkBoxLabelValue).trim();
                     $sessionStorage[storageComplaints][index].element = 'IMAGE' + $scope.Lightbox.image.index;
+
+                    $sessionStorage[storageComplaintsText][index] = {};
+                    $sessionStorage[storageComplaintsText][index].complaintText = complaintText;
 
                     delete $sessionStorage[storageImgName][index];
                 }
+
+
+                console.log($sessionStorage[storageVideoComplaints]);
 
                 $rootScope.$broadcast(broadcastName, {
                     index: index,
@@ -167,6 +189,8 @@ define(["angular", "angular-sanitize",  "angular-animate", "angular-touch", "loc
                 storageImgName = 'base64Images',
                 storageVideoName = 'base64Video',
                 storageVideoComplaints = 'videoComplaints',
+                storageVideoComplaintsText = 'videoComplaintsText',
+                storageComplaintsText = 'complaintsText',
                 storageComplaints = 'complaints',
                 broadcastName = 'acceptDblClick';
 
@@ -175,15 +199,19 @@ define(["angular", "angular-sanitize",  "angular-animate", "angular-touch", "loc
                 storageVideoName += tab;
                 storageVideoComplaints += tab;
                 storageComplaints += tab;
+                storageVideoComplaintsText += tab;
+                storageComplaintsText += tab;
                 broadcastName += tab;
             }
 
             if ($scope.Lightbox.image.complaint) {
                 if (isVideo) {
                     delete $sessionStorage[storageVideoComplaints];
+                    delete $sessionStorage[storageVideoComplaintsText];
                     $sessionStorage[storageVideoName] = $scope.Lightbox.image.base64Video;
                 } else {
                     delete $sessionStorage[storageComplaints][index];
+                    delete $sessionStorage[storageComplaintsText][index];
 
                     $sessionStorage[storageImgName][index] = {};
                     $sessionStorage[storageImgName][index].index = $scope.Lightbox.image.index;

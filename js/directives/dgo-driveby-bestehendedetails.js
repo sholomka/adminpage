@@ -219,8 +219,10 @@ define(["./module"], function (module) {
                         $sessionStorage.base64Videobestehende = [];
                         $sessionStorage.formchangesbestehende = [];
                         $sessionStorage.videoComplaintsbestehende = {};
+                        $sessionStorage.videocomplaintsTextbestehende = {};
                         $sessionStorage.datenComplaintsbestehende = {};
                         $sessionStorage.complaintsbestehende = [];
+                        $sessionStorage.complaintsTextbestehende = [];
                         $sessionStorage.mapObjectList = {};
 
                         $scope.reset();
@@ -239,11 +241,6 @@ define(["./module"], function (module) {
                                 }
 
                                 $sessionStorage.mapObjectList = data;
-
-
-
-                                console.log('her2');
-                                console.log('her3');
 
                                 $timeout(function () {
                                     $scope.highlightMarker(true, data);
@@ -694,6 +691,7 @@ define(["./module"], function (module) {
                                     $scope.video[index].accept = true;
 
                                     delete $sessionStorage.videoComplaintsbestehende;
+                                    delete $sessionStorage.videocomplaintsTextbestehende;
 
                                     $sessionStorage.formchangesbestehende.push('videoaccept'+index);
                                     $scope.undoForm('videocomplaints'+index);
@@ -713,6 +711,7 @@ define(["./module"], function (module) {
                                     $scope.images[index].accept = true;
 
                                     delete $sessionStorage.complaintsbestehende[index];
+                                    delete $sessionStorage.complaintsTextbestehende[index];
 
                                     $sessionStorage.formchangesbestehende.push('imagesaccept'+index);
                                     $scope.undoForm('imagecomplaints'+index);
@@ -740,7 +739,7 @@ define(["./module"], function (module) {
 
                         switch (type) {
                             case 'video':
-                                $scope.complaintText = angular.isObject($sessionStorage.videoComplaintsbestehende) && !angular.equals({}, $sessionStorage.videoComplaintsbestehende) ? $sessionStorage.videoComplaintsbestehende.complaintText : '';
+                                $scope.complaintText = angular.isObject($sessionStorage.videocomplaintsTextbestehende) && !angular.equals({}, $sessionStorage.videocomplaintsTextbestehende) ? $sessionStorage.videocomplaintsTextbestehende.complaintText : '';
                                 break;
 
                             case 'daten':
@@ -748,7 +747,7 @@ define(["./module"], function (module) {
                                 break;
 
                             default:
-                                $scope.complaintText = angular.isObject($sessionStorage.complaintsbestehende[index]) ? $sessionStorage.complaintsbestehende[index].complaintText : '';
+                                $scope.complaintText = angular.isObject($sessionStorage.complaintsTextbestehende[index]) ? $sessionStorage.complaintsTextbestehende[index].complaintText : '';
                         }
 
                         $scope.check($scope.complaintText);
@@ -762,7 +761,14 @@ define(["./module"], function (module) {
                         });
 
                         $scope.save = function(complaintText) {
+                            var arr = angular.element(document.querySelectorAll('.ax_checkbox :checked')).next().children();
+
+                            var checkBoxLabel = [];
+                            angular.forEach(arr, function(value, key, obj) {
+                                checkBoxLabel.push(obj[key].innerText)
+                            });
                             var nextIndex = index + 1;
+                            var checkBoxLabelValue = ' ' + checkBoxLabel.join(' ');
 
                             switch (type) {
                                 case 'video':
@@ -776,8 +782,13 @@ define(["./module"], function (module) {
                                     }
 
                                     $sessionStorage.videoComplaintsbestehende = {};
-                                    $sessionStorage.videoComplaintsbestehende.complaintText = complaintText;
+                                    $sessionStorage.videoComplaintsbestehende.complaintText = (complaintText + checkBoxLabelValue).trim();
                                     $sessionStorage.videoComplaintsbestehende.element = 'VIDEO';
+
+
+                                    $sessionStorage.videocomplaintsTextbestehende = {};
+                                    $sessionStorage.videocomplaintsTextbestehende.complaintText = complaintText;
+
 
                                     $sessionStorage.formchangesbestehende.push('videocomplaints'+index);
                                     break;
@@ -808,7 +819,11 @@ define(["./module"], function (module) {
                                         $scope.images[index].accept = false;
                                     }
                                     $sessionStorage.complaintsbestehende[index] = {};
-                                    $sessionStorage.complaintsbestehende[index].complaintText = complaintText;
+                                    $sessionStorage.complaintsbestehende[index].complaintText = (complaintText + checkBoxLabelValue).trim();
+
+                                    $sessionStorage.complaintsTextbestehende[index] = {};
+                                    $sessionStorage.complaintsTextbestehende[index].complaintText = complaintText;
+
                                     $sessionStorage.complaintsbestehende[index].element = 'IMAGE' + nextIndex;
 
                                     $sessionStorage.formchangesbestehende.push('imagecomplaints'+index);
