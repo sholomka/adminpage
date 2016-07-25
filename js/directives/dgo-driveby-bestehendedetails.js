@@ -527,6 +527,10 @@ define(["./module"], function (module) {
                                     $scope.driveByMap[data[i].buildingProgress].unshift(data[i]); //sortierung umkehren
                                 }
 
+                                // $scope.driveByMap[$scope.sendData.buildingProgress].unshift($scope.sendData);
+
+                                console.log('driveByMap3', $scope.driveByMap);
+                                console.log($scope.sendData.state);
 
                                 for (var i = 0; i < progresses.length; i++) {
                                     if (progresses[i].key == data[0].buildingProgress) {
@@ -538,7 +542,7 @@ define(["./module"], function (module) {
                                     }
                                 }
 
-                                /*if ($event) {
+                                // if ($event) {}
                                     $scope.driveBy = data;
                                     $scope.selectedDriveBy = $scope.driveBy[0];
 
@@ -550,8 +554,8 @@ define(["./module"], function (module) {
                                             id: key
                                         });
                                     });
-                                    console.log('slides2:', slides);
-                                }*/
+                                    console.log('slides3:', slides);
+
 
                                 $scope.drivebyLoading = false;
 
