@@ -197,7 +197,12 @@
             </div>
 
             <h4 class="top-50" style="text-decoration: underline; font-size: 11px; font-weight: bold;">DriveBy-Daten bisher</h4>
-            <div id="driveby" >
+
+            <div class="driveby-error" style="width: 155px;" ng-hide="drivebyLoading">
+                Es gibt keine Daten zu zeigen!
+            </div>
+
+            <div id="driveby" ng-if="drivebyLoading">
                 <div class="row">
                     <div style="overflow: hidden;" class="col-xs-6">
                         <uib-tabset justified="true">
@@ -499,8 +504,8 @@
                             </div>
                             <div class="driveby-dot"
                                  style="right:-{{getDriveByOffset(value,$index)}}"
-                                 ng-class="{'active': selectedDriveBy.transactionHash==driveBy.transactionHash}"
-                                 ng-repeat="driveBy in driveByMap[value] track by $index"
+                                 ng-class="{'active': selectedDriveBy2.transactionHash==driveBy2.transactionHash}"
+                                 ng-repeat="driveBy in driveByMap2[value] track by $index"
                                  uib-tooltip="{{driveBy.dateCreated|date}}"
                                  ng-click="setSelectedDriveBy(driveBy)">
                             </div>

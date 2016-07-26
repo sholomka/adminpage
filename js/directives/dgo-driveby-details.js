@@ -152,6 +152,7 @@ define(["./module"], function (module) {
                         $scope.driveByStatusWidth = statusWidth + "%";
                         $scope.driveByStatusTotalWidth = (statusWidth * (countProgresses)) + "%";
                         $scope.driveByMap = {};
+                        $scope.showDrivebyContainer = true;
 
                         angular.forEach(args.data, function(value, key, obj) {
                             if (key == 'base64Images') {
@@ -166,12 +167,12 @@ define(["./module"], function (module) {
                             } else {
                                 $scope.sendData[key] = value;
 
-                                if (key == 'buildingProgress') {
-                                    if (!angular.isArray($scope.driveByMap[value])) {
-                                        $scope.driveByMap[value] = [];
-                                    }
-                                    $scope.driveByMap[value].unshift($scope.sendData);
-                                }
+                                // if (key == 'buildingProgress') {
+                                //     if (!angular.isArray($scope.driveByMap[value])) {
+                                //         $scope.driveByMap[value] = [];
+                                //     }
+                                //     $scope.driveByMap[value].unshift($scope.sendData);
+                                // }
                             }
                         });
 
@@ -188,8 +189,17 @@ define(["./module"], function (module) {
                             j++;
                         }
 
-                        $scope.driveBy = $scope.sendData;
-                        $scope.selectedDriveBy = $scope.sendData;
+                        if (angular.equals({}, $scope.driveByMap)) {
+                            $scope.showDrivebyContainer = false;
+                        }
+
+                        console.log('1111111', $scope.driveByMap);
+                        //
+                        // $scope.driveBy = $scope.sendData;
+                        // $scope.selectedDriveBy = $scope.sendData;
+
+
+
                         $scope.drivebyLoading = false;
 
                         $scope.infoData = {};
@@ -409,6 +419,7 @@ define(["./module"], function (module) {
                         
                         $drivebysService.getMapped(item.id).then(function (data) {
                             if (data.length > 0) {
+                                $scope.drivebyLoading = true;
                                 var progresses = [];
                                 angular.forEach($scope.bautenstand, function(value, key, obj) {
                                     progresses.push({
@@ -421,6 +432,7 @@ define(["./module"], function (module) {
                                 $scope.driveByStatusWidth = statusWidth + "%";
                                 $scope.driveByStatusTotalWidth = (statusWidth * (progresses.length)) + "%";
                                 $scope.driveByMap = {};
+                                $scope.driveByMap2 = {};
 
                                 for (var i = 0; i < data.length; i++) {
                                     if (!angular.isArray($scope.driveByMap[data[i].buildingProgress])) {
@@ -428,6 +440,19 @@ define(["./module"], function (module) {
                                     }
                                     $scope.driveByMap[data[i].buildingProgress].unshift(data[i]); //sortierung umkehren
                                 }
+
+
+                                for (var i = 0; i < data.length; i++) {
+                                    if (!angular.isArray($scope.driveByMap2[data[i].buildingProgress])) {
+                                        $scope.driveByMap2[data[i].buildingProgress] = [];
+                                    }
+                                    $scope.driveByMap2[data[i].buildingProgress].unshift(data[i]); //sortierung umkehren
+                                }
+
+                                $scope.driveByMap2[data[i].buildingProgress].unshift($scope.sendData);
+
+
+
 
                                 
                                 for (var i = 0; i < progresses.length; i++) {
@@ -441,18 +466,32 @@ define(["./module"], function (module) {
                                 }
 
                                 $scope.driveBy = data;
-                                $scope.selectedDriveBy = $scope.driveBy[0];
-                                
+
+                                $scope.selectedDriveBy = $scope.sendData;
                                 var slides = $scope.slides = [];
-                                
-                                angular.forEach($scope.selectedDriveBy.images, function(value, key, obj) {
+
+                                angular.forEach($scope.driveBy[0].images, function(value, key, obj) {
                                     slides.push({
                                         image: obj[key].uri,
                                         id: key
                                     });
                                 });
-                                
-                                $scope.drivebyLoading = false;
+
+
+                                $scope.driveBy2 = data;
+                                $scope.driveBy2.unshift($scope.sendData);
+
+                                $scope.selectedDriveBy2 = $scope.sendData;
+                                var slides = $scope.slides = [];
+
+                                angular.forEach($scope.driveBy2[0].images, function(value, key, obj) {
+                                    slides.push({
+                                        image: obj[key].uri,
+                                        id: key
+                                    });
+                                });
+
+                                console.log('2323232323');
 
                             }  else {
                                 $scope.drivebyLoading = false;
