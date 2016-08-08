@@ -152,6 +152,7 @@ define(["./module"], function (module) {
                         $scope.driveByStatusWidth = statusWidth + "%";
                         $scope.driveByStatusTotalWidth = (statusWidth * (countProgresses)) + "%";
                         $scope.driveByMap = {};
+                        $scope.driveByMapSpeichern = {};
                         $scope.showDrivebyContainer = true;
 
                         angular.forEach(args.data, function(value, key, obj) {
@@ -167,12 +168,12 @@ define(["./module"], function (module) {
                             } else {
                                 $scope.sendData[key] = value;
 
-                                // if (key == 'buildingProgress') {
-                                //     if (!angular.isArray($scope.driveByMap[value])) {
-                                //         $scope.driveByMap[value] = [];
-                                //     }
-                                //     $scope.driveByMap[value].unshift($scope.sendData);
-                                // }
+                                if (key == 'buildingProgress') {
+                                    if (!angular.isArray($scope.driveByMap[value])) {
+                                        $scope.driveByMap[value] = [];
+                                    }
+                                    $scope.driveByMap[value].unshift($scope.sendData);
+                                }
                             }
                         });
 
@@ -189,18 +190,18 @@ define(["./module"], function (module) {
                             j++;
                         }
 
-                        if (angular.equals({}, $scope.driveByMap)) {
-                            $scope.showDrivebyContainer = false;
-                        }
+                        // if (angular.equals({}, $scope.driveByMap)) {
+                        //     $scope.showDrivebyContainer = false;
+                        // }
 
-                        console.log('1111111', $scope.driveByMap);
+                        console.log('222', $scope.driveByMap);
                         //
                         // $scope.driveBy = $scope.sendData;
                         // $scope.selectedDriveBy = $scope.sendData;
 
 
 
-                        $scope.drivebyLoading = false;
+                        $scope.drivebyLoading = true;
 
                         $scope.infoData = {};
                         $scope.infoData.projectType = args.data.projectType;
@@ -474,6 +475,9 @@ define(["./module"], function (module) {
                     };
 
                     $scope.getMappedSpeichern = function(data) {
+
+                        console.log('aaaaaaaaaaaaa');
+
                         if (data.length > 0) {
                             $scope.drivebyLoading = true;
                             var progresses = [];
