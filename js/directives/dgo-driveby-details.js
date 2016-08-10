@@ -194,14 +194,18 @@ define(["./module"], function (module) {
                         //     $scope.showDrivebyContainer = false;
                         // }
 
-                        console.log('222', $scope.driveByMap);
+
                         //
                         // $scope.driveBy = $scope.sendData;
                         // $scope.selectedDriveBy = $scope.sendData;
 
 
 
-                        $scope.drivebyLoading = true;
+                        $scope.drivebyLoading = false;
+                        $scope.drivebyLoadingSpeichern = false;
+
+
+                        console.log( $scope.drivebyLoading);
 
                         $scope.infoData = {};
                         $scope.infoData.projectType = args.data.projectType;
@@ -421,7 +425,6 @@ define(["./module"], function (module) {
                         $drivebysService.getMapped(item.id).then(function (data) {
                             $scope.getMapped(data);
                             $scope.getMappedSpeichern(data);
-                            console.log(321);
                         }, function (error) { });
                     };
 
@@ -460,7 +463,10 @@ define(["./module"], function (module) {
                             }
 
                             $scope.driveBy = data;
-                            $scope.selectedDriveBy = $scope.sendData;
+
+                            console.log(3223);
+
+                            $scope.selectedDriveBy = $scope.driveBy[0];
                             var slides = $scope.slides = [];
 
                             angular.forEach($scope.driveBy[0].images, function(value, key, obj) {
@@ -475,11 +481,9 @@ define(["./module"], function (module) {
                     };
 
                     $scope.getMappedSpeichern = function(data) {
-
-                        console.log('aaaaaaaaaaaaa');
+                        $scope.drivebyLoadingSpeichern = true;
 
                         if (data.length > 0) {
-                            $scope.drivebyLoading = true;
                             var progresses = [];
                             angular.forEach($scope.bautenstand, function(value, key, obj) {
                                 progresses.push({
@@ -500,15 +504,17 @@ define(["./module"], function (module) {
                                 $scope.driveByMapSpeichern[data[i].buildingProgress].unshift(data[i]); //sortierung umkehren
                             }
 
-                            // $scope.driveByMapSpeichern[$scope.sendData.buildingProgress].unshift($scope.sendData);
+                            $scope.driveByMapSpeichern[$scope.sendData.buildingProgress].unshift($scope.sendData);
 
                             console.log($scope.driveByMapSpeichern);
                             console.log($scope.sendData);
                             console.log($scope.sendData.buildingProgress);
+                            console.log(progresses);
+                            console.log(data);
 
 
                             for (var i = 0; i < progresses.length; i++) {
-                                if (progresses[i].key == data[0].buildingProgress) {
+                                if (progresses[i].key == data[i].buildingProgress) {
                                     $scope.driveByStatus = progresses[i].key;
                                     $scope.driveByStatusIndex = i;
                                     var blockWidth = 100 / (progresses.length);
@@ -516,6 +522,9 @@ define(["./module"], function (module) {
                                     break;
                                 }
                             }
+                            console.log($scope.driveByStatusIndexSpeichern);
+                            console.log(222222222);
+
 
                             $scope.driveBySpeichern = data;
                             $scope.selectedDriveBySpeichern = $scope.sendData;
@@ -528,11 +537,13 @@ define(["./module"], function (module) {
                                 });
                             });
                         }  else {
-                            $scope.drivebyLoading = false;
+                            console.log('getMappedSpeichern');
+
+                            $scope.driveByMapSpeichern = {};
+                            $scope.driveByMapSpeichern[$scope.sendData.buildingProgress] = [];
+                            $scope.driveByMapSpeichern[$scope.sendData.buildingProgress].unshift($scope.sendData);
                         }
                     };
-
-
 
                     $scope.calcOffsets = function (status, statusIndex) {
                         if (statusIndex == $scope.driveByStatusIndex) {
@@ -543,14 +554,27 @@ define(["./module"], function (module) {
                         }
                     };
 
+                    $scope.calcOffsetsSpeichern = function (status, statusIndex) {
+                        if (statusIndex == $scope.driveByStatusIndex) {
+                            var driveBys = $scope.driveByMapSpeichern[status];
+                            if (driveBys && driveBys.length > 0) {
+                                $scope.driveByStatusOffsetSpeichern = ((driveBys.length - 1) / driveBys.length * 100) + "%";
+                            }
+                        }
+                    };
+
                     $scope.getDriveByOffset = function (status, index) {
                         var driveBys = $scope.driveByMap[status];
                         return (index / driveBys.length * 100) + "%";
                     };
 
+                    $scope.getDriveByOffsetSpeichern = function (status, index) {
+                        var driveBys = $scope.driveByMapSpeichern[status];
+                        return (index / driveBys.length * 100) + "%";
+                    };
+
                     $scope.setSelectedDriveBy = function (driveBy) {
                         $scope.selectedDriveBy = driveBy;
-
                         var slides = $scope.slides = [];
 
                         angular.forEach($scope.selectedDriveBy.images, function(value, key, obj) {
@@ -560,15 +584,48 @@ define(["./module"], function (module) {
                             });
                         });
 
-                        $scope.videoUrl = $scope.selectedDriveBy.videoUri;
+                        $scope.videoUrl = null;
 
-                        $scope.config = {
-                            sources: [
-                                {src: $sce.trustAsResourceUrl($scope.videoUrl), type: "video/mp4"},
-                                {src: $sce.trustAsResourceUrl($scope.videoUrl), type: "video/webm"},
-                                {src: $sce.trustAsResourceUrl($scope.videoUrl), type: "video/ogg"}
-                            ]
-                        };
+                        if ($scope.selectedDriveBy.videoUri) {
+                            $scope.videoUrl = $scope.selectedDriveBy.videoUri;
+
+                            $scope.config = {
+                                sources: [
+                                    {src: $sce.trustAsResourceUrl($scope.videoUrl), type: "video/mp4"},
+                                    {src: $sce.trustAsResourceUrl($scope.videoUrl), type: "video/webm"},
+                                    {src: $sce.trustAsResourceUrl($scope.videoUrl), type: "video/ogg"}
+                                ]
+                            };
+                        }
+                    };
+
+                    $scope.setSelectedDriveBySpeichern = function (driveBy) {
+
+                        console.log(driveBy);
+
+                        $scope.selectedDriveBySpeichern = driveBy;
+                        var slides = $scope.slidesSpeichern = [];
+
+                        angular.forEach($scope.selectedDriveBySpeichern.images, function(value, key, obj) {
+                            slides.push({
+                                image: obj[key].uri,
+                                id: key
+                            });
+                        });
+
+                        $scope.videoUrlSpeichern = null;
+
+                        if ($scope.selectedDriveBySpeichern.videoUri) {
+                            $scope.videoUrlSpeichern = $scope.selectedDriveBySpeichern.videoUri;
+
+                            $scope.configSpeichern = {
+                                sources: [
+                                    {src: $sce.trustAsResourceUrl($scope.videoUrlSpeichern), type: "video/mp4"},
+                                    {src: $sce.trustAsResourceUrl($scope.videoUrlSpeichern), type: "video/webm"},
+                                    {src: $sce.trustAsResourceUrl($scope.videoUrlSpeichern), type: "video/ogg"}
+                                ]
+                            };
+                        }
                     };
 
                     $scope.reset = function () {

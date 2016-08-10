@@ -195,14 +195,13 @@
                     Element noch nicht bewertet!
                 </div>
             </div>
-
-            <h4 class="top-50" style="text-decoration: underline; font-size: 11px; font-weight: bold;">DriveBy-Daten bisher</h4>
-
-            <div class="driveby-error" style="width: 155px;" ng-hide="drivebyLoading">
-                Es gibt keine Daten zu zeigen!
-            </div>
+            
+            <!--<div class="driveby-error" style="width: 155px;" ng-hide="drivebyLoading">-->
+                <!--Es gibt keine Daten zu zeigen!-->
+            <!--</div>-->
 
             <div id="driveby" ng-if="drivebyLoading">
+                <h4 class="top-50" style="text-decoration: underline; font-size: 11px; font-weight: bold;">DriveBy-Daten bisher</h4>
                 <div class="row">
                     <div style="overflow: hidden;" class="col-xs-6">
                         <uib-tabset justified="true">
@@ -231,10 +230,10 @@
                                 </div>
                             </uib-tab>
                             <uib-tab heading="Video">
-                                <div class="top-10" ng-if="!config.sources">
+                                <div class="top-10" ng-if="!videoUrl">
                                     <img src="img/video_dummy.png"/>
                                 </div>
-                                <div class="videogular-container" ng-if="config.sources">
+                                <div class="videogular-container" ng-if="videoUrl">
                                     <videogular>
                                         <vg-media vg-src="config.sources" vg-type="video" vg-native-controls="true"></vg-media>
                                     </videogular>
@@ -359,8 +358,15 @@
 
                 </div>
             </div>
-            <div id="driveby2" class="top-50">
-                <h4 style="text-decoration: underline; font-size: 11px; font-weight: bold;"> DriveBy-Daten nach Speichern2</h4>
+
+
+
+            <!--<div class="driveby-error" style="width: 155px;" ng-hide="drivebyLoadingSpeichern">-->
+                <!--Es gibt keine Daten zu zeigen!-->
+            <!--</div>-->
+
+            <div id="driveby2" ng-if="drivebyLoadingSpeichern" class="top-50">
+                <h4 style="text-decoration: underline; font-size: 11px; font-weight: bold;"> DriveBy-Daten nach Speichern </h4>
                 <div class="row">
                     <div style="overflow: hidden;" class="col-xs-6">
                         <uib-tabset justified="true">
@@ -368,7 +374,7 @@
                                 <div>
                                     <div>
                                         <uib-carousel active="active" interval="myInterval" no-wrap="noWrapSlides">
-                                            <uib-slide ng-repeat="slide in slides track by slide.id" index="slide.id">
+                                            <uib-slide ng-repeat="slide in slidesSpeichern track by slide.id" index="slide.id">
                                                 <img ng-src="{{slide.image}}" style="margin:auto;">
                                                 <div class="carousel-caption">
                                                     <h4>Slide {{slide.id}}</h4>
@@ -380,12 +386,12 @@
                                 </div>
                             </uib-tab>
                             <uib-tab heading="Video">
-                                <div class="top-10" ng-if="!config.sources">
+                                <div class="top-10" ng-if="!videoUrlSpeichern">
                                     <img src="img/video_dummy.png"/>
                                 </div>
-                                <div class="videogular-container" ng-if="config.sources">
+                                <div class="videogular-container" ng-if="videoUrlSpeichern">
                                     <videogular>
-                                        <vg-media vg-src="config.sources" vg-type="video" vg-native-controls="true"></vg-media>
+                                        <vg-media vg-src="configSpeichern.sources" vg-type="video" vg-native-controls="true"></vg-media>
                                     </videogular>
                                 </div>
                             </uib-tab>
@@ -397,7 +403,7 @@
                                 Datum:
                             </div>
                             <div class="col-xs-5 nopad-l">
-                                {{selectedDriveBy.dateCreated}}
+                                {{selectedDriveBySpeichern.dateCreated}}
                             </div>
                         </div>
                         <div class="row top-10">
@@ -405,7 +411,7 @@
                                 Zustand:
                             </div>
                             <div class="col-xs-5 nopad-l">
-                                {{zustandFront[selectedDriveBy.projectType]}}
+                                {{zustandFront[selectedDriveBySpeichern.projectType]}}
                             </div>
                         </div>
                         <div class="row">
@@ -413,7 +419,7 @@
                                 Objekttyp:
                             </div>
                             <div class="col-xs-5 nopad-l">
-                                {{objekttypFront[selectedDriveBy.objectType]}}
+                                {{objekttypFront[selectedDriveBySpeichern.objectType]}}
                             </div>
                         </div>
                         <div class="row">
@@ -421,7 +427,7 @@
                                 Denkmalschutz:
                             </div>
                             <div class="col-xs-5 nopad-l">
-                                {{denkmalschutzFront[selectedDriveBy.protectedBuilding]}}
+                                {{denkmalschutzFront[selectedDriveBySpeichern.protectedBuilding]}}
                             </div>
                         </div>
                         <div class="row">
@@ -429,7 +435,7 @@
                                 Bautenstand:
                             </div>
                             <div class="col-xs-5 nopad-l">
-                                {{bautenstandFront[selectedDriveBy.buildingProgress]}}
+                                {{bautenstandFront[selectedDriveBySpeichern.buildingProgress]}}
                             </div>
                         </div>
                         <div class="row">
@@ -437,7 +443,7 @@
                                 Umgebende Bebauung:
                             </div>
                             <div class="col-xs-5 nopad-l">
-                                {{umgebendeFront[selectedDriveBy.objectStandardEnv]}}
+                                {{umgebendeFront[selectedDriveBySpeichern.objectStandardEnv]}}
                             </div>
                         </div>
                         <div class="row">
@@ -445,7 +451,7 @@
                                 Leerstand Umgebung:
                             </div>
                             <div class="col-xs-5 nopad-l">
-                                {{leerstandFront[selectedDriveBy.vacancyEnv]}}
+                                {{leerstandFront[selectedDriveBySpeichern.vacancyEnv]}}
                             </div>
                         </div>
                         <div class="row">
@@ -453,7 +459,7 @@
                                 Verkehrsanbindung ÖPNV:
                             </div>
                             <div class="col-xs-5 nopad-l">
-                                {{verkehrsanbindungFront[selectedDriveBy.publicTransport]}}
+                                {{verkehrsanbindungFront[selectedDriveBySpeichern.publicTransport]}}
                             </div>
                         </div>
                         <div class="row">
@@ -461,7 +467,7 @@
                                 Nähe Versorgungseinrichtungen:
                             </div>
                             <div class="col-xs-5 nopad-l">
-                                {{versorgungseinrichtungFront[selectedDriveBy.nearbySupply]}}
+                                {{versorgungseinrichtungFront[selectedDriveBySpeichern.nearbySupply]}}
                             </div>
                         </div>
                         <div class="row">
@@ -469,7 +475,7 @@
                                 Nähe Erholungseinrichtungen:
                             </div>
                             <div class="col-xs-5 nopad-l">
-                                {{erholungsmoglichkeitenFront[selectedDriveBy.nearbyRecreation]}}
+                                {{erholungsmoglichkeitenFront[selectedDriveBySpeichern.nearbyRecreation]}}
                             </div>
                         </div>
                     </div>
@@ -488,23 +494,23 @@
                             <div class="driveby-line" style="width:{{driveByStatusBarWidth}}"></div>
                         </div>
                         <div class="driveby-status-helper" ng-repeat="(key, value) in bautenstand track by $index"
-                             style="width:{{driveByStatusWidth}}" ng-init="calcOffsets(value,$index)">
-                            <div ng-if="$index==driveByStatusIndex && driveByStatusOffset"
+                             style="width:{{driveByStatusWidth}}" ng-init="calcOffsetsSpeichern(value,$index)">
+                            <div ng-if="$index==driveByStatusIndex && driveByStatusOffsetSpeichern"
                                  class="driveby-status-progressbar"
-                                 style="width:{{driveByStatusOffset}};right:-{{driveByStatusOffset}}"></div>
-                            <div ng-if="$index==driveByStatusIndex && driveByStatusOffset" class="driveby-status-line"
-                                 style="width:{{driveByStatusOffset}};right:-{{driveByStatusOffset}}"></div>
+                                 style="width:{{driveByStatusOffsetSpeichern}};right:-{{driveByStatusOffsetSpeichern}}"></div>
+                            <div ng-if="$index==driveByStatusIndex && driveByStatusOffsetSpeichern" class="driveby-status-line"
+                                 style="width:{{driveByStatusOffsetSpeichern}};right:-{{driveByStatusOffsetSpeichern}}"></div>
                             <div class="driveby-status-dot" ng-class="{'active':$index<=driveByStatusIndex}"></div>
                             <div class="driveby-status-arrow"></div>
                             <div class="driveby-status text-small" ng-class="{'active':$index<=driveByStatusIndex}">
                                 {{key}}
                             </div>
                             <div class="driveby-dot"
-                                 style="right:-{{getDriveByOffset(value,$index)}}"
+                                 style="right:-{{getDriveByOffsetSpeichern(value,$index)}}"
                                  ng-class="{'active': selectedDriveBySpeichern.transactionHash==driveBy.transactionHash}"
                                  ng-repeat="driveBy in driveByMapSpeichern[value] track by $index"
                                  uib-tooltip="{{driveBy.dateCreated|date}}"
-                                 ng-click="setSelectedDriveBy(driveBy)">
+                                 ng-click="setSelectedDriveBySpeichern(driveBy)">
                             </div>
                         </div>
                     </div>
