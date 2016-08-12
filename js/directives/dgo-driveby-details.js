@@ -177,35 +177,9 @@ define(["./module"], function (module) {
                             }
                         });
 
-                        var j = 0;
-                        for(var i in progresses) {
-                            if (progresses[i] == $scope.sendData.buildingProgress) {
-                                $scope.driveByStatus = progresses[i];
-                                $scope.driveByStatusIndex = j;
-                                var blockWidth = 100 / (countProgresses);
-                                $scope.driveByStatusBarWidth = (blockWidth * ($scope.driveByStatusIndex)).toFixed(2) + "%";
-                                break;
-                            }
-
-                            j++;
-                        }
-
-                        // if (angular.equals({}, $scope.driveByMap)) {
-                        //     $scope.showDrivebyContainer = false;
-                        // }
-
-
-                        //
-                        // $scope.driveBy = $scope.sendData;
-                        // $scope.selectedDriveBy = $scope.sendData;
-
-
 
                         $scope.drivebyLoading = false;
                         $scope.drivebyLoadingSpeichern = false;
-
-
-                        console.log( $scope.drivebyLoading);
 
                         $scope.infoData = {};
                         $scope.infoData.projectType = args.data.projectType;
@@ -463,9 +437,6 @@ define(["./module"], function (module) {
                             }
 
                             $scope.driveBy = data;
-
-                            console.log(3223);
-
                             $scope.selectedDriveBy = $scope.driveBy[0];
                             var slides = $scope.slides = [];
 
@@ -506,13 +477,6 @@ define(["./module"], function (module) {
 
                             $scope.driveByMapSpeichern[$scope.sendData.buildingProgress].unshift($scope.sendData);
 
-                            console.log($scope.driveByMapSpeichern);
-                            console.log($scope.sendData);
-                            console.log($scope.sendData.buildingProgress);
-                            console.log(progresses);
-                            console.log(data);
-
-
                             for (var i = 0; i < progresses.length; i++) {
                                 if (progresses[i].key == data[i].buildingProgress) {
                                     $scope.driveByStatus = progresses[i].key;
@@ -522,20 +486,31 @@ define(["./module"], function (module) {
                                     break;
                                 }
                             }
-                            console.log($scope.driveByStatusIndexSpeichern);
-                            console.log(222222222);
-
 
                             $scope.driveBySpeichern = data;
                             $scope.selectedDriveBySpeichern = $scope.sendData;
-                            var slides = $scope.slides = [];
+                            var slides = $scope.slidesSpeichern = [];
 
-                            angular.forEach($scope.driveBySpeichern[0].images, function(value, key, obj) {
-                                slides.push({
-                                    image: obj[key].uri,
-                                    id: key
-                                });
+                            angular.forEach($scope.images, function(value, key, obj) {
+                                console.log(obj[key].accept);
+                                console.log('111');
+
+                                if (obj[key].accept) {
+                                    slides.push({
+                                        image: 'data:image/png;base64,' + obj[key].base64,
+                                        text: $scope.titlesImage[obj[key].index-1],
+                                        id: key
+                                    });
+                                }
                             });
+
+                            // angular.forEach($scope.driveBySpeichern[0].images, function(value, key, obj) {
+                            //     slides.push({
+                            //         image: obj[key].uri,
+                            //         id: key
+                            //     });
+                            // });
+
                         }  else {
                             console.log('getMappedSpeichern');
 
@@ -602,16 +577,29 @@ define(["./module"], function (module) {
                     $scope.setSelectedDriveBySpeichern = function (driveBy) {
 
                         console.log(driveBy);
+                        console.log('XL');
 
                         $scope.selectedDriveBySpeichern = driveBy;
                         var slides = $scope.slidesSpeichern = [];
 
-                        angular.forEach($scope.selectedDriveBySpeichern.images, function(value, key, obj) {
-                            slides.push({
-                                image: obj[key].uri,
-                                id: key
+                        if ($scope.selectedDriveBySpeichern.base64Images) {
+                            angular.forEach($scope.selectedDriveBySpeichern.base64Images, function(value, key, obj) {
+                                slides.push({
+                                    image: 'data:image/png;base64,' + obj[key].base64,
+                                    text: $scope.titlesImage[obj[key].index-1],
+                                    id: key
+                                });
                             });
-                        });
+                        } else {
+                            angular.forEach($scope.selectedDriveBySpeichern.images, function(value, key, obj) {
+                                slides.push({
+                                    image: obj[key].uri,
+                                    id: key
+                                });
+                            });
+                        }
+
+
 
                         $scope.videoUrlSpeichern = null;
 
