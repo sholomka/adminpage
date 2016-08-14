@@ -207,6 +207,7 @@ define(["./module"], function (module) {
                         $scope.images = [];
                         $scope.images = args.data.base64Images;
                         $scope.videoUrl = "data:video/mp4;base64," + args.data.base64Video;
+                        $scope.videoUrlSpeichern = "data:video/mp4;base64," + args.data.base64Video;
                         $scope.base64Video = args.data.base64Video;
                         $scope.daten = {
                             accept: false,
@@ -661,6 +662,26 @@ define(["./module"], function (module) {
                                     $scope.undoForm('videoaccept'+index);
                                 }
 
+
+
+
+                                var videoUrlSpeichern = $scope.videoUrlSpeichern;
+
+                                if ($scope.video[index].accept == false) {
+                                    videoUrlSpeichern = null;
+                                }
+
+                                console.log(videoUrlSpeichern);
+                                $scope.configSpeichern = {
+                                    sources: [
+                                        {src: $sce.trustAsResourceUrl(videoUrlSpeichern), type: "video/mp4"},
+                                        {src: $sce.trustAsResourceUrl(videoUrlSpeichern), type: "video/webm"},
+                                        {src: $sce.trustAsResourceUrl(videoUrlSpeichern), type: "video/ogg"}
+                                    ]
+                                };
+
+
+
                                 break;
                             case 'daten':
                                 if (!accept.hasClass('active')) {
@@ -683,6 +704,18 @@ define(["./module"], function (module) {
                                     $scope.images[index].accept = false;
                                     $scope.undoForm('imagesaccept'+index);
                                 }
+
+                                var slides = $scope.slidesSpeichern = [];
+
+                                angular.forEach($scope.images, function(value, key, obj) {
+                                    if (obj[key].accept) {
+                                        slides.push({
+                                            image: 'data:image/png;base64,' + obj[key].base64,
+                                            text: $scope.titlesImage[obj[key].index-1],
+                                            id: key
+                                        });
+                                    }
+                                });
 
                                 $rootScope.$broadcast('accept2', {
                                     index: index,
