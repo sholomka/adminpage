@@ -181,6 +181,9 @@ define(["./module"], function (module) {
                         $scope.drivebyLoading = false;
                         $scope.drivebyLoadingSpeichern = false;
 
+
+
+
                         $scope.infoData = {};
                         $scope.infoData.projectType = args.data.projectType;
                         $scope.infoData.objectType = args.data.objectType;
@@ -203,11 +206,15 @@ define(["./module"], function (module) {
                         $sessionStorage.formchanges = [];
                         $sessionStorage.highlightItem = '';
 
+
+                        console.log( 'highlightItem',  $sessionStorage.highlightItem);
+
                         $scope.reset();
                         $scope.images = [];
                         $scope.images = args.data.base64Images;
                         $scope.videoUrl = "data:video/mp4;base64," + args.data.base64Video;
                         $scope.videoUrlSpeichern = "data:video/mp4;base64," + args.data.base64Video;
+                        $scope.showVideo = true;
                         $scope.base64Video = args.data.base64Video;
                         $scope.daten = {
                             accept: false,
@@ -357,13 +364,16 @@ define(["./module"], function (module) {
                                 });
                             });
 
-                            console.log('detailItemneue', $sessionStorage.highlightItem);
+                            $timeout(function () {
+                                console.log($sessionStorage.highlightItem);
+                                console.log($sessionStorage.highlightItem == '');
 
-                            if ($sessionStorage.highlightItem != '' && angular.isObject($scope.sendData)) {
-                                $sucheService.loadItem($sessionStorage.highlightItemID).then(function (data) {
-                                    $scope.highlightMarker(false, data);
-                                });
-                            }
+                                if ($sessionStorage.highlightItem != '' && angular.isObject($scope.sendData)) {
+                                    $sucheService.loadItem($sessionStorage.highlightItemID).then(function (data) {
+                                        $scope.highlightMarker(false, data);
+                                    });
+                                }
+                            }, 500);
                         }
                     });
 
@@ -405,6 +415,8 @@ define(["./module"], function (module) {
 
 
                     $scope.getMapped = function(data) {
+
+
                         if (data.length > 0) {
                             $scope.drivebyLoading = true;
                             var progresses = [];
@@ -576,20 +588,18 @@ define(["./module"], function (module) {
                     };
 
                     $scope.setSelectedDriveBySpeichern = function (driveBy) {
-
-                        console.log(driveBy);
-                        console.log('XL');
-
                         $scope.selectedDriveBySpeichern = driveBy;
                         var slides = $scope.slidesSpeichern = [];
 
                         if ($scope.selectedDriveBySpeichern.base64Images) {
-                            angular.forEach($scope.selectedDriveBySpeichern.base64Images, function(value, key, obj) {
-                                slides.push({
-                                    image: 'data:image/png;base64,' + obj[key].base64,
-                                    text: $scope.titlesImage[obj[key].index-1],
-                                    id: key
-                                });
+                            angular.forEach($scope.images, function(value, key, obj) {
+                                if (obj[key].accept) {
+                                    slides.push({
+                                        image: 'data:image/png;base64,' + obj[key].base64,
+                                        text: $scope.titlesImage[obj[key].index-1],
+                                        id: key
+                                    });
+                                }
                             });
                         } else {
                             angular.forEach($scope.selectedDriveBySpeichern.images, function(value, key, obj) {
@@ -600,18 +610,40 @@ define(["./module"], function (module) {
                             });
                         }
 
+                        if ($scope.selectedDriveBySpeichern.base64Video) {
 
+                            var videoUrlSpeichern = $scope.videoUrlSpeichern;
 
-                        $scope.videoUrlSpeichern = null;
-
-                        if ($scope.selectedDriveBySpeichern.videoUri) {
-                            $scope.videoUrlSpeichern = $scope.selectedDriveBySpeichern.videoUri;
+                            if ($scope.video[0].accept == false) {
+                                videoUrlSpeichern = null;
+                                $scope.showVideo = false;
+                            } else {
+                                $scope.showVideo = true;
+                            }
 
                             $scope.configSpeichern = {
                                 sources: [
-                                    {src: $sce.trustAsResourceUrl($scope.videoUrlSpeichern), type: "video/mp4"},
-                                    {src: $sce.trustAsResourceUrl($scope.videoUrlSpeichern), type: "video/webm"},
-                                    {src: $sce.trustAsResourceUrl($scope.videoUrlSpeichern), type: "video/ogg"}
+                                    {src: $sce.trustAsResourceUrl(videoUrlSpeichern), type: "video/mp4"},
+                                    {src: $sce.trustAsResourceUrl(videoUrlSpeichern), type: "video/webm"},
+                                    {src: $sce.trustAsResourceUrl(videoUrlSpeichern), type: "video/ogg"}
+                                ]
+                            };
+                        } else {
+                            var videoUrlSpeichern = null;
+
+                            
+                            if ($scope.selectedDriveBySpeichern.videoUri) {
+                                videoUrlSpeichern = $scope.selectedDriveBySpeichern.videoUri;
+                                $scope.showVideo = true;
+                            } else {
+                                $scope.showVideo = false;
+                            }
+
+                            $scope.configSpeichern = {
+                                sources: [
+                                    {src: $sce.trustAsResourceUrl(videoUrlSpeichern), type: "video/mp4"},
+                                    {src: $sce.trustAsResourceUrl(videoUrlSpeichern), type: "video/webm"},
+                                    {src: $sce.trustAsResourceUrl(videoUrlSpeichern), type: "video/ogg"}
                                 ]
                             };
                         }
@@ -662,16 +694,15 @@ define(["./module"], function (module) {
                                     $scope.undoForm('videoaccept'+index);
                                 }
 
-
-
-
                                 var videoUrlSpeichern = $scope.videoUrlSpeichern;
 
                                 if ($scope.video[index].accept == false) {
                                     videoUrlSpeichern = null;
+                                    $scope.showVideo = false;
+                                } else {
+                                    $scope.showVideo = true;
                                 }
 
-                                console.log(videoUrlSpeichern);
                                 $scope.configSpeichern = {
                                     sources: [
                                         {src: $sce.trustAsResourceUrl(videoUrlSpeichern), type: "video/mp4"},
@@ -679,8 +710,6 @@ define(["./module"], function (module) {
                                         {src: $sce.trustAsResourceUrl(videoUrlSpeichern), type: "video/ogg"}
                                     ]
                                 };
-
-
 
                                 break;
                             case 'daten':
@@ -716,6 +745,11 @@ define(["./module"], function (module) {
                                         });
                                     }
                                 });
+
+                                console.log(slides);
+                                console.log($scope.slidesSpeichern);
+
+
 
                                 $rootScope.$broadcast('accept2', {
                                     index: index,

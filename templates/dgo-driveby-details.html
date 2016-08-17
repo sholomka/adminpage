@@ -86,19 +86,22 @@
                 </div>
             </div>
 
-            <h4 class="top-50" style="text-decoration: underline; font-size: 11px; font-weight: bold;">Video</h4>
-            <div class="foto-container">
-                <div ng-repeat="videoItem in video" class="video" >
-                    <img id="video" ng-src="{{videoItem.thumbUrl}}" ng-click="Lightbox.openModal(video, $index)" class="img-thumbnail">
-                    <div class="nav-list">
-                        <a class="accept" ng-class="videoItem.accept ? 'active' : ''" ng-click="accept($event, $index, 'video')" ng-dblclick="acceptDblClick($event, $index, 'video')"></a>
-                        <a class="complaint" ng-class="videoItem.complaint ? 'active' : ''" ng-click="complaint($event, $index, 'video')"></a>
-                    </div>
-                    <div class="driveby-error" ng-show="videoItem.error">
-                        Element noch nicht bewertet!
+            <div ng-if="base64Video">
+                <h4 class="top-50" style="text-decoration: underline; font-size: 11px; font-weight: bold;">Video</h4>
+                <div class="foto-container">
+                    <div ng-repeat="videoItem in video" class="video" >
+                        <img id="video" ng-src="{{videoItem.thumbUrl}}" ng-click="Lightbox.openModal(video, $index)" class="img-thumbnail">
+                        <div class="nav-list">
+                            <a class="accept" ng-class="videoItem.accept ? 'active' : ''" ng-click="accept($event, $index, 'video')" ng-dblclick="acceptDblClick($event, $index, 'video')"></a>
+                            <a class="complaint" ng-class="videoItem.complaint ? 'active' : ''" ng-click="complaint($event, $index, 'video')"></a>
+                        </div>
+                        <div class="driveby-error" ng-show="videoItem.error">
+                            Element noch nicht bewertet!
+                        </div>
                     </div>
                 </div>
             </div>
+
 
             <div class="table-responsive daten-container top-50">
                 <h4 style="text-decoration: underline; font-size: 11px; font-weight: bold;">Daten</h4>
@@ -374,7 +377,7 @@
                                 <div>
                                     <div>
                                         <uib-carousel active="active" interval="myInterval" no-wrap="noWrapSlides">
-                                            <uib-slide ng-repeat="slide in slidesSpeichern track by slide.id" index="slide.id">
+                                            <uib-slide ng-repeat="slide in slidesSpeichern track by $index" index="$index">
                                                 <img ng-src="{{slide.image}}" style="margin:auto;">
                                                 <div class="carousel-caption">
                                                     <h4>Slide {{slide.id}}</h4>
@@ -386,10 +389,10 @@
                                 </div>
                             </uib-tab>
                             <uib-tab heading="Video">
-                                <div class="top-10" ng-if="!videoUrlSpeichern">
+                                <div class="top-10" ng-if="!showVideo">
                                     <img src="img/video_dummy.png"/>
                                 </div>
-                                <div class="videogular-container" ng-if="videoUrlSpeichern">
+                                <div class="videogular-container" ng-if="showVideo">
                                     <videogular>
                                         <vg-media vg-src="configSpeichern.sources" vg-type="video" vg-native-controls="true"></vg-media>
                                     </videogular>
