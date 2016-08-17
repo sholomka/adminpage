@@ -176,14 +176,9 @@ define(["./module"], function (module) {
                                 }
                             }
                         });
-
-
+                        
                         $scope.drivebyLoading = false;
                         $scope.drivebyLoadingSpeichern = false;
-
-
-
-
                         $scope.infoData = {};
                         $scope.infoData.projectType = args.data.projectType;
                         $scope.infoData.objectType = args.data.objectType;
@@ -365,9 +360,6 @@ define(["./module"], function (module) {
                             });
 
                             $timeout(function () {
-                                console.log($sessionStorage.highlightItem);
-                                console.log($sessionStorage.highlightItem == '');
-
                                 if ($sessionStorage.highlightItem != '' && angular.isObject($scope.sendData)) {
                                     $sucheService.loadItem($sessionStorage.highlightItemID).then(function (data) {
                                         $scope.highlightMarker(false, data);
@@ -415,8 +407,6 @@ define(["./module"], function (module) {
 
 
                     $scope.getMapped = function(data) {
-
-
                         if (data.length > 0) {
                             $scope.drivebyLoading = true;
                             var progresses = [];
@@ -516,17 +506,7 @@ define(["./module"], function (module) {
                                     });
                                 }
                             });
-
-                            // angular.forEach($scope.driveBySpeichern[0].images, function(value, key, obj) {
-                            //     slides.push({
-                            //         image: obj[key].uri,
-                            //         id: key
-                            //     });
-                            // });
-
                         }  else {
-                            console.log('getMappedSpeichern');
-
                             $scope.driveByMapSpeichern = {};
                             $scope.driveByMapSpeichern[$scope.sendData.buildingProgress] = [];
                             $scope.driveByMapSpeichern[$scope.sendData.buildingProgress].unshift($scope.sendData);
@@ -745,12 +725,7 @@ define(["./module"], function (module) {
                                         });
                                     }
                                 });
-
-                                console.log(slides);
-                                console.log($scope.slidesSpeichern);
-
-
-
+                                
                                 $rootScope.$broadcast('accept2', {
                                     index: index,
                                     accept:  $scope.images[index].accept
