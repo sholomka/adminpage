@@ -627,6 +627,8 @@ define(["./module"], function (module) {
                                 ]
                             };
                         }
+
+                        console.log($scope.selectedDriveBySpeichern);
                     };
 
                     $scope.reset = function () {
@@ -674,22 +676,28 @@ define(["./module"], function (module) {
                                     $scope.undoForm('videoaccept'+index);
                                 }
 
-                                var videoUrlSpeichern = $scope.videoUrlSpeichern;
 
-                                if ($scope.video[index].accept == false) {
-                                    videoUrlSpeichern = null;
-                                    $scope.showVideo = false;
-                                } else {
-                                    $scope.showVideo = true;
+
+                                if ($scope.selectedDriveBySpeichern.transactionHash == $scope.sendData.transactionHash) {
+                                    var videoUrlSpeichern = $scope.videoUrlSpeichern;
+
+                                    if ($scope.video[index].accept == false) {
+                                        videoUrlSpeichern = null;
+                                        $scope.showVideo = false;
+                                    } else  {
+                                        $scope.showVideo = true;
+                                    }
+
+                                    $scope.configSpeichern = {
+                                        sources: [
+                                            {src: $sce.trustAsResourceUrl(videoUrlSpeichern), type: "video/mp4"},
+                                            {src: $sce.trustAsResourceUrl(videoUrlSpeichern), type: "video/webm"},
+                                            {src: $sce.trustAsResourceUrl(videoUrlSpeichern), type: "video/ogg"}
+                                        ]
+                                    };
                                 }
 
-                                $scope.configSpeichern = {
-                                    sources: [
-                                        {src: $sce.trustAsResourceUrl(videoUrlSpeichern), type: "video/mp4"},
-                                        {src: $sce.trustAsResourceUrl(videoUrlSpeichern), type: "video/webm"},
-                                        {src: $sce.trustAsResourceUrl(videoUrlSpeichern), type: "video/ogg"}
-                                    ]
-                                };
+
 
                                 break;
                             case 'daten':
@@ -714,18 +722,24 @@ define(["./module"], function (module) {
                                     $scope.undoForm('imagesaccept'+index);
                                 }
 
-                                var slides = $scope.slidesSpeichern = [];
+                                if ($scope.selectedDriveBySpeichern.transactionHash == $scope.sendData.transactionHash) {
+                                    var slides = $scope.slidesSpeichern = [];
 
-                                angular.forEach($scope.images, function(value, key, obj) {
-                                    if (obj[key].accept) {
-                                        slides.push({
-                                            image: 'data:image/png;base64,' + obj[key].base64,
-                                            text: $scope.titlesImage[obj[key].index-1],
-                                            id: key
-                                        });
-                                    }
-                                });
-                                
+                                    console.log($scope.selectedDriveBySpeichern.transactionHash);
+                                    console.log($scope.sendData.transactionHash);
+                                    console.log(($scope.selectedDriveBySpeichern.transactionHash == $scope.sendData.transactionHash));
+
+                                    angular.forEach($scope.images, function(value, key, obj) {
+                                        if (obj[key].accept) {
+                                            slides.push({
+                                                image: 'data:image/png;base64,' + obj[key].base64,
+                                                text: $scope.titlesImage[obj[key].index-1],
+                                                id: key
+                                            });
+                                        }
+                                    });
+                                }
+
                                 $rootScope.$broadcast('accept2', {
                                     index: index,
                                     accept:  $scope.images[index].accept

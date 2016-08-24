@@ -496,62 +496,7 @@ define(["./module"], function (module) {
                             $scope.getMappedSpeichern(data);
                         }, function (error) { });
 
-                        /*$drivebysService.getMapped(item.id).then(function (data) {
-                            if (data.length > 0) {
-                                var progresses = [];
-                                angular.forEach($scope.bautenstand, function(value, key, obj) {
-                                    progresses.push({
-                                        key: value,
-                                        name: key
-                                    });
-                                });
 
-                                var statusWidth = Math.floor(100 / (progresses.length + 1));
-                                $scope.driveByStatusWidth = statusWidth + "%";
-                                $scope.driveByStatusTotalWidth = (statusWidth * (progresses.length)) + "%";
-                                $scope.driveByMap = {};
-
-                                for (var i = 0; i < data.length; i++) {
-                                    if (!angular.isArray($scope.driveByMap[data[i].buildingProgress])) {
-                                        $scope.driveByMap[data[i].buildingProgress] = [];
-                                    }
-                                    $scope.driveByMap[data[i].buildingProgress].unshift(data[i]); //sortierung umkehren
-                                }
-
-                                // $scope.driveByMap[$scope.sendData.buildingProgress].unshift($scope.sendData);
-
-                                console.log('driveByMap3', $scope.driveByMap);
-                                console.log($scope.sendData.state);
-
-                                for (var i = 0; i < progresses.length; i++) {
-                                    if (progresses[i].key == data[0].buildingProgress) {
-                                        $scope.driveByStatus = progresses[i].key;
-                                        $scope.driveByStatusIndex = i;
-                                        var blockWidth = 100 / (progresses.length);
-                                        $scope.driveByStatusBarWidth = (blockWidth * ($scope.driveByStatusIndex)).toFixed(2) + "%";
-                                        break;
-                                    }
-                                }
-
-                                $scope.driveBy = data;
-                                $scope.selectedDriveBy = $scope.driveBy[0];
-
-                                var slides = $scope.slides = [];
-
-                                angular.forEach($scope.selectedDriveBy.images, function(value, key, obj) {
-                                    slides.push({
-                                        image: obj[key].uri,
-                                        id: key
-                                    });
-                                });
-
-                                $scope.drivebyLoading = false;
-
-                            }  else {
-                                $scope.drivebyLoading = false;
-                            }
-
-                        }, function (error) { });*/
                     };
 
                     $scope.getMapped = function(data) {
@@ -623,10 +568,17 @@ define(["./module"], function (module) {
                                 if (!angular.isArray($scope.driveByMapSpeichern[data[i].buildingProgress])) {
                                     $scope.driveByMapSpeichern[data[i].buildingProgress] = [];
                                 }
-                                $scope.driveByMapSpeichern[data[i].buildingProgress].unshift(data[i]); //sortierung umkehren
+
+                                if ($scope.sendData.transactionHash == data[i].transactionHash) {
+                                    $scope.driveByMapSpeichern[data[i].buildingProgress].unshift($scope.sendData); //sortierung umkehren
+                                } else {
+                                    $scope.driveByMapSpeichern[data[i].buildingProgress].unshift(data[i]); //sortierung umkehren
+                                }
                             }
 
-                            $scope.driveByMapSpeichern[$scope.sendData.buildingProgress].unshift($scope.sendData);
+                            if ($scope.sendData.state == 'NEW') {
+                                $scope.driveByMapSpeichern[$scope.sendData.buildingProgress].unshift($scope.sendData);
+                            }
 
                             for (var i = 0; i < progresses.length; i++) {
                                 if (progresses[i].key == data[i].buildingProgress) {
@@ -670,8 +622,22 @@ define(["./module"], function (module) {
                         }
                     };
 
+                    $scope.calcOffsetsSpeichern = function (status, statusIndex) {
+                        if (statusIndex == $scope.driveByStatusIndex) {
+                            var driveBys = $scope.driveByMapSpeichern[status];
+                            if (driveBys && driveBys.length > 0) {
+                                $scope.driveByStatusOffsetSpeichern = ((driveBys.length - 1) / driveBys.length * 100) + "%";
+                            }
+                        }
+                    };
+
                     $scope.getDriveByOffset = function (status, index) {
                         var driveBys = $scope.driveByMap[status];
+                        return (index / driveBys.length * 100) + "%";
+                    };
+
+                    $scope.getDriveByOffsetSpeichern = function (status, index) {
+                        var driveBys = $scope.driveByMapSpeichern[status];
                         return (index / driveBys.length * 100) + "%";
                     };
 
@@ -703,6 +669,7 @@ define(["./module"], function (module) {
 
                     $scope.setSelectedDriveBySpeichern = function (driveBy) {
                         $scope.selectedDriveBySpeichern = driveBy;
+
                         var slides = $scope.slidesSpeichern = [];
 
                         if ($scope.selectedDriveBySpeichern.base64Images) {
@@ -716,12 +683,23 @@ define(["./module"], function (module) {
                                 }
                             });
                         } else {
-                            angular.forEach($scope.selectedDriveBySpeichern.images, function(value, key, obj) {
-                                slides.push({
-                                    image: obj[key].uri,
-                                    id: key
+                            if ($scope.selectedDriveBySpeichern.transactionHash == $scope.sendData.transactionHash) {
+                                angular.forEach($scope.images, function(value, key, obj) {
+                                    if (obj[key].accept) {
+                                        slides.push({
+                                            image: obj[key].uri,
+                                            id: key
+                                        });
+                                    }
                                 });
-                            });
+                            } else {
+                                angular.forEach($scope.selectedDriveBySpeichern.images, function(value, key, obj) {
+                                    slides.push({
+                                        image: obj[key].uri,
+                                        id: key
+                                    });
+                                });
+                            }
                         }
 
                         if ($scope.selectedDriveBySpeichern.base64Video) {
@@ -753,6 +731,15 @@ define(["./module"], function (module) {
                                 $scope.showVideo = false;
                             }
 
+                            if ($scope.selectedDriveBySpeichern.transactionHash == $scope.sendData.transactionHash) {
+                                if ($scope.video[0].accept == false) {
+                                    videoUrlSpeichern = null;
+                                    $scope.showVideo = false;
+                                } else {
+                                    $scope.showVideo = true;
+                                }
+                            }
+
                             $scope.configSpeichern = {
                                 sources: [
                                     {src: $sce.trustAsResourceUrl(videoUrlSpeichern), type: "video/mp4"},
@@ -761,32 +748,12 @@ define(["./module"], function (module) {
                                 ]
                             };
                         }
+
+                        console.log($scope.selectedDriveBySpeichern);
+
                     };
 
-/*                    $scope.setSelectedDriveBy = function (driveBy) {
-                        $scope.selectedDriveBy = driveBy;
 
-                        var slides = $scope.slides = [];
-
-                        angular.forEach($scope.selectedDriveBy.images, function(value, key, obj) {
-                            slides.push({
-                                image: obj[key].uri,
-                                id: key
-                            });
-                        });
-
-                        // console.log('slides3:', slides);
-
-                        $scope.videoUrl = $scope.selectedDriveBy.videoUri;
-
-                        $scope.config = {
-                            sources: [
-                                {src: $sce.trustAsResourceUrl($scope.videoUrl), type: "video/mp4"},
-                                {src: $sce.trustAsResourceUrl($scope.videoUrl), type: "video/webm"},
-                                {src: $sce.trustAsResourceUrl($scope.videoUrl), type: "video/ogg"}
-                            ]
-                        };
-                    }*/;
 
                     $scope.reset = function () {
                         $scope.street = $scope.sendData.street;
@@ -833,22 +800,24 @@ define(["./module"], function (module) {
                                     $scope.undoForm('videoaccept'+index);
                                 }
 
-                                var videoUrlSpeichern = $scope.videoUrlSpeichern;
+                                if ($scope.selectedDriveBySpeichern.transactionHash == $scope.sendData.transactionHash) {
+                                    var videoUrlSpeichern = $scope.videoUrlSpeichern;
 
-                                if ($scope.video[index].accept == false) {
-                                    videoUrlSpeichern = null;
-                                    $scope.showVideo = false;
-                                } else {
-                                    $scope.showVideo = true;
+                                    if ($scope.video[index].accept == false) {
+                                        videoUrlSpeichern = null;
+                                        $scope.showVideo = false;
+                                    } else {
+                                        $scope.showVideo = true;
+                                    }
+
+                                    $scope.configSpeichern = {
+                                        sources: [
+                                            {src: $sce.trustAsResourceUrl(videoUrlSpeichern), type: "video/mp4"},
+                                            {src: $sce.trustAsResourceUrl(videoUrlSpeichern), type: "video/webm"},
+                                            {src: $sce.trustAsResourceUrl(videoUrlSpeichern), type: "video/ogg"}
+                                        ]
+                                    };
                                 }
-
-                                $scope.configSpeichern = {
-                                    sources: [
-                                        {src: $sce.trustAsResourceUrl(videoUrlSpeichern), type: "video/mp4"},
-                                        {src: $sce.trustAsResourceUrl(videoUrlSpeichern), type: "video/webm"},
-                                        {src: $sce.trustAsResourceUrl(videoUrlSpeichern), type: "video/ogg"}
-                                    ]
-                                };
 
                                 break;
                             case 'daten':
@@ -873,17 +842,19 @@ define(["./module"], function (module) {
                                     $scope.undoForm('imagesaccept'+index);
                                 }
 
-                                var slides = $scope.slidesSpeichern = [];
+                                if ($scope.selectedDriveBySpeichern.transactionHash == $scope.sendData.transactionHash) {
+                                    var slides = $scope.slidesSpeichern = [];
+                                    angular.forEach($scope.images, function(value, key, obj) {
+                                        if (obj[key].accept) {
+                                            slides.push({
+                                                image: obj[key].uri,
+                                                text: $scope.titlesImage[obj[key].index-1],
+                                                id: key
+                                            });
+                                        }
+                                    });
 
-                                angular.forEach($scope.images, function(value, key, obj) {
-                                    if (obj[key].accept) {
-                                        slides.push({
-                                            image: obj[key].uri,
-                                            text: $scope.titlesImage[obj[key].index-1],
-                                            id: key
-                                        });
-                                    }
-                                });
+                                }
 
                                 $rootScope.$broadcast('accept2', {
                                     index: index,
