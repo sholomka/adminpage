@@ -179,6 +179,7 @@ define(["./module"], function (module) {
                         
                         $scope.drivebyLoading = false;
                         $scope.drivebyLoadingSpeichern = false;
+
                         $scope.infoData = {};
                         $scope.infoData.projectType = args.data.projectType;
                         $scope.infoData.objectType = args.data.objectType;
@@ -200,6 +201,9 @@ define(["./module"], function (module) {
                         $sessionStorage.complaintsText = [];
                         $sessionStorage.formchanges = [];
                         $sessionStorage.highlightItem = '';
+
+
+                        $scope.selectedDriveBySpeichern = {};
 
 
                         console.log( 'highlightItem',  $sessionStorage.highlightItem);
@@ -491,7 +495,11 @@ define(["./module"], function (module) {
                             }
 
                             $scope.driveBySpeichern = data;
-                            $scope.selectedDriveBySpeichern = $scope.sendData;
+                            $scope.selectedDriveBySpeichern = {};
+                            $scope.selectedDriveBySpeichern.transactionHash = $scope.sendData.transactionHash;
+                            $scope.datenData = $scope.sendData;
+
+
                             var slides = $scope.slidesSpeichern = [];
 
                             angular.forEach($scope.images, function(value, key, obj) {
@@ -628,7 +636,14 @@ define(["./module"], function (module) {
                             };
                         }
 
-                        console.log($scope.selectedDriveBySpeichern);
+                        if ($scope.selectedDriveBySpeichern.transactionHash == $scope.sendData.transactionHash) {
+                            if ($scope.daten.accept) {
+                                $scope.selectedDriveBySpeichern = driveBy;
+                            } else {
+                                $scope.selectedDriveBySpeichern = {};
+                                $scope.selectedDriveBySpeichern.transactionHash = driveBy.transactionHash;
+                            }
+                        }
                     };
 
                     $scope.reset = function () {
@@ -676,8 +691,6 @@ define(["./module"], function (module) {
                                     $scope.undoForm('videoaccept'+index);
                                 }
 
-
-
                                 if ($scope.selectedDriveBySpeichern.transactionHash == $scope.sendData.transactionHash) {
                                     var videoUrlSpeichern = $scope.videoUrlSpeichern;
 
@@ -696,9 +709,6 @@ define(["./module"], function (module) {
                                         ]
                                     };
                                 }
-
-
-
                                 break;
                             case 'daten':
                                 if (!accept.hasClass('active')) {
@@ -708,6 +718,13 @@ define(["./module"], function (module) {
                                     delete $sessionStorage.daten;
                                     $scope.daten.accept = false;
                                     $scope.undoForm('datenaccept');
+                                }
+
+                                if ($scope.selectedDriveBySpeichern.transactionHash == $scope.sendData.transactionHash && $scope.daten.accept) {
+                                    $scope.selectedDriveBySpeichern = $scope.datenData;
+                                } else {
+                                    $scope.selectedDriveBySpeichern = {};
+                                    $scope.selectedDriveBySpeichern.transactionHash = $scope.sendData.transactionHash;
                                 }
 
                                 break;
@@ -724,10 +741,6 @@ define(["./module"], function (module) {
 
                                 if ($scope.selectedDriveBySpeichern.transactionHash == $scope.sendData.transactionHash) {
                                     var slides = $scope.slidesSpeichern = [];
-
-                                    console.log($scope.selectedDriveBySpeichern.transactionHash);
-                                    console.log($scope.sendData.transactionHash);
-                                    console.log(($scope.selectedDriveBySpeichern.transactionHash == $scope.sendData.transactionHash));
 
                                     angular.forEach($scope.images, function(value, key, obj) {
                                         if (obj[key].accept) {

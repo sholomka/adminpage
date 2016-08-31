@@ -146,6 +146,7 @@ define(["./module"], function (module) {
                         $scope.mapped = {};
                         $scope.driveByRate = {};
                         $scope.rateTextStyle = {};
+                        $scope.selectedDriveBySpeichern = {};
 
                         var progresses = $scope.bautenstand,
                             countProgresses = Object.keys(progresses).length;
@@ -230,7 +231,9 @@ define(["./module"], function (module) {
                         $sessionStorage.mapObjectList = {};
 
                         $scope.reset();
-                        
+
+                        console.log(36);
+
                         if (angular.isObject(args.data.mappedImmoObject) && $sessionStorage.highlightItemBestehende == '') {
                             $sucheService.loadItem(args.data.mappedImmoObject.objectId).then(function (data) {
                                 var add = true;
@@ -591,7 +594,10 @@ define(["./module"], function (module) {
                             }
 
                             $scope.driveBySpeichern = data;
-                            $scope.selectedDriveBySpeichern = $scope.sendData;
+                            $scope.selectedDriveBySpeichern = {};
+                            $scope.selectedDriveBySpeichern.transactionHash = $scope.sendData.transactionHash;
+                            $scope.datenData = $scope.sendData;
+
                             var slides = $scope.slidesSpeichern = [];
 
                             angular.forEach($scope.images, function(value, key, obj) {
@@ -749,8 +755,14 @@ define(["./module"], function (module) {
                             };
                         }
 
-                        console.log($scope.selectedDriveBySpeichern);
-
+                        if ($scope.selectedDriveBySpeichern.transactionHash == $scope.sendData.transactionHash) {
+                            if ($scope.daten.accept) {
+                                $scope.selectedDriveBySpeichern = driveBy;
+                            } else {
+                                $scope.selectedDriveBySpeichern = {};
+                                $scope.selectedDriveBySpeichern.transactionHash = driveBy.transactionHash;
+                            }
+                        }
                     };
 
 
@@ -828,6 +840,13 @@ define(["./module"], function (module) {
                                     delete $sessionStorage.datenbestehende;
                                     $scope.daten.accept = false;
                                     $scope.undoForm('datenaccept');
+                                }
+
+                                if ($scope.selectedDriveBySpeichern.transactionHash == $scope.sendData.transactionHash && $scope.daten.accept) {
+                                    $scope.selectedDriveBySpeichern = $scope.datenData;
+                                } else {
+                                    $scope.selectedDriveBySpeichern = {};
+                                    $scope.selectedDriveBySpeichern.transactionHash = $scope.sendData.transactionHash;
                                 }
 
                                 break;
