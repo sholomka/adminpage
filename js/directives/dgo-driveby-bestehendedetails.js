@@ -544,6 +544,7 @@ define(["./module"], function (module) {
                             angular.forEach($scope.driveBy[0].images, function(value, key, obj) {
                                 slides.push({
                                     image: obj[key].uri,
+                                    text: $scope.titlesImage[obj[key].index-1],
                                     id: key
                                 });
                             });
@@ -654,6 +655,7 @@ define(["./module"], function (module) {
                         angular.forEach($scope.selectedDriveBy.images, function(value, key, obj) {
                             slides.push({
                                 image: obj[key].uri,
+                                text: $scope.titlesImage[obj[key].index-1],
                                 id: key
                             });
                         });
@@ -694,6 +696,7 @@ define(["./module"], function (module) {
                                     if (obj[key].accept) {
                                         slides.push({
                                             image: obj[key].uri,
+                                            text: $scope.titlesImage[obj[key].index-1],
                                             id: key
                                         });
                                     }
@@ -702,6 +705,7 @@ define(["./module"], function (module) {
                                 angular.forEach($scope.selectedDriveBySpeichern.images, function(value, key, obj) {
                                     slides.push({
                                         image: obj[key].uri,
+                                        text: $scope.titlesImage[obj[key].index-1],
                                         id: key
                                     });
                                 });

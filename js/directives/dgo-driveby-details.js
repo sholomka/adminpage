@@ -450,6 +450,7 @@ define(["./module"], function (module) {
                             angular.forEach($scope.driveBy[0].images, function(value, key, obj) {
                                 slides.push({
                                     image: obj[key].uri,
+                                    text: $scope.titlesImage[obj[key].index-1],
                                     id: key
                                 });
                             });
@@ -551,6 +552,7 @@ define(["./module"], function (module) {
                         angular.forEach($scope.selectedDriveBy.images, function(value, key, obj) {
                             slides.push({
                                 image: obj[key].uri,
+                                text: $scope.titlesImage[obj[key].index-1],
                                 id: key
                             });
                         });
@@ -588,6 +590,7 @@ define(["./module"], function (module) {
                             angular.forEach($scope.selectedDriveBySpeichern.images, function(value, key, obj) {
                                 slides.push({
                                     image: obj[key].uri,
+                                    text: $scope.titlesImage[obj[key].index-1],
                                     id: key
                                 });
                             });
@@ -714,7 +717,7 @@ define(["./module"], function (module) {
                                     $scope.daten.accept = false;
                                     $scope.undoForm('datenaccept');
                                 }
-                                
+
                                 if ($scope.selectedDriveBySpeichern.transactionHash == $scope.sendData.transactionHash && $scope.daten.accept) {
                                     $scope.selectedDriveBySpeichern = $scope.datenData;
                                 } else {
