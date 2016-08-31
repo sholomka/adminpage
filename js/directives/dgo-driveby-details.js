@@ -202,11 +202,11 @@ define(["./module"], function (module) {
                         $sessionStorage.formchanges = [];
                         $sessionStorage.highlightItem = '';
 
-
                         $scope.selectedDriveBySpeichern = {};
+                        $scope.selectedDriveBySpeichern.transactionHash = $scope.sendData.transactionHash;
+                        $scope.datenData = $scope.sendData;
+                        console.log($scope.selectedDriveBySpeichern.transactionHash);
 
-
-                        console.log( 'highlightItem',  $sessionStorage.highlightItem);
 
                         $scope.reset();
                         $scope.images = [];
@@ -495,11 +495,6 @@ define(["./module"], function (module) {
                             }
 
                             $scope.driveBySpeichern = data;
-                            $scope.selectedDriveBySpeichern = {};
-                            $scope.selectedDriveBySpeichern.transactionHash = $scope.sendData.transactionHash;
-                            $scope.datenData = $scope.sendData;
-
-
                             var slides = $scope.slidesSpeichern = [];
 
                             angular.forEach($scope.images, function(value, key, obj) {
@@ -719,7 +714,7 @@ define(["./module"], function (module) {
                                     $scope.daten.accept = false;
                                     $scope.undoForm('datenaccept');
                                 }
-
+                                
                                 if ($scope.selectedDriveBySpeichern.transactionHash == $scope.sendData.transactionHash && $scope.daten.accept) {
                                     $scope.selectedDriveBySpeichern = $scope.datenData;
                                 } else {

@@ -146,7 +146,7 @@ define(["./module"], function (module) {
                         $scope.mapped = {};
                         $scope.driveByRate = {};
                         $scope.rateTextStyle = {};
-                        $scope.selectedDriveBySpeichern = {};
+
 
                         var progresses = $scope.bautenstand,
                             countProgresses = Object.keys(progresses).length;
@@ -230,9 +230,11 @@ define(["./module"], function (module) {
                         $sessionStorage.complaintsTextbestehende = [];
                         $sessionStorage.mapObjectList = {};
 
-                        $scope.reset();
+                        $scope.selectedDriveBySpeichern = {};
+                        $scope.selectedDriveBySpeichern.transactionHash = $scope.sendData.transactionHash;
+                        $scope.datenData = $scope.sendData;
 
-                        console.log(36);
+                        $scope.reset();
 
                         if (angular.isObject(args.data.mappedImmoObject) && $sessionStorage.highlightItemBestehende == '') {
                             $sucheService.loadItem(args.data.mappedImmoObject.objectId).then(function (data) {
@@ -594,9 +596,7 @@ define(["./module"], function (module) {
                             }
 
                             $scope.driveBySpeichern = data;
-                            $scope.selectedDriveBySpeichern = {};
-                            $scope.selectedDriveBySpeichern.transactionHash = $scope.sendData.transactionHash;
-                            $scope.datenData = $scope.sendData;
+
 
                             var slides = $scope.slidesSpeichern = [];
 
