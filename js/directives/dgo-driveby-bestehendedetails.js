@@ -1110,6 +1110,8 @@ define(["./module"], function (module) {
                         if ($scope.sendData.mappedImmoObject == null) {
                             index.push('mappedImmoObjectbestehende');
                             $scope.error = true;
+                            console.log('1');
+
                             $scope.mapped.error = true;
                         } else {
                             $scope.mapped.error = false;
@@ -1120,6 +1122,7 @@ define(["./module"], function (module) {
                                 index.push('imagebestehende_' + value.index);
                                 obj[key].error = true;
                                 $scope.error = true;
+                                console.log('2');
                             } else {
                                 obj[key].error = false;
                             }
@@ -1128,23 +1131,27 @@ define(["./module"], function (module) {
                                 $scope.sendData.state = $scope.states.Abgelehnt;
                         });
 
-                        angular.forEach($scope.video, function(value, key, obj) {
-                            if (!(value.accept || value.complaint)) {
-                                index.push('videobestehende');
-                                obj[key].error = true;
-                                $scope.error = true;
-                            } else {
-                                obj[key].error = false;
-                            }
+                        if ($scope.base64Video !== null) {
+                            angular.forEach($scope.video, function(value, key, obj) {
+                                if (!(value.accept || value.complaint)) {
+                                    index.push('videobestehende');
+                                    obj[key].error = true;
+                                    $scope.error = true;
+                                    console.log('3');
+                                } else {
+                                    obj[key].error = false;
+                                }
 
-                            if (value.complaint)
-                                $scope.sendData.state = $scope.states.Abgelehnt;
-                        });
+                                if (value.complaint)
+                                    $scope.sendData.state = $scope.states.Abgelehnt;
+                            });
+                        }
 
                         if (!($scope.daten.accept || $scope.daten.complaint)) {
                             index.push('datenbestehende');
                             $scope.daten.error = true;
                             $scope.error = true;
+                            console.log('4');
                         } else {
                             $scope.daten.error = false;
                         }
@@ -1152,6 +1159,7 @@ define(["./module"], function (module) {
                         if ($scope.uploadingObject.driveByRate == 0) {
                             index.push('driveByRatebestehende');
                             $scope.error = true;
+                            console.log('5');
                             $scope.driveByRate.error = true;
 
                             $scope.rateTextStyle = {color: $scope.driveByRate.error ? 'red' : 'black'};

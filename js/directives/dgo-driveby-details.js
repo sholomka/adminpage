@@ -987,18 +987,21 @@ define(["./module"], function (module) {
                                 $scope.sendData.state = $scope.states.Abgelehnt;
                         });
 
-                        angular.forEach($scope.video, function(value, key, obj) {
-                            if (!(value.accept || value.complaint)) {
-                                index.push('video');
-                                obj[key].error = true;
-                                $scope.error = true;
-                            } else {
-                                obj[key].error = false;
-                            }
 
-                            if (value.complaint)
-                                $scope.sendData.state = $scope.states.Abgelehnt;
-                        });
+                        if ($scope.base64Video !== null) {
+                            angular.forEach($scope.video, function(value, key, obj) {
+                                if (!(value.accept || value.complaint)) {
+                                    index.push('video');
+                                    obj[key].error = true;
+                                    $scope.error = true;
+                                } else {
+                                    obj[key].error = false;
+                                }
+
+                                if (value.complaint)
+                                    $scope.sendData.state = $scope.states.Abgelehnt;
+                            });
+                        }
 
                         if (!($scope.daten.accept || $scope.daten.complaint)) {
                             index.push('daten');
