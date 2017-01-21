@@ -1,6 +1,6 @@
 <div>
     <div class="modal-complaint daten" id="u477_state7_content">
-        <h2>Aufnahme reklamieren</h2>
+        <h2>Details reklamieren</h2>
 
         <div class="ax_checkbox" id="u618" style="">
             <table class="table table-bordered">
@@ -9,7 +9,7 @@
                         Zustand
                     </td>
                     <td>
-                        {{sendData.projectType}}
+                        {{zustandFront[sendData.projectType]}}
                     </td>
                     <td><input type="checkbox" value="checkbox"></td>
                 </tr>
@@ -18,7 +18,7 @@
                         Objekttyp
                     </td>
                     <td>
-                        {{sendData.objectType}}
+                        {{objekttypFront[sendData.objectType]}}
                     </td>
                     <td><input type="checkbox" value="checkbox"></td>
                 </tr>
@@ -27,7 +27,7 @@
                         Denkmalschutz
                     </td>
                     <td>
-                        {{sendData.protectedBuilding}}
+                        {{denkmalschutzFront[sendData.protectedBuilding]}}
                     </td>
                     <td><input type="checkbox" value="checkbox"></td>
                 </tr>
@@ -36,7 +36,7 @@
                         Bautenstand
                     </td>
                     <td>
-                        {{sendData.buildingProgress}}
+                        {{bautenstandFront[sendData.buildingProgress]}}
                     </td>
                     <td><input type="checkbox" value="checkbox"></td>
                 </tr>
@@ -45,7 +45,7 @@
                         Objektstandard nach Fertigstelllung
                     </td>
                     <td>
-                        {{sendData.objectStandard}}
+                        {{objektStandardTypeFront[sendData.objectStandard]}}
                     </td>
                     <td><input type="checkbox" value="checkbox"></td>
                 </tr>
@@ -54,7 +54,7 @@
                         umgebende Bebauung
                     </td>
                     <td>
-                        {{sendData.objectStandardEnv}}
+                        {{umgebendeFront[sendData.objectStandardEnv]}}
                     </td>
                     <td><input type="checkbox" value="checkbox"></td>
                 </tr>
@@ -63,7 +63,7 @@
                         Leerstand
                     </td>
                     <td>
-                        {{sendData.vacancyEnv}}
+                        {{leerstandFront[sendData.vacancyEnv]}}
                     </td>
                     <td><input type="checkbox" value="checkbox"></td>
                 </tr>
@@ -72,7 +72,7 @@
                         Verkehrsanbindung ÖPNV
                     </td>
                     <td>
-                        {{sendData.publicTransport}}
+                        {{verkehrsanbindungFront[sendData.publicTransport]}}
                     </td>
                     <td><input type="checkbox" value="checkbox"></td>
                 </tr>
@@ -81,7 +81,7 @@
                         Nähe zu Versorgungseinrichtung
                     </td>
                     <td>
-                        {{sendData.nearbySupply}}
+                        {{versorgungseinrichtungFront[sendData.nearbySupply]}}
                     </td>
                     <td><input type="checkbox" value="checkbox"></td>
                 </tr>
@@ -90,7 +90,7 @@
                         Nähe zu Erholungsmöglichkeiten
                     </td>
                     <td>
-                        {{sendData.nearbyRecreation}}
+                        {{erholungsmoglichkeitenFront[sendData.nearbyRecreation]}}
                     </td>
                     <td><input type="checkbox" value="checkbox"></td>
                 </tr>

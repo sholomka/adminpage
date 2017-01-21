@@ -455,7 +455,9 @@ define(["./module"], function (module) {
 
                             angular.forEach(item.objektImBauVorschau, function(data) {
                                 $sucheService.loadItem(data.id).then(function (data) {
-                                    $scope.mapObjectList.push(data);
+                                    if (JSON.stringify($scope.mapObjectList).indexOf(JSON.stringify(data.id)) == - 1) {
+                                        $scope.mapObjectList.push(data);
+                                    }
                                 });
                             });
 
@@ -942,7 +944,7 @@ define(["./module"], function (module) {
                             $scope.disabled = complaintText == '' && $scope.uploadingObject.weitere;
                         };
 
-                        $scope.currentImg = $scope.images[index].thumbUrl;
+                        $scope.currentImg = $scope.images[0].thumbUrl;
 
                         switch (type) {
                             case 'video':
