@@ -270,8 +270,13 @@ define(["./module"], function (module) {
                         } else if (args.data.videoUri) {
                             $scope.videoUrl = args.data.videoUri;
                         }
-                        
+
                         $scope.base64Video = args.data.base64Video;
+                        $scope.videoUri = args.data.videoUri;
+
+                        console.log($scope.videoUri);
+
+
                         $scope.daten = {
                             accept: false,
                             complaint: false
