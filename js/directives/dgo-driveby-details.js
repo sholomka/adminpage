@@ -719,9 +719,11 @@ define(["./module"], function (module) {
 
                                 if ($scope.selectedDriveBySpeichern.transactionHash == $scope.sendData.transactionHash && $scope.daten.accept) {
                                     $scope.selectedDriveBySpeichern = $scope.datenData;
+                                    $scope.progressBar = true;
                                 } else {
                                     $scope.selectedDriveBySpeichern = {};
                                     $scope.selectedDriveBySpeichern.transactionHash = $scope.sendData.transactionHash;
+                                    $scope.progressBar = false;
                                 }
 
                                 break;
@@ -801,7 +803,7 @@ define(["./module"], function (module) {
                         $scope.check = function(complaintText) {
                             $scope.disabled = complaintText == '' && $scope.uploadingObject.weitere;
                         };
-                        
+
                         switch (type) {
                             case 'video':
                                 $scope.complaintText = angular.isObject($sessionStorage.videoComplaintsText) && !angular.equals({}, $sessionStorage.videoComplaintsText) ? $sessionStorage.videoComplaintsText.complaintText : '';
@@ -932,7 +934,7 @@ define(["./module"], function (module) {
                             // $scope.daten.accept = true;
 
                             $timeout(function() {
-                                angular.element(document.querySelector('#datenbestehende .accept')).triggerHandler('click');
+                                angular.element(document.querySelector('#daten .accept')).triggerHandler('click');
                             }, 0);
 
                             currentModal.dismiss();

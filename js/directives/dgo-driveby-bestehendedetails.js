@@ -803,12 +803,6 @@ define(["./module"], function (module) {
 
                     $scope.accept = function($event, index, type) {
 
-
-
-
-                        datenbestehende
-
-
                         var event = $event.currentTarget,
                             accept = angular.element(event),
                             complaint = accept.next();
@@ -861,9 +855,11 @@ define(["./module"], function (module) {
 
                                 if ($scope.selectedDriveBySpeichern.transactionHash == $scope.sendData.transactionHash && $scope.daten.accept) {
                                     $scope.selectedDriveBySpeichern = $scope.datenData;
+                                    $scope.progressBar = true;
                                 } else {
                                     $scope.selectedDriveBySpeichern = {};
                                     $scope.selectedDriveBySpeichern.transactionHash = $scope.sendData.transactionHash;
+                                    $scope.progressBar = false;
                                 }
 
                                 break;
