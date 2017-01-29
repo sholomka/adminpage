@@ -564,6 +564,72 @@ define(["./module"], function (module) {
                         }
                     };
 
+                    $scope.createProgressBar = function(buildingProgress) {
+                        var progresses = [];
+                        angular.forEach($scope.bautenstand, function(value, key, obj) {
+                            progresses.push({
+                                key: value,
+                                name: key
+                            });
+                        });
+
+                        var statusWidth = Math.floor(100 / (progresses.length + 1));
+                        $scope.driveByStatusWidthSpeichern = statusWidth + "%";
+                        $scope.driveByStatusTotalWidthSpeichern= (statusWidth * (progresses.length)) + "%";
+
+
+                        for (var j = 0; j < progresses.length; j++) {
+                            if (progresses[j].key == buildingProgress) {
+                                $scope.driveByStatusSpeichern = progresses[j].key;
+                                $scope.driveByStatusIndexSpeichern = j;
+                                var blockWidth = 100 / (progresses.length);
+                                $scope.driveByStatusBarWidthSpeichern= (blockWidth * ($scope.driveByStatusIndexSpeichern)).toFixed(2) + "%";
+                                break;
+                            }
+                        }
+                    };
+
+                    $scope.getLastProgress = function() {
+                        for (var i in $scope.bautenstand) {
+                            var key = $scope.bautenstand[i];
+
+                            for (var j in $scope.driveByMapSpeichern[key]) {
+                                var buildingProgress = $scope.driveByMapSpeichern[key][j].buildingProgress;
+                            }
+                        }
+
+                        return buildingProgress;
+                    };
+
+                    $scope.refreshProgressBar = function(selectedData) {
+                        for (var bautenstand in $scope.bautenstand) {
+                            var key = $scope.bautenstand[bautenstand];
+
+                            if (typeof $scope.driveByMapSpeichern[key] !== 'undefined' && $scope.driveByMapSpeichern[key].length > 0) {
+                                for (var driveByMap in $scope.driveByMapSpeichern[key]) {
+                                    var data = $scope.driveByMapSpeichern[key][driveByMap];
+                                    var buildingProgress = data.buildingProgress;
+
+                                    if (selectedData.transactionHash === data.transactionHash) {
+
+                                        if (!angular.isArray($scope.driveByMapSpeichern[data.buildingProgress])) {
+                                            $scope.driveByMapSpeichern[data.buildingProgress] = [];
+                                        }
+
+                                        if (key !== buildingProgress) {
+                                            $scope.driveByMapSpeichern[data.buildingProgress].unshift(data);
+                                            $scope.driveByMapSpeichern[key].splice(driveByMap, 1);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        var lastProgress = $scope.getLastProgress();
+                        $scope.createProgressBar(lastProgress);
+                    };
+
+
                     $scope.getMappedSpeichern = function(data) {
                         $scope.drivebyLoadingSpeichern = true;
 
@@ -577,8 +643,8 @@ define(["./module"], function (module) {
                             });
 
                             var statusWidth = Math.floor(100 / (progresses.length + 1));
-                            $scope.driveByStatusWidth = statusWidth + "%";
-                            $scope.driveByStatusTotalWidth = (statusWidth * (progresses.length)) + "%";
+                            $scope.driveByStatusWidthSpeichern = statusWidth + "%";
+                            $scope.driveByStatusTotalWidthSpeichern = (statusWidth * (progresses.length)) + "%";
                             $scope.driveByMapSpeichern = {};
 
                             for (var i = 0; i < data.length; i++) {
@@ -600,23 +666,22 @@ define(["./module"], function (module) {
                             for (var bautenstand in $scope.bautenstand) {
                                 var key = $scope.bautenstand[bautenstand];
 
-                                for (var driveByMap in $scope.driveByMap[key]) {
-                                    var buildingProgress = $scope.driveByMap[key][driveByMap].buildingProgress;
+                                for (var driveByMap in $scope.driveByMapSpeichern[key]) {
+                                    var buildingProgress = $scope.driveByMapSpeichern[key][driveByMap].buildingProgress;
                                 }
                             }
 
                             for (var j = 0; j < progresses.length; j++) {
                                 if (progresses[j].key == buildingProgress) {
-                                    $scope.driveByStatus = progresses[j].key;
-                                    $scope.driveByStatusIndex = j;
+                                    $scope.driveByStatusSpeichern = progresses[j].key;
+                                    $scope.driveByStatusIndexSpeichern = j;
                                     var blockWidth = 100 / (progresses.length);
-                                    $scope.driveByStatusBarWidth = (blockWidth * ($scope.driveByStatusIndex)).toFixed(2) + "%";
+                                    $scope.driveByStatusBarWidthSpeichern = (blockWidth * ($scope.driveByStatusIndexSpeichern)).toFixed(2) + "%";
                                     break;
                                 }
                             }
 
                             $scope.driveBySpeichern = data;
-
 
                             var slides = $scope.slidesSpeichern = [];
 
@@ -868,18 +933,10 @@ define(["./module"], function (module) {
                                     $scope.undoForm('datenaccept');
                                 }
 
-
-
-
                                 if ($scope.selectedDriveBySpeichern.transactionHash == $scope.sendData.transactionHash && $scope.daten.accept) {
-
                                     $scope.selectedDriveBySpeichern = $scope.datenData;
                                     $scope.progressBar = true;
-
-
-                                    console.log($scope.selectedDriveBySpeichern);
-                                    console.log($scope.driveByMapSpeichern);
-                                    console.log($scope.bautenstand);
+                                    $scope.refreshProgressBar($scope.selectedDriveBySpeichern);
                                 } else {
                                     $scope.selectedDriveBySpeichern = {};
                                     $scope.selectedDriveBySpeichern.transactionHash = $scope.sendData.transactionHash;

@@ -488,7 +488,7 @@
 
                     <div class="clearfix driveby-container" ng-if="progressBar">
                         <div class="driveby-bar"
-                             style="width:{{driveByStatusTotalWidth}};margin-left:{{driveByStatusWidth}}">
+                             style="width:{{driveByStatusTotalWidthSpeichern}};margin-left:{{driveByStatusWidthSpeichern}}">
                             <div class="driveby-bar-bumper" style="left:-50px"></div>
                             <div class="driveby-bar-bumper" style="left:-30px"></div>
                             <div class="driveby-bar-bumper" style="left:-10px"></div>
@@ -496,11 +496,11 @@
                             <div class="driveby-bar-bumper" style="right:-30px"></div>
                             <div class="driveby-bar-bumper" style="right:-50px"></div>
                             <div class="driveby-dots"></div>
-                            <div class="driveby-progressbar" style="width:{{driveByStatusBarWidth}}"></div>
-                            <div class="driveby-line" style="width:{{driveByStatusBarWidth}}"></div>
+                            <div class="driveby-progressbar" style="width:{{driveByStatusBarWidthSpeichern}}"></div>
+                            <div class="driveby-line" style="width:{{driveByStatusBarWidthSpeichern}}"></div>
                         </div>
                         <div class="driveby-status-helper" ng-repeat="(key, value) in bautenstand track by $index"
-                             style="width:{{driveByStatusWidth}}" ng-init="calcOffsetsSpeichern(value,$index)">
+                             style="width:{{driveByStatusWidthSpeichern}}" ng-init="calcOffsetsSpeichern(value,$index)">
                             <div ng-if="$index==driveByStatusIndex && driveByStatusOffsetSpeichern"
                                  class="driveby-status-progressbar"
                                  style="width:{{driveByStatusOffsetSpeichern}};right:-{{driveByStatusOffsetSpeichern}}"></div>
