@@ -91,6 +91,10 @@ define(["./module"], function (module) {
                             };
                         }
 
+                        $rootScope.$broadcast('sort', {
+                            sortFields: $scope.sortFields
+                        });
+
                         $scope.sendData.pageNumber = $scope.currentPage;
                         $scope.sendData.numberOfResults = $scope.numberOfResults;
                         $scope.sendData.sortCriterium = $scope.sortFields.criterium;

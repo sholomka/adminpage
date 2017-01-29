@@ -344,9 +344,6 @@ define(["./module"], function (module) {
                             });
                         });
 
-
-                        // console.log('slides1:', slides);
-
                         angular.forEach($scope.sendData.complaints, function(value, key, obj) {
                             var index = parseInt(obj[key].element.substr(-1)) - 1;
                             $scope.images[index].complaintText = obj[key].complaintText;
@@ -659,6 +656,8 @@ define(["./module"], function (module) {
                         $scope.selectedDriveBy = driveBy;
                         var slides = $scope.slides = [];
 
+
+                        $scope.sortByKey($scope.selectedDriveBy.images, 'index');
                         angular.forEach($scope.selectedDriveBy.images, function(value, key, obj) {
                             slides.push({
                                 image: obj[key].uri,
@@ -949,7 +948,7 @@ define(["./module"], function (module) {
                             $scope.disabled = complaintText == '' && $scope.uploadingObject.weitere;
                         };
 
-                        $scope.currentImg = $scope.images[0].thumbUrl;
+                        $scope.currentImg = $scope.images[index].thumbUrl;
 
                         switch (type) {
                             case 'video':

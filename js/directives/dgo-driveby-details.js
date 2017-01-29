@@ -281,8 +281,6 @@ define(["./module"], function (module) {
                             });
                         });
 
-                        // console.log(slides);
-
                         $scope.rateText = [
                             "Bitte bewerten Sie diesen Upload!",
                             "Der Upload war unzureichend",
@@ -549,6 +547,7 @@ define(["./module"], function (module) {
                         $scope.selectedDriveBy = driveBy;
                         var slides = $scope.slides = [];
 
+                        $scope.sortByKey($scope.selectedDriveBy.images, 'index');
                         angular.forEach($scope.selectedDriveBy.images, function(value, key, obj) {
                             slides.push({
                                 image: obj[key].uri,
@@ -803,7 +802,7 @@ define(["./module"], function (module) {
                             $scope.disabled = complaintText == '' && $scope.uploadingObject.weitere;
                         };
 
-                        $scope.currentImg = $scope.images[0].thumbUrl;
+                        $scope.currentImg = $scope.images[index].thumbUrl;
 
                         switch (type) {
                             case 'video':

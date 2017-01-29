@@ -10,6 +10,11 @@ define(["./module"], function (module) {
                 controller: function ($scope, $element) {
                     $scope.status = {};
                     $scope.count = 0;
+
+                    $scope.sortFields = {
+                        criterium: 'TIME',
+                        order: 'ASC'
+                    };
                     
                     $constantsService.getStates().then(function(constants){
                         $scope.states = constants;
@@ -21,7 +26,12 @@ define(["./module"], function (module) {
                     $scope.$on('updateBestehendeListCount', function (event, args) {
                         $scope.getCount();
                     });
-                    
+
+                    $scope.$on('sort', function (event, args) {
+                        $scope.sortFields.criterium = args.sortFields.criterium;
+                        $scope.sortFields.order = args.sortFields.order;
+                    });
+
                     $scope.showError =function(error) {
                         if (angular.isDefined(error)) {
                             if (error.required) {
@@ -57,8 +67,10 @@ define(["./module"], function (module) {
 
                         sendData.createDateFrom = $filter('date')(sendData.createDateFrom, 'yyyy-MM-dd');
                         sendData.createDateUntil = $filter('date')(sendData.createDateUntil, 'yyyy-MM-dd');
-
+                        sendData.sortCriterium =  $scope.sortFields.criterium;
+                        sendData.sortOrder = $scope.sortFields.order;
                         sendData.searchedStates = [];
+
                         angular.forEach($scope.status, function(value, key) {
                             if (value) {
                                 if (key == 'Unvollstandig')
