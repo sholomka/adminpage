@@ -441,6 +441,9 @@ define(["./module"], function (module) {
                                 }
                             }
 
+                            console.log(data);
+
+
                             $scope.driveBy = data;
                             $scope.selectedDriveBy = $scope.driveBy[0];
                             var slides = $scope.slides = [];
