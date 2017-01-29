@@ -801,9 +801,7 @@ define(["./module"], function (module) {
                         $scope.check = function(complaintText) {
                             $scope.disabled = complaintText == '' && $scope.uploadingObject.weitere;
                         };
-
-                        $scope.currentImg = $scope.images[index].thumbUrl;
-
+                        
                         switch (type) {
                             case 'video':
                                 $scope.complaintText = angular.isObject($sessionStorage.videoComplaintsText) && !angular.equals({}, $sessionStorage.videoComplaintsText) ? $sessionStorage.videoComplaintsText.complaintText : '';
@@ -814,6 +812,7 @@ define(["./module"], function (module) {
                                 break;
 
                             default:
+                                $scope.currentImg = $scope.images[index].thumbUrl;
                                 $scope.complaintText = angular.isObject($sessionStorage.complaintsText[index]) ? $sessionStorage.complaintsText[index].complaintText : '';
                         }
 
@@ -930,7 +929,11 @@ define(["./module"], function (module) {
                             $scope.infoData.nearbySupply = $scope.sendData.nearbySupply;
                             $scope.infoData.nearbyRecreation = $scope.sendData.nearbyRecreation;
 
-                            $scope.daten.accept = true;
+                            // $scope.daten.accept = true;
+
+                            $timeout(function() {
+                                angular.element(document.querySelector('#datenbestehende .accept')).triggerHandler('click');
+                            }, 0);
 
                             currentModal.dismiss();
                         };

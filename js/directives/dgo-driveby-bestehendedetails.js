@@ -802,6 +802,13 @@ define(["./module"], function (module) {
                     $scope.Lightbox = Lightbox;
 
                     $scope.accept = function($event, index, type) {
+
+
+
+
+                        datenbestehende
+
+
                         var event = $event.currentTarget,
                             accept = angular.element(event),
                             complaint = accept.next();
@@ -948,8 +955,6 @@ define(["./module"], function (module) {
                             $scope.disabled = complaintText == '' && $scope.uploadingObject.weitere;
                         };
 
-                        $scope.currentImg = $scope.images[index].thumbUrl;
-
                         switch (type) {
                             case 'video':
                                 $scope.complaintText = angular.isObject($sessionStorage.videocomplaintsTextbestehende) && !angular.equals({}, $sessionStorage.videocomplaintsTextbestehende) ? $sessionStorage.videocomplaintsTextbestehende.complaintText : '';
@@ -960,6 +965,7 @@ define(["./module"], function (module) {
                                 break;
 
                             default:
+                                $scope.currentImg = $scope.images[index].thumbUrl;
                                 $scope.complaintText = angular.isObject($sessionStorage.complaintsTextbestehende[index]) ? $sessionStorage.complaintsTextbestehende[index].complaintText : '';
                         }
 
@@ -1076,7 +1082,11 @@ define(["./module"], function (module) {
                             $scope.infoData.nearbySupply = $scope.sendData.nearbySupply;
                             $scope.infoData.nearbyRecreation = $scope.sendData.nearbyRecreation;
 
-                            $scope.daten.accept = true;
+                            // $scope.daten.accept = true;
+
+                            $timeout(function() {
+                                angular.element(document.querySelector('#datenbestehende .accept')).triggerHandler('click');
+                            }, 0);
 
                             currentModal.dismiss();
                         };
