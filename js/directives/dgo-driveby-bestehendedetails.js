@@ -869,6 +869,7 @@ define(["./module"], function (module) {
                         $sessionStorage.highlightItemBestehende = '';
                         
                         $scope.undoForm('highlightMarker');
+                        $scope.slidesSpeichern = [];
                         //$listenerService.triggerChange("drivebyDetails", "dgoDrivebys", $scope.sendData.location);
                     };
 

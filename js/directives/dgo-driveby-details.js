@@ -205,7 +205,9 @@ define(["./module"], function (module) {
                         $scope.selectedDriveBySpeichern = {};
                         $scope.selectedDriveBySpeichern.transactionHash = $scope.sendData.transactionHash;
                         $scope.datenData = $scope.sendData;
-                        console.log($scope.selectedDriveBySpeichern.transactionHash);
+
+
+
 
 
                         $scope.reset();
@@ -594,9 +596,6 @@ define(["./module"], function (module) {
                                     });
                                 }
                             });
-
-
-
                         }  else {
                             $scope.driveByMapSpeichern = {};
 
@@ -750,6 +749,8 @@ define(["./module"], function (module) {
                         $sessionStorage.highlightItem = '';
 
                         $scope.undoForm('highlightMarker');
+                        $scope.slidesSpeichern = [];
+
                         //$listenerService.triggerChange("drivebyDetails", "dgoDrivebys", $scope.sendData.location);
                     };
 
