@@ -1002,7 +1002,7 @@ define(["./module"], function (module) {
 
                                     $sessionStorage.formchangesbestehende.push('datenaccept');
                                     $scope.undoForm('datencomplaints');
-                                    
+
                                     $scope.selectedDriveBySpeichern = $scope.datenData;
                                     $scope.progressBar = true;
                                     $scope.refreshProgressBar($scope.selectedDriveBySpeichern);
