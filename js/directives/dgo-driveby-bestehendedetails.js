@@ -978,7 +978,7 @@ define(["./module"], function (module) {
                     };
 
                     $scope.acceptDblClick = function($event, index, type) {
-                        var event = $event.currentTarget,
+                        var event = $event.currentTarget || document.querySelector('#datenbestehende .accept'),
                             accept = angular.element(event),
                             complaint = accept.next();
 
@@ -1002,6 +1002,11 @@ define(["./module"], function (module) {
 
                                     $sessionStorage.formchangesbestehende.push('datenaccept');
                                     $scope.undoForm('datencomplaints');
+                                    
+                                    $scope.selectedDriveBySpeichern = $scope.datenData;
+                                    $scope.progressBar = true;
+                                    $scope.refreshProgressBar($scope.selectedDriveBySpeichern);
+
                                     break;
 
                                 default:
@@ -1124,13 +1129,12 @@ define(["./module"], function (module) {
                                     $sessionStorage.complaintsbestehende[index].element = 'IMAGE' + nextIndex;
 
                                     $sessionStorage.formchangesbestehende.push('imagecomplaints'+index);
+
+                                    $rootScope.$broadcast('complaint2', {
+                                        index: index,
+                                        complaint:  $scope.images[index].complaint
+                                    });
                             }
-
-
-                            $rootScope.$broadcast('complaint2', {
-                                index: index,
-                                complaint:  $scope.images[index].complaint
-                            });
 
                             currentModal.dismiss();
                         };
@@ -1163,7 +1167,14 @@ define(["./module"], function (module) {
                             // $scope.daten.accept = true;
 
                             $timeout(function() {
-                                angular.element(document.querySelector('#datenbestehende .accept')).triggerHandler('click');
+                                var accept = angular.element(document.querySelector('#datenbestehende .accept'));
+                                if ($scope.daten.complaint) {
+
+
+                                    accept.triggerHandler('dblclick');
+                                } else {
+                                    accept.triggerHandler('click');
+                                }
                             }, 0);
 
                             currentModal.dismiss();
