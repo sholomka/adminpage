@@ -483,15 +483,15 @@
                             <div class="driveby-line" style="width:{{driveByStatusBarWidthSpeichern}}"></div>
                         </div>
                         <div class="driveby-status-helper" ng-repeat="(key, value) in bautenstand track by $index"
-                             style="width:{{driveByStatusWidth}}" ng-init="calcOffsetsSpeichern(value,$index)">
-                            <div ng-if="$index==driveByStatusIndex && driveByStatusOffsetSpeichern"
+                             style="width:{{driveByStatusWidthSpeichern}}" ng-init="calcOffsetsSpeichern(value,$index)">
+                            <div ng-if="$index==driveByStatusIndexSpeichern && driveByStatusOffsetSpeichern"
                                  class="driveby-status-progressbar"
                                  style="width:{{driveByStatusOffsetSpeichern}};right:-{{driveByStatusOffsetSpeichern}}"></div>
-                            <div ng-if="$index==driveByStatusIndex && driveByStatusOffsetSpeichern" class="driveby-status-line"
+                            <div ng-if="$index==driveByStatusIndexSpeichern && driveByStatusOffsetSpeichern" class="driveby-status-line"
                                  style="width:{{driveByStatusOffsetSpeichern}};right:-{{driveByStatusOffsetSpeichern}}"></div>
-                            <div class="driveby-status-dot" ng-class="{'active':$index<=driveByStatusIndex}"></div>
+                            <div class="driveby-status-dot" ng-class="{'active':$index<=driveByStatusIndexSpeichern}"></div>
                             <div class="driveby-status-arrow"></div>
-                            <div class="driveby-status text-small" ng-class="{'active':$index<=driveByStatusIndex}">
+                            <div class="driveby-status text-small" ng-class="{'active':$index<=driveByStatusIndexSpeichern}">
                                 {{key}}
                             </div>
                             <div class="driveby-dot"

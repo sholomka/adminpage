@@ -974,7 +974,7 @@ define(["./module"], function (module) {
                                     }
                                     $sessionStorage.datenComplaints = {};
                                     $sessionStorage.datenComplaints.complaintText = complaintText;
-                                    $sessionStorage.datenComplaints.element = 'DATEN';
+                                    $sessionStorage.datenComplaints.element = 'DATA';
 
                                     $sessionStorage.formchanges.push('datencomplaints');
                                     break;

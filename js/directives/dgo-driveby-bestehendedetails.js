@@ -239,13 +239,14 @@ define(["./module"], function (module) {
                         if (angular.isObject(args.data.mappedImmoObject) && $sessionStorage.highlightItemBestehende == '') {
                             $sucheService.loadItem(args.data.mappedImmoObject.objectId).then(function (data) {
                                 var add = true;
+
                                 for (var i in  $scope.mapObjectList) {
                                     if ( $scope.mapObjectList.hasOwnProperty(i) && $scope.mapObjectList[i].id == data.id) {
                                         add = false;
                                     }
                                 }
 
-                                if (add) {
+                                if (add && typeof $scope.mapObjectList !== 'undefined') {
                                     $scope.mapObjectList.unshift(data);
                                 }
 
@@ -1106,7 +1107,7 @@ define(["./module"], function (module) {
                                     }
                                     $sessionStorage.datenComplaintsbestehende = {};
                                     $sessionStorage.datenComplaintsbestehende.complaintText = complaintText;
-                                    $sessionStorage.datenComplaintsbestehende.element = 'DATEN';
+                                    $sessionStorage.datenComplaintsbestehende.element = 'DATA';
 
                                     $sessionStorage.formchangesbestehende.push('datencomplaints');
                                     break;
@@ -1234,7 +1235,7 @@ define(["./module"], function (module) {
                                 $scope.sendData.state = $scope.states.Abgelehnt;
                         });
 
-                        if ($scope.base64Video !== null) {
+                        if ($scope.base64Video !== null || $scope.videoUri !== null) {
                             angular.forEach($scope.video, function(value, key, obj) {
                                 if (!(value.accept || value.complaint)) {
                                     index.push('videobestehende');
