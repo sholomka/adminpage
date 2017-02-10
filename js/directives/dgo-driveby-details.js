@@ -446,6 +446,8 @@ define(["./module"], function (module) {
 
 
                             $scope.driveBy = data;
+                            $scope.selectedDriveBy = data[0];
+
                             var slides = $scope.slides = [];
 
                             angular.forEach($scope.driveBy[0].images, function(value, key, obj) {
@@ -557,6 +559,7 @@ define(["./module"], function (module) {
                             }
 
                             if ($scope.sendData.buildingProgress !== null) {
+                                $scope.driveByMapSpeichern[$scope.sendData.buildingProgress] = [];
                                 $scope.driveByMapSpeichern[$scope.sendData.buildingProgress].unshift($scope.sendData);
                             } else {
                                 $scope.driveByMapSpeichern['START'] = [];
@@ -939,7 +942,7 @@ define(["./module"], function (module) {
                             });
 
                             var nextIndex = index + 1;
-                            var checkBoxLabelValue = ' ' + checkBoxLabel.join(' ');
+                            var checkBoxLabelValue = checkBoxLabel.join(', ');
 
                             switch (type) {
                                 case 'video':
@@ -953,7 +956,14 @@ define(["./module"], function (module) {
                                     }
 
                                     $sessionStorage.videoComplaints = {};
-                                    $sessionStorage.videoComplaints.complaintText = (complaintText + checkBoxLabelValue).trim();
+                                    $sessionStorage.videoComplaints.complaintText = checkBoxLabelValue.trim();
+
+                                    if (checkBoxLabelValue.indexOf('Weitere Gründe') > 0) {
+                                        $sessionStorage.videoComplaints.complaintText += ': ' + complaintText;
+                                    }
+                                    
+                                    console.log($sessionStorage.videoComplaints.complaintText);
+
 
                                     $sessionStorage.videoComplaintsText = {};
                                     $sessionStorage.videoComplaintsText.complaintText = complaintText;
@@ -990,7 +1000,11 @@ define(["./module"], function (module) {
                                     }
 
                                     $sessionStorage.complaints[index] = {};
-                                    $sessionStorage.complaints[index].complaintText = (complaintText + checkBoxLabelValue).trim();
+                                    $sessionStorage.complaints[index].complaintText = checkBoxLabelValue.trim();
+
+                                    if (checkBoxLabelValue.indexOf('Weitere Gründe') > 0) {
+                                        $sessionStorage.complaints[index].complaintText += ': ' + complaintText;
+                                    }
 
                                     $sessionStorage.complaintsText[index] = {};
                                     $sessionStorage.complaintsText[index].complaintText = complaintText;

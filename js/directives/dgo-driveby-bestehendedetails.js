@@ -551,6 +551,7 @@ define(["./module"], function (module) {
                             }
 
                             $scope.driveBy = data;
+                            // $scope.selectedDriveBy = data[0];
                             var slides = $scope.slides = [];
 
                             angular.forEach($scope.images, function(value, key, obj) {
