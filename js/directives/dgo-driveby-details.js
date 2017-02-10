@@ -961,7 +961,7 @@ define(["./module"], function (module) {
                                     if (checkBoxLabelValue.indexOf('Weitere Gründe') > 0) {
                                         $sessionStorage.videoComplaints.complaintText += ': ' + complaintText;
                                     }
-                                    
+
                                     console.log($sessionStorage.videoComplaints.complaintText);
 
 
