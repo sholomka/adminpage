@@ -133,7 +133,21 @@ define(["./module"], function (module) {
                         $scope.sendData = {};
                         $scope.uploadingObject = {};
                         $scope.uploadingObject.unbekannt = false;
+
                         $scope.uploadingObject.weitere = false;
+                        $scope.uploadingObject.datei = false;
+                        $scope.uploadingObject.verwackelt = false;
+                        $scope.uploadingObject.unscharf = false;
+                        $scope.uploadingObject.falsches = false;
+                        $scope.uploadingObject.geringe = false;
+
+                        $scope.uploadingObject.videoweitere = false;
+                        $scope.uploadingObject.videodatei = false;
+                        $scope.uploadingObject.videoverwackelt = false;
+                        $scope.uploadingObject.videounscharf = false;
+                        $scope.uploadingObject.videofalsches = false;
+                        $scope.uploadingObject.videogeringe = false;
+
                         $scope.showForm = true;
                         $scope.max = 5;
                         $scope.isReadonly = false;
@@ -912,19 +926,21 @@ define(["./module"], function (module) {
                         switch (type) {
                             case 'video':
                                 $scope.complaintText = angular.isObject($sessionStorage.videoComplaintsText) && !angular.equals({}, $sessionStorage.videoComplaintsText) ? $sessionStorage.videoComplaintsText.complaintText : '';
+                                $scope.templateUrl = 'templates/modal-video-complaint.html';
                                 break;
 
                             case 'daten':
                                 $scope.complaintText = angular.isObject($sessionStorage.datenComplaints) && !angular.equals({}, $sessionStorage.datenComplaints) ? $sessionStorage.datenComplaints.complaintText : '';
+                                $scope.templateUrl = 'templates/modal-daten-complaint.html';
                                 break;
 
                             default:
                                 $scope.currentImg = $scope.images[index].thumbUrl;
                                 $scope.complaintText = angular.isObject($sessionStorage.complaintsText[index]) ? $sessionStorage.complaintsText[index].complaintText : '';
+                                $scope.templateUrl = 'templates/modal-complaint.html';
                         }
 
                         $scope.check($scope.complaintText);
-                        $scope.templateUrl = type == 'daten' ? 'templates/modal-daten-complaint.html' : 'templates/modal-complaint.html';
 
                         var currentModal = $uibModal.open({
                             templateUrl: $scope.templateUrl,
@@ -958,12 +974,9 @@ define(["./module"], function (module) {
                                     $sessionStorage.videoComplaints = {};
                                     $sessionStorage.videoComplaints.complaintText = checkBoxLabelValue.trim();
 
-                                    if (checkBoxLabelValue.indexOf('Weitere Gründe') > 0) {
+                                    if ($scope.uploadingObject.videoweitere) {
                                         $sessionStorage.videoComplaints.complaintText += ': ' + complaintText;
                                     }
-
-                                    console.log($sessionStorage.videoComplaints.complaintText);
-
 
                                     $sessionStorage.videoComplaintsText = {};
                                     $sessionStorage.videoComplaintsText.complaintText = complaintText;
@@ -1002,7 +1015,7 @@ define(["./module"], function (module) {
                                     $sessionStorage.complaints[index] = {};
                                     $sessionStorage.complaints[index].complaintText = checkBoxLabelValue.trim();
 
-                                    if (checkBoxLabelValue.indexOf('Weitere Gründe') > 0) {
+                                    if ($scope.uploadingObject.weitere) {
                                         $sessionStorage.complaints[index].complaintText += ': ' + complaintText;
                                     }
 

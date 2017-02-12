@@ -135,7 +135,22 @@ define(["./module"], function (module) {
                         $scope.sendData = {};
                         $scope.uploadingObject = {};
                         $scope.uploadingObject.unbekannt = false;
+
                         $scope.uploadingObject.weitere = false;
+                        $scope.uploadingObject.datei = false;
+                        $scope.uploadingObject.verwackelt = false;
+                        $scope.uploadingObject.unscharf = false;
+                        $scope.uploadingObject.falsches = false;
+                        $scope.uploadingObject.geringe = false;
+
+                        $scope.uploadingObject.videoweitere = false;
+                        $scope.uploadingObject.videodatei = false;
+                        $scope.uploadingObject.videoverwackelt = false;
+                        $scope.uploadingObject.videounscharf = false;
+                        $scope.uploadingObject.videofalsches = false;
+                        $scope.uploadingObject.videogeringe = false;
+
+
                         $scope.showForm = true;
                         $scope.max = 5;
                         $scope.isReadonly = false;
@@ -345,9 +360,16 @@ define(["./module"], function (module) {
                             });
                         });
 
+
+                        console.log($scope.sendData.complaints);
+                        console.log($scope.images);
+
+
                         angular.forEach($scope.sendData.complaints, function(value, key, obj) {
-                            var index = parseInt(obj[key].element.substr(-1)) - 1;
-                            $scope.images[index].complaintText = obj[key].complaintText;
+                            if (obj[key].element !== 'VIDEO' && obj[key].element !== 'DATA') {
+                                var index = parseInt(obj[key].element.substr(-1)) - 1;
+                                $scope.images[index].complaintText = obj[key].complaintText;
+                            }
                         });
 
                         $scope.rateText = [
@@ -1043,19 +1065,21 @@ define(["./module"], function (module) {
                         switch (type) {
                             case 'video':
                                 $scope.complaintText = angular.isObject($sessionStorage.videocomplaintsTextbestehende) && !angular.equals({}, $sessionStorage.videocomplaintsTextbestehende) ? $sessionStorage.videocomplaintsTextbestehende.complaintText : '';
+                                $scope.templateUrl = 'templates/modal-video-complaint.html';
                                 break;
 
                             case 'daten':
                                 $scope.complaintText = angular.isObject($sessionStorage.datenComplaintsbestehende) && !angular.equals({}, $sessionStorage.datenComplaintsbestehende) ? $sessionStorage.datenComplaintsbestehende.complaintText : '';
+                                $scope.templateUrl = 'templates/modal-daten-complaint.html';
                                 break;
 
                             default:
                                 $scope.currentImg = $scope.images[index].thumbUrl;
                                 $scope.complaintText = angular.isObject($sessionStorage.complaintsTextbestehende[index]) ? $sessionStorage.complaintsTextbestehende[index].complaintText : '';
+                                $scope.templateUrl = 'templates/modal-complaint.html';
                         }
 
                         $scope.check($scope.complaintText);
-                        $scope.templateUrl = type == 'daten' ? 'templates/modal-daten-complaint.html' : 'templates/modal-complaint.html';
 
                         var currentModal = $uibModal.open({
                             templateUrl: $scope.templateUrl,
@@ -1072,7 +1096,7 @@ define(["./module"], function (module) {
                                 checkBoxLabel.push(obj[key].innerText)
                             });
                             var nextIndex = index + 1;
-                            var checkBoxLabelValue = ' ' + checkBoxLabel.join(' ');
+                            var checkBoxLabelValue = checkBoxLabel.join(', ');
 
                             switch (type) {
                                 case 'video':
@@ -1086,9 +1110,13 @@ define(["./module"], function (module) {
                                     }
 
                                     $sessionStorage.videoComplaintsbestehende = {};
-                                    $sessionStorage.videoComplaintsbestehende.complaintText = (complaintText + checkBoxLabelValue).trim();
+                                    $sessionStorage.videoComplaintsbestehende.complaintText = checkBoxLabelValue.trim();
                                     $sessionStorage.videoComplaintsbestehende.element = 'VIDEO';
 
+
+                                    if ($scope.uploadingObject.videoweitere) {
+                                        $sessionStorage.videoComplaintsbestehende.complaintText += ': ' + complaintText;
+                                    }
 
                                     $sessionStorage.videocomplaintsTextbestehende = {};
                                     $sessionStorage.videocomplaintsTextbestehende.complaintText = complaintText;
@@ -1123,7 +1151,11 @@ define(["./module"], function (module) {
                                         $scope.images[index].accept = false;
                                     }
                                     $sessionStorage.complaintsbestehende[index] = {};
-                                    $sessionStorage.complaintsbestehende[index].complaintText = (complaintText + checkBoxLabelValue).trim();
+                                    $sessionStorage.complaintsbestehende[index].complaintText = checkBoxLabelValue.trim();
+
+                                    if ($scope.uploadingObject.weitere) {
+                                        $sessionStorage.complaintsbestehende[index].complaintText += ': ' + complaintText;
+                                    }
 
                                     $sessionStorage.complaintsTextbestehende[index] = {};
                                     $sessionStorage.complaintsTextbestehende[index].complaintText = complaintText;
