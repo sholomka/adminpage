@@ -384,14 +384,14 @@ define(["./module"], function (module) {
                             $mapService.unhighlightAllItems();
 
                             angular.forEach(item.objektImBauVorschau, function(data, key, obj) {
-                                $sucheService.loadItem(data.id).then(function (data) {
+                                $sucheService.loadItem(encodeURIComponent(data.id)).then(function (data) {
                                     $scope.mapObjectList.push(data);
                                 });
                             });
 
                             $timeout(function () {
                                 if ($sessionStorage.highlightItem != '' && angular.isObject($scope.sendData)) {
-                                    $sucheService.loadItem($sessionStorage.highlightItemID).then(function (data) {
+                                    $sucheService.loadItem(encodeURIComponent($sessionStorage.highlightItemID)).then(function (data) {
                                         $scope.highlightMarker(false, data);
                                     });
                                 }

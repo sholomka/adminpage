@@ -488,7 +488,7 @@ define(["./module"], function (module) {
                             }
 
                             angular.forEach(item.objektImBauVorschau, function(data) {
-                                $sucheService.loadItem(data.id).then(function (data) {
+                                $sucheService.loadItem(encodeURIComponent(data.id)).then(function (data) {
                                     if (JSON.stringify($scope.mapObjectList).indexOf(JSON.stringify(data.id)) == - 1) {
                                         $scope.mapObjectList.push(data);
                                     }
@@ -496,7 +496,7 @@ define(["./module"], function (module) {
                             });
 
                             if ($sessionStorage.highlightItemBestehende != '' && angular.isObject($scope.sendData)) {
-                                $sucheService.loadItem($sessionStorage.highlightItemBestehendeID).then(function (data) {
+                                $sucheService.loadItem(encodeURIComponent($sessionStorage.highlightItemBestehendeID)).then(function (data) {
                                     $scope.highlightMarker(false, data);
                                 });
                             }
