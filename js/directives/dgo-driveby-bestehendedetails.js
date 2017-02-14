@@ -136,13 +136,6 @@ define(["./module"], function (module) {
                         $scope.uploadingObject = {};
                         $scope.uploadingObject.unbekannt = false;
 
-                        $scope.uploadingObject.weitere = false;
-                        $scope.uploadingObject.datei = false;
-                        $scope.uploadingObject.verwackelt = false;
-                        $scope.uploadingObject.unscharf = false;
-                        $scope.uploadingObject.falsches = false;
-                        $scope.uploadingObject.geringe = false;
-
                         $scope.uploadingObject.videoweitere = false;
                         $scope.uploadingObject.videodatei = false;
                         $scope.uploadingObject.videoverwackelt = false;
@@ -362,6 +355,12 @@ define(["./module"], function (module) {
                             obj[key].accept = false;
                             obj[key].complaint = false;
                             obj[key].tab = 'bestehende';
+                            obj[key].weitere = false;
+                            obj[key].datei = false;
+                            obj[key].verwackelt = false;
+                            obj[key].unscharf = false;
+                            obj[key].falsches = false;
+                            obj[key].geringe = false;
 
                             slides.push({
                                 image: obj[key].base64 ? 'data:image/png;base64,' + obj[key].base64 : obj[key].uri,
@@ -1068,15 +1067,18 @@ define(["./module"], function (module) {
                     };
 
                     $scope.complaint = function($event, index, type) {
-                        $scope.check = function(complaintText) {
-                            var checkboxSelected = !($scope.uploadingObject.datei ||
-                            $scope.uploadingObject.verwackelt ||
-                            $scope.uploadingObject.unscharf ||
-                            $scope.uploadingObject.falsches ||
-                            $scope.uploadingObject.geringe ||
-                            $scope.uploadingObject.weitere);
+                        var image = $scope.images[index];
+                        $scope.complaintIndex = index;
 
-                            $scope.disabled = checkboxSelected || complaintText == '' && $scope.uploadingObject.weitere;
+                        $scope.check = function(complaintText) {
+                            var checkboxSelected = !( image.datei ||
+                                                        image.verwackelt ||
+                                                        image.unscharf ||
+                                                        image.falsches ||
+                                                        image.geringe ||
+                                                        image.weitere);
+
+                            $scope.disabled = checkboxSelected || complaintText == '' &&  image.weitere;
                         };
 
                         $scope.videoCheck = function(complaintText) {

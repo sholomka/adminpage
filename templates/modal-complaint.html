@@ -5,21 +5,21 @@
         <div class="ax_checkbox" id="u618" style="">
             <ul>
                 <li>
-                    <input type="checkbox" value="checkbox" ng-model="uploadingObject.datei" ng-change="check(complaintText)" id="u618_input">
+                    <input type="checkbox" value="checkbox" ng-model="images[complaintIndex].datei" ng-change="check(complaintText)" id="u618_input">
                     <label for="u618_input">
                         <span>Datei beschädigt</span>
                     </label>
                 </li>
                 <li>
 
-                    <input type="checkbox" value="checkbox" ng-model="uploadingObject.verwackelt" ng-change="check(complaintText)" id="u620_input">
+                    <input type="checkbox" value="checkbox" ng-model="images[complaintIndex].verwackelt" ng-change="check(complaintText)" id="u620_input">
                     <label for="u620_input">
                         <span>Bild verwackelt</span>
                     </label>
                 </li>
                 <li>
 
-                    <input type="checkbox" value="checkbox" ng-model="uploadingObject.unscharf" ng-change="check(complaintText)" id="u622_input">
+                    <input type="checkbox" value="checkbox" ng-model="images[complaintIndex].unscharf" ng-change="check(complaintText)" id="u622_input">
                     <label for="u622_input">
                         <span>Bild unscharf</span>
 
@@ -27,7 +27,7 @@
                 </li>
                 <li>
 
-                    <input type="checkbox" value="checkbox" ng-model="uploadingObject.falsches" ng-change="check(complaintText)" id="u624_input">
+                    <input type="checkbox" value="checkbox" ng-model="images[complaintIndex].falsches" ng-change="check(complaintText)" id="u624_input">
                     <label for="u624_input">
                         <span>Falsches Motiv</span>
                     </label>
@@ -35,13 +35,13 @@
                 </ul>
             <ul>
                 <li>
-                    <input type="checkbox" value="checkbox" ng-model="uploadingObject.geringe" ng-change="check(complaintText)" id="u626_input">
+                    <input type="checkbox" value="checkbox" ng-model="images[complaintIndex].geringe" ng-change="check(complaintText)" id="u626_input">
                     <label for="u626_input">
                         <span>Zu geringe Auflösung</span>
                     </label>
                 </li>
                 <li>
-                    <input type="checkbox" value="checkbox" ng-model="uploadingObject.weitere" ng-change="check(complaintText)" id="u628_input">
+                    <input type="checkbox" value="checkbox" ng-model="images[complaintIndex].weitere" ng-change="check(complaintText)" id="u628_input">
                     <label for="u628_input">
                         <span>Weitere Gründe</span>
                     </label>
