@@ -11,7 +11,9 @@
                     <td>
                         {{zustandFront[sendData.projectType]}}
                     </td>
-                    <td><input type="checkbox" value="checkbox"></td>
+                    <td>
+                        <input type="checkbox" value="checkbox" ng-model="uploadingObject.datenzustand" ng-change="datenCheck(complaintText)" data-send="Zustand: {{zustandFront[sendData.projectType]}}">
+                    </td>
                 </tr>
                 <tr>
                     <td>
@@ -20,7 +22,9 @@
                     <td>
                         {{objekttypFront[sendData.objectType]}}
                     </td>
-                    <td><input type="checkbox" value="checkbox"></td>
+                    <td>
+                        <input type="checkbox" value="checkbox" ng-model="uploadingObject.datenobjekttyp" ng-change="datenCheck(complaintText)" data-send="Objekttyp: {{objekttypFront[sendData.objectType]}}">
+                    </td>
                 </tr>
                 <tr>
                     <td>
@@ -29,7 +33,9 @@
                     <td>
                         {{denkmalschutzFront[sendData.protectedBuilding]}}
                     </td>
-                    <td><input type="checkbox" value="checkbox"></td>
+                    <td>
+                        <input type="checkbox" value="checkbox" ng-model="uploadingObject.datendenkmalschutz" ng-change="datenCheck(complaintText)" data-send="Denkmalschutz: {{denkmalschutzFront[sendData.protectedBuilding]}}">
+                    </td>
                 </tr>
                 <tr>
                     <td>
@@ -38,7 +44,9 @@
                     <td>
                         {{bautenstandFront[sendData.buildingProgress]}}
                     </td>
-                    <td><input type="checkbox" value="checkbox"></td>
+                    <td>
+                        <input type="checkbox" value="checkbox" ng-model="uploadingObject.datenbautenstand" ng-change="datenCheck(complaintText)" data-send="Bautenstand: {{bautenstandFront[sendData.buildingProgress]}}">
+                    </td>
                 </tr>
                 <tr>
                     <td>
@@ -47,7 +55,9 @@
                     <td>
                         {{objektStandardTypeFront[sendData.objectStandard]}}
                     </td>
-                    <td><input type="checkbox" value="checkbox"></td>
+                    <td>
+                        <input type="checkbox" value="checkbox" ng-model="uploadingObject.datenobjektStandard" ng-change="datenCheck(complaintText)" data-send="Objektstandard nach Fertigstelllung: {{objektStandardTypeFront[sendData.objectStandard]}}">
+                    </td>
                 </tr>
                 <tr>
                     <td>
@@ -56,7 +66,9 @@
                     <td>
                         {{umgebendeFront[sendData.objectStandardEnv]}}
                     </td>
-                    <td><input type="checkbox" value="checkbox"></td>
+                    <td>
+                        <input type="checkbox" value="checkbox" ng-model="uploadingObject.datenumgebende" ng-change="datenCheck(complaintText)" data-send="umgebende Bebauung: {{umgebendeFront[sendData.objectStandardEnv]}}">
+                    </td>
                 </tr>
                 <tr>
                     <td>
@@ -65,7 +77,9 @@
                     <td>
                         {{leerstandFront[sendData.vacancyEnv]}}
                     </td>
-                    <td><input type="checkbox" value="checkbox"></td>
+                    <td>
+                        <input type="checkbox" value="checkbox" ng-model="uploadingObject.datenleerstand" ng-change="datenCheck(complaintText)" data-send="Leerstand: {{leerstandFront[sendData.vacancyEnv]}}">
+                    </td>
                 </tr>
                 <tr>
                     <td>
@@ -74,7 +88,9 @@
                     <td>
                         {{verkehrsanbindungFront[sendData.publicTransport]}}
                     </td>
-                    <td><input type="checkbox" value="checkbox"></td>
+                    <td>
+                        <input type="checkbox" value="checkbox" ng-model="uploadingObject.datenverkehrsanbindung" ng-change="datenCheck(complaintText)" data-send="Verkehrsanbindung ÖPNV: {{verkehrsanbindungFront[sendData.publicTransport]}}">
+                    </td>
                 </tr>
                 <tr>
                     <td>
@@ -83,7 +99,9 @@
                     <td>
                         {{versorgungseinrichtungFront[sendData.nearbySupply]}}
                     </td>
-                    <td><input type="checkbox" value="checkbox"></td>
+                    <td>
+                        <input type="checkbox" value="checkbox" ng-model="uploadingObject.datenversorgungseinrichtung" ng-change="datenCheck(complaintText)" data-send="Nähe zu Versorgungseinrichtung: {{versorgungseinrichtungFront[sendData.nearbySupply]}}">
+                    </td>
                 </tr>
                 <tr>
                     <td>
@@ -92,7 +110,9 @@
                     <td>
                         {{erholungsmoglichkeitenFront[sendData.nearbyRecreation]}}
                     </td>
-                    <td><input type="checkbox" value="checkbox"></td>
+                    <td>
+                        <input type="checkbox" value="checkbox" ng-model="uploadingObject.datenerholungsmoglichkeiten" ng-change="datenCheck(complaintText)" data-send="Nähe zu Erholungsmöglichkeiten: {{erholungsmoglichkeitenFront[sendData.nearbyRecreation]}}">
+                    </td>
                 </tr>
             </table>
 
@@ -100,7 +120,7 @@
         </div>
         <div class="img-content">
             <div class="ax_text_area">
-              <textarea ng-model="complaintText" ng-change="check(complaintText)">
+              <textarea ng-model="complaintText" ng-change="datenCheck(complaintText)">
               </textarea>
             </div>
         </div>
@@ -111,7 +131,7 @@
         </div>
 
         <div class="buttons">
-            <button class="btn btn-primary" ng-click="save(complaintText)" ng-disabled="disabled">Senden vermerken</button>
+            <button class="btn btn-primary" ng-click="save(complaintText)" ng-disabled="datenDisabled">Senden vermerken</button>
             <button class="btn btn-default" ng-click="cancel()">Abbrechen</button>
         </div>
     </div>

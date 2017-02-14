@@ -150,6 +150,16 @@ define(["./module"], function (module) {
                         $scope.uploadingObject.videofalsches = false;
                         $scope.uploadingObject.videogeringe = false;
 
+                        $scope.uploadingObject.datenzustand = false;
+                        $scope.uploadingObject.datenobjekttyp = false;
+                        $scope.uploadingObject.datendenkmalschutz = false;
+                        $scope.uploadingObject.datenbautenstand = false;
+                        $scope.uploadingObject.datenobjektStandard = false;
+                        $scope.uploadingObject.datenumgebende = false;
+                        $scope.uploadingObject.datenleerstand = false;
+                        $scope.uploadingObject.datenverkehrsanbindung = false;
+                        $scope.uploadingObject.datenversorgungseinrichtung = false;
+                        $scope.uploadingObject.datenerholungsmoglichkeiten = false;
 
                         $scope.showForm = true;
                         $scope.max = 5;
@@ -1059,27 +1069,62 @@ define(["./module"], function (module) {
 
                     $scope.complaint = function($event, index, type) {
                         $scope.check = function(complaintText) {
-                            $scope.disabled = complaintText == '' && $scope.uploadingObject.weitere;
+                            var checkboxSelected = !($scope.uploadingObject.datei ||
+                            $scope.uploadingObject.verwackelt ||
+                            $scope.uploadingObject.unscharf ||
+                            $scope.uploadingObject.falsches ||
+                            $scope.uploadingObject.geringe ||
+                            $scope.uploadingObject.weitere);
+
+                            $scope.disabled = checkboxSelected || complaintText == '' && $scope.uploadingObject.weitere;
+                        };
+
+                        $scope.videoCheck = function(complaintText) {
+                            var checkboxSelected = !($scope.uploadingObject.videodatei ||
+                                                     $scope.uploadingObject.videoverwackelt ||
+                                                     $scope.uploadingObject.videounscharf ||
+                                                     $scope.uploadingObject.videofalsches ||
+                                                     $scope.uploadingObject.videogeringe ||
+                                                     $scope.uploadingObject.videoweitere);
+
+                            $scope.videoDisabled = checkboxSelected || complaintText == '' && $scope.uploadingObject.videoweitere;
+                        };
+
+                        $scope.datenCheck = function(complaintText) {
+                            var checkboxSelected = !($scope.uploadingObject.datenzustand ||
+                                $scope.uploadingObject.datenobjekttyp ||
+                                $scope.uploadingObject.datendenkmalschutz ||
+                                $scope.uploadingObject.datenbautenstand ||
+                                $scope.uploadingObject.datenobjektStandard ||
+                                $scope.uploadingObject.datenumgebende ||
+                                $scope.uploadingObject.datenleerstand ||
+                                $scope.uploadingObject.datenverkehrsanbindung ||
+                                $scope.uploadingObject.datenversorgungseinrichtung ||
+                                $scope.uploadingObject.datenerholungsmoglichkeiten
+                            );
+
+                            $scope.datenDisabled = checkboxSelected;
                         };
 
                         switch (type) {
                             case 'video':
                                 $scope.complaintText = angular.isObject($sessionStorage.videocomplaintsTextbestehende) && !angular.equals({}, $sessionStorage.videocomplaintsTextbestehende) ? $sessionStorage.videocomplaintsTextbestehende.complaintText : '';
                                 $scope.templateUrl = 'templates/modal-video-complaint.html';
+                                $scope.videoCheck($scope.complaintText);
                                 break;
 
                             case 'daten':
-                                $scope.complaintText = angular.isObject($sessionStorage.datenComplaintsbestehende) && !angular.equals({}, $sessionStorage.datenComplaintsbestehende) ? $sessionStorage.datenComplaintsbestehende.complaintText : '';
+                                $scope.complaintText = angular.isObject($sessionStorage.datenComplaintsTextbestehende) && !angular.equals({}, $sessionStorage.datenComplaintsTextbestehende) ? $sessionStorage.datenComplaintsTextbestehende.complaintText : '';
                                 $scope.templateUrl = 'templates/modal-daten-complaint.html';
+                                $scope.datenCheck($scope.complaintText);
                                 break;
 
                             default:
                                 $scope.currentImg = $scope.images[index].thumbUrl;
                                 $scope.complaintText = angular.isObject($sessionStorage.complaintsTextbestehende[index]) ? $sessionStorage.complaintsTextbestehende[index].complaintText : '';
                                 $scope.templateUrl = 'templates/modal-complaint.html';
+                                $scope.check($scope.complaintText);
                         }
-
-                        $scope.check($scope.complaintText);
 
                         var currentModal = $uibModal.open({
                             templateUrl: $scope.templateUrl,
@@ -1088,15 +1133,31 @@ define(["./module"], function (module) {
                             scope: $scope
                         });
 
-                        $scope.save = function(complaintText) {
-                            var arr = angular.element(document.querySelectorAll('.ax_checkbox :checked')).next().children();
-
+                        $scope.setComplaintText = function() {
+                            var selected = angular.element(document.querySelectorAll('.ax_checkbox :checked'));
                             var checkBoxLabel = [];
-                            angular.forEach(arr, function(value, key, obj) {
-                                checkBoxLabel.push(obj[key].innerText)
-                            });
+
+                            switch (type) {
+                                case 'daten':
+                                    angular.forEach(selected, function(value, key, obj) {
+                                        checkBoxLabel.push(obj[key].dataset.send)
+                                    });
+
+                                    break;
+
+                                default:
+                                    var arr = selected.next().children();
+
+                                    angular.forEach(arr, function(value, key, obj) {
+                                        checkBoxLabel.push(obj[key].innerText)
+                                    });
+                            }
+
+                            return checkBoxLabel.join(', ').trim();
+                        };
+
+                        $scope.save = function(complaintText) {
                             var nextIndex = index + 1;
-                            var checkBoxLabelValue = checkBoxLabel.join(', ');
 
                             switch (type) {
                                 case 'video':
@@ -1110,7 +1171,7 @@ define(["./module"], function (module) {
                                     }
 
                                     $sessionStorage.videoComplaintsbestehende = {};
-                                    $sessionStorage.videoComplaintsbestehende.complaintText = checkBoxLabelValue.trim();
+                                    $sessionStorage.videoComplaintsbestehende.complaintText = $scope.setComplaintText(type);
                                     $sessionStorage.videoComplaintsbestehende.element = 'VIDEO';
 
 
@@ -1135,7 +1196,14 @@ define(["./module"], function (module) {
                                         $scope.daten.accept = false;
                                     }
                                     $sessionStorage.datenComplaintsbestehende = {};
-                                    $sessionStorage.datenComplaintsbestehende.complaintText = complaintText;
+                                    $sessionStorage.datenComplaintsbestehende.complaintText = $scope.setComplaintText(type);
+
+                                    if (complaintText !== '') {
+                                        $sessionStorage.datenComplaintsbestehende.complaintText += ', textbox: ' + complaintText;
+                                    }
+
+                                    $sessionStorage.datenComplaintsTextbestehende = {};
+                                    $sessionStorage.datenComplaintsTextbestehende.complaintText = complaintText;
                                     $sessionStorage.datenComplaintsbestehende.element = 'DATA';
 
                                     $sessionStorage.formchangesbestehende.push('datencomplaints');
@@ -1151,7 +1219,7 @@ define(["./module"], function (module) {
                                         $scope.images[index].accept = false;
                                     }
                                     $sessionStorage.complaintsbestehende[index] = {};
-                                    $sessionStorage.complaintsbestehende[index].complaintText = checkBoxLabelValue.trim();
+                                    $sessionStorage.complaintsbestehende[index].complaintText = $scope.setComplaintText(type);
 
                                     if ($scope.uploadingObject.weitere) {
                                         $sessionStorage.complaintsbestehende[index].complaintText += ': ' + complaintText;
