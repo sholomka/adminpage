@@ -14,7 +14,8 @@ define([
     "./dgo-drivebys-bestehende",
     "./dgo-map",
     "./dgo-map-bestehende",
-    "./dgo-driveby-bestehendedetails"
+    "./dgo-driveby-bestehendedetails",
+    "./dgo-oib"
 
 
 ], function () {});

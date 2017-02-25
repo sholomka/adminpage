@@ -74,12 +74,21 @@ body {
     top: 0;
 }
 
+.navbar-news, .navbar-oib {
+    position: absolute;
+    top: 0;
+}
+
 .navbar-news {
     left: 170px;
 }
 
 .navbar-drive-by-daten {
     left: 380px;
+}
+
+.navbar-oib {
+    left: 590px;
 }
 
 .navbar-menu {

@@ -5,7 +5,9 @@ define(["./module"], function (module) {
 			{ title:'Neue', url:'dgo-neue', show: true },
 			{ title:'Bestehende', url:'dgo-bestehende', show: true},
 			{ title:'Neue', url:'dgo-neue-driveby', show: false },
-			{ title:'Bestehende', url:'dgo-bestehende-driveby', show: false}
+			{ title:'Bestehende', url:'dgo-bestehende-driveby', show: false},
+            { title:'Neue', url:'dgo-oib', show: false },
+            { title:'Bestehende', url:'dgo-oib', show: false}
 		];
 
 		$constantsService.newsThemen().then(function(constants){

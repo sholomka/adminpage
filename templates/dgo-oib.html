@@ -1,0 +1,53 @@
+<div class="container">
+    <div clas="row">
+        <div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+                <label class="control-label">von</label>
+                <p class="input-group">
+                    <input type="text" uib-datepicker-popup="dd.MM.yyyy" ng-change="getCount()"
+                           class="form-control" ng-model="von" is-open="settings.status.openedFrom"
+                           max-date="settings.maxDate" datepicker-options="settings.dateOptions" ng-required="true"
+                           close-text="Schließen" current-text="Heute" clear-text="Löschen"/>
+                    <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="settings.openFrom($event)"><i
+                                    class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                </p>
+                <div class="error" ng-show="newsFinden.createDateFrom.$dirty">
+                    {{showError(newsFinden.createDateFrom.$error)}}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-4">
+                <label class="control-label">Bis</label>
+                <p class="input-group">
+                    <input type="text" uib-datepicker-popup="dd.MM.yyyy" ng-change="getCount()" class="form-control"
+                           ng-model="bis" is-open="settings.status.openedUntil"
+                           max-date="settings.maxDate" datepicker-options="settings.dateOptions" ng-required="true"
+                           close-text="Schließen" current-text="Heute" clear-text="Löschen"/>
+                    <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="settings.openUntil($event)"><i
+                                    class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                </p>
+                <div class="error" ng-show="newsFinden.createDateUntil.$dirty">
+                    {{showError(newsFinden.createDateUntil.$error)}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <label class="control-label">Stadt</label>
+        <input type="text" ng-model="selected" uib-typeahead="ort for ort in orte | filter:$viewValue | limitTo:8" class="form-control">
+    </div>
+
+    <br/>
+    <!--{{stadt}}: {{von | date: dd.MM.yyyy}} - {{bis | date: dd.MM.yyyy}}-->
+    <div class="row">
+        <div class="col-sm-4">
+            <a class="btn btn-primary"
+               href="/service/adminbackend/oib/download?from={{von | date: dd.MM.yyyy}}&to={{bis  | date: dd.MM.yyyy}}&stadt={{selected}}">runterladen</a>
+        </div>
+    </div>
+</div>

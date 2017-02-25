@@ -19,13 +19,16 @@ define(["./module"], function (module) {
 							elements.eq(i).addClass("btn-active");
 						} else if(elements.eq(i).hasClass('navbar-drive-by-daten') && type == 'driveBy') {
 							elements.eq(i).addClass("btn-active");
-						}
+						} else if(elements.eq(i).hasClass('navbar-oib') && type == 'oib') {
+                            elements.eq(i).addClass("btn-active");
+                        }
 					}
 
 					$scope.tabs[0].show = (type == 'news');
 					$scope.tabs[1].show = (type == 'news');
 					$scope.tabs[2].show = (type == 'driveBy');
 					$scope.tabs[3].show = (type == 'driveBy');
+                    $scope.tabs[4].show = (type == 'oib');
 
 				}
 	    	}

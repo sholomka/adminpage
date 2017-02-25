@@ -333,7 +333,13 @@ define(["./module"], function (module) {
 				// url: "mapped.json"
 			});
 		};
-		
+        var getOrte = function () {
+            return getRequest({
+                method: "GET",
+                url: "/service/adminbackend/oib/orte"
+            });
+        };
+
         return {
             getNewsThemen: getNewsThemen,
 			getNewsTypen: getNewsTypen,
@@ -363,7 +369,8 @@ define(["./module"], function (module) {
 			getVerkehr:getVerkehr,
 			getVersorgung:getVersorgung,
 			getErholung:getErholung,
-			getMapped:getMapped
+			getMapped:getMapped,
+            getOrte: getOrte
         };
 
     }]);

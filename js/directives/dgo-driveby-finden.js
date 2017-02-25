@@ -70,7 +70,7 @@ define(["./module"], function (module) {
                         sendData.sortCriterium =  $scope.sortFields.criterium;
                         sendData.sortOrder = $scope.sortFields.order;
                         sendData.searchedStates = [];
-
+                        
                         angular.forEach($scope.status, function(value, key) {
                             if (value) {
                                 if (key == 'Unvollstandig')

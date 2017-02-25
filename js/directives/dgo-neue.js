@@ -8,7 +8,7 @@ define(["./module"], function (module) {
                 scope: true,
                 templateUrl: "templates/dgo-neue.html",
                 controller: function ($scope, $element) {
-
+                    console.log('neue222');
                 }
             };
 
