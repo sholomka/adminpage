@@ -1087,9 +1087,14 @@ define(["./module"], function (module) {
                                     $sessionStorage.complaints[index] = {};
                                     $sessionStorage.complaints[index].complaintText = $scope.setComplaintText(type);
 
-                                    if ($scope.uploadingObject.weitere) {
+                                    if (image.weitere) {
                                         $sessionStorage.complaints[index].complaintText += ': ' + complaintText;
                                     }
+
+
+                                    console.log(image.weitere);
+                                    console.log($sessionStorage.complaints);
+
 
                                     $sessionStorage.complaintsText[index] = {};
                                     $sessionStorage.complaintsText[index].complaintText = complaintText;

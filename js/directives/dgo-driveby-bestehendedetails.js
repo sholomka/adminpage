@@ -1223,7 +1223,7 @@ define(["./module"], function (module) {
                                     $sessionStorage.complaintsbestehende[index] = {};
                                     $sessionStorage.complaintsbestehende[index].complaintText = $scope.setComplaintText(type);
 
-                                    if ($scope.uploadingObject.weitere) {
+                                    if (image.weitere) {
                                         $sessionStorage.complaintsbestehende[index].complaintText += ': ' + complaintText;
                                     }
 
