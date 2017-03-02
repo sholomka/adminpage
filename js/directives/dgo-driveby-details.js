@@ -400,7 +400,6 @@ define(["./module"], function (module) {
                     });
 
                     $scope.highlightMarker = function (isCenter, item, $event) {
-                        console.log('highlightMarker', item);
                         $sessionStorage.formchanges.push('highlightMarker');
                         $sessionStorage.highlightItem = 'data' + item.id.split('.')[0];
                         $sessionStorage.highlightItemID = item.id;
@@ -613,9 +612,6 @@ define(["./module"], function (module) {
                             var slides = $scope.slidesSpeichern = [];
 
                             angular.forEach($scope.images, function(value, key, obj) {
-                                console.log(obj[key].accept);
-                                console.log('111');
-
                                 if (obj[key].accept) {
                                     slides.push({
                                         image: 'data:image/png;base64,' + obj[key].base64,
@@ -1091,11 +1087,6 @@ define(["./module"], function (module) {
                                         $sessionStorage.complaints[index].complaintText += ': ' + complaintText;
                                     }
 
-
-                                    console.log(image.weitere);
-                                    console.log($sessionStorage.complaints);
-
-
                                     $sessionStorage.complaintsText[index] = {};
                                     $sessionStorage.complaintsText[index].complaintText = complaintText;
 
@@ -1285,8 +1276,6 @@ define(["./module"], function (module) {
                             $scope.preloader = true;
                             $scope.showForm = false;
                             
-                            console.log($scope.sendData);
-
                             $drivebysService.storeEdited($scope.sendData, 'neue').then(function () {
                                 $scope.sendData = {};
                                 $sessionStorage.formchanges = [];

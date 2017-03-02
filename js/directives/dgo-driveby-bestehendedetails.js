@@ -290,11 +290,14 @@ define(["./module"], function (module) {
                             $scope.videoUrl = args.data.videoUri;
                         }
 
+                        if (args.data.base64Video) {
+                            $scope.videoUrlSpeichern = "data:video/mp4;base64," + args.data.base64Video;
+                        } else if (args.data.videoUri) {
+                            $scope.videoUrlSpeichern = args.data.videoUri;
+                        }
+
                         $scope.base64Video = args.data.base64Video;
                         $scope.videoUri = args.data.videoUri;
-
-                        console.log($scope.videoUri);
-
 
                         $scope.daten = {
                             accept: false,
@@ -368,10 +371,6 @@ define(["./module"], function (module) {
                                 id: key
                             });
                         });
-
-
-                        console.log($scope.sendData.complaints);
-                        console.log($scope.images);
 
 
                         angular.forEach($scope.sendData.complaints, function(value, key, obj) {
@@ -719,9 +718,6 @@ define(["./module"], function (module) {
                             var slides = $scope.slidesSpeichern = [];
 
                             angular.forEach($scope.images, function(value, key, obj) {
-                                console.log(obj[key].accept);
-                                console.log('111');
-
                                 if (obj[key].accept) {
                                     slides.push({
                                         image: 'data:image/png;base64,' + obj[key].base64,
@@ -990,17 +986,17 @@ define(["./module"], function (module) {
                                 }
 
                                 if ($scope.selectedDriveBySpeichern.transactionHash == $scope.sendData.transactionHash) {
+
                                     var slides = $scope.slidesSpeichern = [];
                                     angular.forEach($scope.images, function(value, key, obj) {
                                         if (obj[key].accept) {
                                             slides.push({
-                                                image: obj[key].uri,
+                                                image: obj[key].uri ? obj[key].uri : 'data:image/png;base64,' + obj[key].base64,
                                                 text: $scope.titlesImage[obj[key].index-1],
                                                 id: key
                                             });
                                         }
                                     });
-
                                 }
 
                                 $rootScope.$broadcast('accept2', {
@@ -1317,7 +1313,6 @@ define(["./module"], function (module) {
                         if ($scope.sendData.mappedImmoObject == null) {
                             index.push('mappedImmoObjectbestehende');
                             $scope.error = true;
-                            console.log('1');
 
                             $scope.mapped.error = true;
                         } else {
@@ -1329,7 +1324,6 @@ define(["./module"], function (module) {
                                 index.push('imagebestehende_' + value.index);
                                 obj[key].error = true;
                                 $scope.error = true;
-                                console.log('2');
                             } else {
                                 obj[key].error = false;
                             }
@@ -1344,7 +1338,6 @@ define(["./module"], function (module) {
                                     index.push('videobestehende');
                                     obj[key].error = true;
                                     $scope.error = true;
-                                    console.log('3');
                                 } else {
                                     obj[key].error = false;
                                 }
@@ -1358,7 +1351,6 @@ define(["./module"], function (module) {
                             index.push('datenbestehende');
                             $scope.daten.error = true;
                             $scope.error = true;
-                            console.log('4');
                         } else {
                             $scope.daten.error = false;
                         }
@@ -1366,7 +1358,6 @@ define(["./module"], function (module) {
                         if ($scope.uploadingObject.driveByRate == 0) {
                             index.push('driveByRatebestehende');
                             $scope.error = true;
-                            console.log('5');
                             $scope.driveByRate.error = true;
 
                             $scope.rateTextStyle = {color: $scope.driveByRate.error ? 'red' : 'black'};
